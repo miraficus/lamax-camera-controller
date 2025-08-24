@@ -425,7 +425,6 @@ class DownloadFile(Action):
     def add_arguments(self):
         self.parser.add_argument("remote_path", help="The remote path of the file on the camera (e.g., sd/DCIM/.../file.MP4).")
         self.parser.add_argument("local_path", nargs='?', help="The local path to save the file. Defaults to the original filename in the current directory.")
-        self.parser.add_argument("--type", choices=['high', 'low', 'thumb'], default='high', help="Specify file type to download: high-res (.MP4), low-res (.LRV), or thumbnail (.THM).")
 
     def execute(self, args):
         remote_path = args.remote_path
