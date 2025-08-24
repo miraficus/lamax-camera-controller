@@ -1,0 +1,204 @@
+# Data gathered on Android 14 with PCAPdroid and LAMAX Hi Cam (com.gku.alex) app version 3.5-build20190329
+
+## The following is true of all GET requests:
+Hypertext Transfer Protocol
+    GET /cgi-bin/hi3510/xxxxxxxxx.cgi HTTP/1.1\r\n
+    Host: 192.168.0.1\r\n
+    Connection: Keep-Alive\r\n
+    User-Agent: HiCamera\r\n
+    \r\n
+    [Full request URI: http://192.168.0.1/cgi-bin/hi3510/xxxxxxxxx.cgi]
+
+## The following is true of all responses (unless noted otherwise)
+Hypertext Transfer Protocol
+    HTTP/1.1 200 OK\r\n
+    Server: thttpd/2.29 23May2018\r\n
+    Content-Type: text/plain; charset=UTF-8\r\n
+    Date: Sun, 24 Aug 2025 12:55:16 GMT\r\n
+    Last-Modified: Sun, 24 Aug 2025 12:55:16 GMT\r\n
+    Accept-Ranges: bytes\r\n
+    Connection: close\r\n
+    \r\n
+
+
+## In this file, the first line of each noted request (/cgi-bin/etc) is the get request, the lines below are the response as seen in wireshark.
+
+## Workmode getting and setting
+### Please note there is also a workmode of "System" that is not reuturned by getallworkmode request. It is used only for changing the camera's system settings and does not need to be set to do that.
+
+/cgi-bin/hi3510/getallworkmode.cgi
+Line-based text data: text/plain (1 lines)
+    var photo="NormalPhoto,TimerPhoto,Burst,PhotoLapse";var video="NormalVideo,CarMode,VideoLapse,SlowRec";
+
+/cgi-bin/hi3510/getcurworkmode.cgi
+Line-based text data: text/plain (2 lines)
+    var workmode="VideoLapse";\r\n
+    var value="Video time-lapse";\r\n
+
+/cgi-bin/hi3510/setcurworkmode.cgi?-workmode=NormalVideo
+200 OK
+
+## System getting and setting
+
+/cgi-bin/hi3510/getcurallinfo.cgi
+Line-based text data: text/plain (4 lines)
+    var mode="VideoLapse";\r\n
+    var state="21";\r\n
+    var event="0";\r\n
+    var pasttime="0";\r\n
+
+/cgi-bin/hi3510/setsystime.cgi?-time=20250824125458
+200 OK
+
+/cgi-bin/hi3510/getdeviceattr.cgi
+Line-based text data: text/plain (10 lines)
+    var name="";\r\n
+    var serialnum="1";\r\n
+    var type="Hi3559V200";\r\n
+    var networkstatus="0";\r\n
+    var softversion="V1.0.0.6";\r\n
+    var hardversion="NewAPP";\r\n
+    var startdate="0";\r\n
+    var runtimes="3018092";\r\n
+    var model="3018092";\r\n
+    var timeout="0";\r\n
+
+/cgi-bin/hi3510/getbatterycapacity.cgi?
+Line-based text data: text/plain (3 lines)
+    var capacity="0";\r\n
+    var charge="1";\r\n
+    var ac="1";\r\n
+
+## Recording start stop
+
+/cgi-bin/hi3510/record.cgi?&-cmd=start
+200 OK
+
+/cgi-bin/hi3510/record.cgi?&-cmd=stop
+200 OK
+
+### Take a picture (starts video recording if in video mode)
+/cgi-bin/hi3510/photo.cgi?&-type=photo
+200 OK
+Line-based text data: text/plain (1 lines)
+    Success\r\n
+
+## Requesting all camera settings per workmode (think of this as a tree with primary and secondary menu items)
+
+### This request returns primary menu items for the set workmode and their current settings
+/cgi-bin/hi3510/getprimarymenuitem.cgi?-workmode=NormalPhoto
+Line-based text data: text/plain (1 lines)
+    var item="Resolution,Lens angle,Exposure,ISO,White balance,Time stamp,Scene mode";var cur="12M,Medium,AUTO,AUTO,AUTO,Off,Auto";\r\n
+
+### Using the following request, all of the options of a specific primary menu item of a specified workmode can be returned, as well as the one currently set. it would be best to have a command like settings-tree that would show all settings
+/cgi-bin/hi3510/getsecondmenuitem.cgi?-workmode=NormalPhoto&-name=Lens%20angle
+Line-based text data: text/plain (2 lines)
+    var item="Wide,Medium,Narrow";\r\n
+    var value="Medium";\r\n
+
+### A set command for the secondary menu item. It would be great if it could dynamically return/allow the options as they can vary between models.
+/cgi-bin/hi3510/setcurparameter.cgi?-workmode=NormalPhoto&-name=Lens%20angle&-value=Narrow
+200 OK
+
+### Video mode settings sample
+
+/cgi-bin/hi3510/setcurworkmode.cgi?-workmode=NormalVideo
+200 OK
+Line-based text data: text/plain (1 lines)
+    Success\r\n
+
+/cgi-bin/hi3510/getsecondmenuitem.cgi?-workmode=NormalVideo&-name=Resolution
+Line-based text data: text/plain (2 lines)
+    var item="4K30,2.7K30,1440P60,1440P30,1080P60,1080P30,720P120,720P60,720P30";\r\n
+    var value="4K30";\r\n
+
+### System settings sample
+
+/cgi-bin/hi3510/getprimarymenuitem.cgi?-workmode=System
+Line-based text data: text/plain (1 lines)
+    var item="Screen Saver,Auto Power Off,Wi-Fi,Language,Auto Sync Time,Image rotation,Frequency,Factory Reset,SD Format,Information";var cur="30s,3 mins,,English,OFF,Cancel,50HZ,,,";\r\n
+
+
+## Format SD Card
+/cgi-bin/hi3510/sdcommand.cgi?-format&-partition=1
+Line-based text data: text/plain (4 lines)
+    var sdstatus="1";\r\n
+    var sdfreespace="30431";\r\n
+    var sdtotalspace="30431";\r\n
+    var partitionnum="1";\r\n
+
+## Get SD card state
+/cgi-bin/hi3510/getsdstate.cgi?
+Line-based text data: text/plain (3 lines)
+    var sdstate="SDOK";\r\n
+    var total="30431 MB";\r\n
+    var used="2 MB";\r\n
+
+## Get WiFi details
+/cgi-bin/hi3510/getwifi.cgi
+Line-based text data: text/plain (6 lines)
+    var enablewifi="1";\r\n
+    var wifissid="LAMAX X91_aabbcc";\r\n
+    var wifikey="1234567890";\r\n
+    var secretmode="3";\r\n
+    var wifichannel="11";\r\n
+    var links="1";\r\n
+
+## Set WiFi settings
+### Note: in the mobile app, the user needs to set wifi name of exactly 9 characters long (with the 6 hexadecimal characters and the underscore being added automatically), and the password needs to be exaclty 10 characters long.
+/cgi-bin/hi3510/setwifi.cgi?&-wifissid=camera123_aabbcc&-wifikey=1234567890
+This request does not produce any response.
+
+# Files manipulation
+
+## Get filecount
+/cgi-bin/hi3510/getfilecount.cgi?
+Line-based text data: text/plain (1 lines)
+    var count="14";\r\n
+
+## Get filelist
+/cgi-bin/hi3510/getfilelistinfoios.cgi?&-start=1&-end=999
+Line-based text data: text/plain (1 lines)
+    [{"path":"sd/DCIM/100GKUDV/LPSE0014.MP4","create":"2025/08/24 14:55:18","time":"0","size":"3369248"},]
+
+## Get file Information
+/cgi-bin/hi3510/getfileinfo.cgi?&-name=sd/DCIM/100GKUDV/NORM0002.MP4
+Line-based text data: text/plain (4 lines)
+    var size="29667105";\r\n
+    var path="/app/sd/DCIM/100GKUDV/NORM0002.MP4";\r\n
+    var time="4";\r\n
+    var create="2025/08/24 14:39:11";\r\n
+
+## Delete file
+/cgi-bin/hi3510/deletefile.cgi?&-name=sd/DCIM/100GKUDV/L0010013.JPG
+Line-based text data: text/plain (1 lines)
+    Success\r\n
+
+## Download Low-res image (!! POST REQUEST !!)
+
+Hypertext Transfer Protocol
+    POST /sd/DCIM/100GKUDV/LPSE0014.THM HTTP/1.1\r\n
+    Content-Type: application/x-www-form-urlencoded\r\n
+    User-Agent: Dalvik/2.1.0 (Linux; U; Android 14; ONEPLUS A6013 Build/AP1A.240505.005)\r\n
+    Host: 192.168.0.1\r\n
+    Connection: Keep-Alive\r\n
+    Accept-Encoding: gzip\r\n
+    Content-Length: 0\r\n
+    \r\n
+    [Full request URI: http://192.168.0.1/sd/DCIM/100GKUDV/LPSE0014.THM]
+
+Response: JPEG JFIF image
+
+## Download low-res video (Get request)
+
+/sd/DCIM/100GKUDV/NORM0002.LRV
+
+Response: LRV Video sent as line-based plain text data
+
+## Download high-res video (Get request)
+
+/sd/DCIM/100GKUDV/NORM0002.MP4
+
+Response: MP4
+
+There is also an RTSP stream at :554/livestream/12
