@@ -37,7 +37,17 @@ def main():
             "path": "sd/DCIM/100GKUDV/DUMMY.MP4"
         }
 
+        # --- Define commands to exclude from testing ---
+        EXCLUDED_COMMANDS = [
+            "set_wifi_settings", # Breaks the connection
+            "format_sd_card",    # Destructive
+        ]
+
         for action_name, command_str in commands_to_test.items():
+            if action_name in EXCLUDED_COMMANDS:
+                print(f"  [SKIPPED] {action_name} (Breaking command)")
+                continue
+
             try:
                 # Get the endpoint, filling in placeholders with dummy data
                 endpoint = camera_api.get_command(action_name, **dummy_params)
