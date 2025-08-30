@@ -4,9 +4,48 @@ import json
 class CameraAPI:
     """Handles communication with the camera's API."""
 
-    def __init__(self, cgi_base_url, file_base_url):
-        self.cgi_base_url = cgi_base_url
-        self.file_base_url = file_base_url
+    def __init__(self, camera_ip, model_definition):
+        """
+        Initializes the CameraAPI with a specific camera model.
+
+        Args:
+            camera_ip (str): The IP address of the camera.
+            model_definition (dict): The model-specific definition containing
+                                     commands and base paths.
+        """
+        self.camera_ip = camera_ip
+        self.model_definition = model_definition
+        self.commands = self.model_definition.get("commands", {})
+
+        cgi_path = self.model_definition.get("cgi_base_path", "/cgi-bin/hi3510/")
+        self.cgi_base_url = f"http://{self.camera_ip}{cgi_path}"
+        self.file_base_url = f"http://{self.camera_ip}/"
+
+
+    def get_command(self, action_name, **kwargs):
+        """
+        Retrieves and formats a command string for a given action.
+
+        Args:
+            action_name (str): The generic name of the action (e.g., 'start_recording').
+            **kwargs: Keyword arguments to format the command string.
+
+        Returns:
+            str: The fully formatted command string.
+
+        Raises:
+            KeyError: If the action_name is not found in the model's command set.
+        """
+        try:
+            base_command = self.commands[action_name]
+            return base_command.format(**kwargs)
+        except KeyError:
+            # This provides a clear error message for developers if a command is missing.
+            raise KeyError(f"Command '{action_name}' not defined for model '{self.model_definition.get('model_name', 'Unknown')}'.")
+        except Exception as e:
+            # Catch other potential formatting errors
+            print(f"Error formatting command '{action_name}': {e}")
+            return None
 
     def _parse_response(self, text_response):
         """
@@ -56,24 +95,22 @@ class CameraAPI:
                 response_data['status'] = clean_line
         return response_data
 
-    def send_command(self, endpoint, params=None):
+    def send_command(self, endpoint, params=None, timeout=10):
         """
         Sends a command to the camera.
 
         Args:
             endpoint (str): The CGI script to call (e.g., "getsdstate.cgi").
             params (dict, optional): A dictionary of parameters to send.
+            timeout (int, optional): The request timeout in seconds. Defaults to 10.
 
         Returns:
             dict: The parsed response from the camera, or None on error.
         """
-        # The camera API seems to use a mix of query string styles.
-        # Sometimes it's `?&-param=value`, sometimes `?-param=value`.
-        # We will construct the URL manually from the endpoint string.
         url = self.cgi_base_url + endpoint
         print(f"Executing: {url}")
         try:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=timeout)
             response.raise_for_status()
             print("Response received.")
             return self._parse_response(response.text)
@@ -81,15 +118,22 @@ class CameraAPI:
             print(f"Error communicating with camera: {e}")
             return None
 
-    def download_file(self, remote_path, local_path):
-        """Downloads a file from the camera."""
+    def download_file(self, remote_path, local_path, timeout=60):
+        """
+        Downloads a file from the camera.
+
+        Args:
+            remote_path (str): The remote path of the file on the camera.
+            local_path (str): The local path to save the file.
+            timeout (int, optional): The request timeout in seconds. Defaults to 60.
+        """
         url = self.file_base_url + remote_path
         
         print(f"Attempting to download '{remote_path}' from '{url}'")
 
         try:
             print("Using GET for file...")
-            response = requests.get(url, timeout=60, stream=True)
+            response = requests.get(url, timeout=timeout, stream=True)
             
             response.raise_for_status()
 
