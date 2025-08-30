@@ -1,0 +1,131 @@
+## In this file, the first line of each noted request (/cgi-bin/etc) is the get request, the lines below are the response as seen in wireshark.
+# Connected camera is LAMAX X10.1 Action Camera (gkuvision-dv-3559-mn34120-linux), SW Version V1.0.0.1
+# Please note that the settings structure and multiple commands completely differ from the X9.1 model.
+
+
+[Request URI: /cgi-bin/hi3510/getdeviceattr.cgi]
+Line-based text data: text/html (10 lines)
+    var name="gkuvision-dv-3559-mn34120-linux";\r\n
+    var serialnum="";\r\n
+    var type="117";\r\n
+    var networkstatus="0";\r\n
+    var softversion=" ";\r\n
+    var hardversion="";\r\n
+    var startdate="";\r\n
+    var runtimes="0";\r\n
+    var model="0";\r\n
+    var timeout="0";\r\n
+
+[Request URI: /cgi-bin/hi3510/getledstate.cgi?]
+Line-based text data: text/html (1 lines)
+    var enable="1";\r\n
+
+[Request URI: /cgi-bin/hi3510/setsystime.cgi?-time=20250830210049]
+Line-based text data: text/html (1 lines)
+    Success\r\n
+
+[Request URI: /cgi-bin/hi3510/getbatterycapacity.cgi?]
+Line-based text data: text/html (3 lines)
+    var capacity="80";\r\n
+    var charge="0";\r\n
+    var ac="1";\r\n
+
+[Request URI: /cgi-bin/hi3510/getallinfo.cgi]
+Line-based text data: text/html (4 lines)
+    var mode="0";\r\n
+    var state="7";\r\n
+    var event="0";\r\n
+    var pasttime="1756587649";\r\n
+
+[Request URI: /cgi-bin/hi3510/getdevcapabilities.cgi?]
+Line-based text data: text/html (1 lines)
+    var devcapabilities="standby,timelapse,workmode";\r\n
+
+[Request URI: /cgi-bin/hi3510/getworkmode.cgi?]
+Line-based text data: text/html (4 lines)
+    var workmodephoto="0";\r\n
+    var workmodemulti="1";\r\n
+    var workmodevideo="0";\r\n
+    var workmode="00";\r\n
+
+[Request URI: /cgi-bin/hi3510/setworkmode.cgi?&-workmode=1?]
+Line-based text data: text/html (1 lines)
+    Success\r\n
+
+# Get a list of all capabilities of a certain type (in this case Resolution) per workmode
+[Request URI: /cgi-bin/hi3510/getcapability.cgi?&-workmode=20&-type=0]
+Line-based text data: text/html (1 lines)
+    var capability="4K30,2.7K30,1440P60(4:3),1440P30(4:3),1080P120,1080P60,1080P30,720P240,720P120,720P60,720P30";\r\n
+
+# Get the current setting of a parameter of a certain type (in this case Resolution) per workmode
+[Request URI: /cgi-bin/hi3510/getparameter.cgi?&-workmode=20&-type=0]
+Line-based text data: text/html (1 lines)
+    var value="4K30";\r\n
+
+# Set a parameter per workmode
+[Request URI: /cgi-bin/hi3510/setparameter.cgi?&-workmode=24&-type=0&-value=1080P60]
+Line-based text data: text/html (1 lines)
+    Success\r\n
+
+# Get current field of view
+[Request URI: /cgi-bin/hi3510/getviewfield.cgi?]
+Line-based text data: text/html (1 lines)
+    var fov="170";\r\n
+
+# Get information about display image flip (in case camera is upside down)
+[Request URI: /cgi-bin/hi3510/getflip.cgi?]
+Line-based text data: text/html (1 lines)
+    var enable="0";\r\n
+
+[Request URI: /cgi-bin/hi3510/setflip.cgi?&-enable=0]
+Line-based text data: text/html (1 lines)
+    Success\r\n
+
+[Request URI: /cgi-bin/hi3510/settimeosd.cgi?&-enable=1]
+Line-based text data: text/html (1 lines)
+    Success\r\n
+
+[Request URI: /cgi-bin/hi3510/getscreenautosleep.cgi?]
+Line-based text data: text/html (1 lines)
+    var time="5";\r\n
+
+[Request URI: /cgi-bin/hi3510/getsdstate.cgi?]
+Line-based text data: text/html (3 lines)
+    var sdstate="SDOK";\r\n
+    var total="941 MB";\r\n
+    var used="1 MB";\r\n
+
+[Request URI: /cgi-bin/hi3510/sdcommand.cgi?-format&-partition=1]
+Line-based text data: text/html (4 lines)
+    var sdstatus="1";\r\n
+    var sdfreespace="941";\r\n
+    var sdtotalspace="941";\r\n
+    var partitionnum="0";\r\n
+
+[Request URI: /cgi-bin/hi3510/getbootaction.cgi?]
+Line-based text data: text/html (1 lines)
+    var action="idle";\r\n
+
+[Request URI: /cgi-bin/hi3510/setbootaction.cgi?&-action=record]
+Line-based text data: text/html (1 lines)
+    Success\r\n
+
+# Get state of audio recording enablement
+[Request URI: /cgi-bin/hi3510/getaudioencode.cgi?]
+Line-based text data: text/html (1 lines)
+    var enable="1";\r\n
+
+[Request URI: /cgi-bin/hi3510/setaudioencode.cgi?&-enable=0]
+Line-based text data: text/html (1 lines)
+    Success\r\n
+
+[Request URI: /cgi-bin/hi3510/getfilelistinfoios.cgi?&-start=1&-end=1]
+Line-based text data: text/html (1 lines)
+    [{"path":"sd/DCIM/100GKUDV/SING0001.JPG","create":"20180101000140","time":"0","size":"1284271"}]
+
+[Request URI: /cgi-bin/hi3510/getfilecount.cgi?]
+Line-based text data: text/html (1 lines)
+    var count="1";\r\n
+
+# Restart camera
+[Request URI: /cgi-bin/hi3510/reset.cgi?]
