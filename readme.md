@@ -180,6 +180,50 @@ This project is designed to be easily extensible. To add support for a new camer
 
 That's it! The `main.py` script will automatically discover your new model and its commands.
 
+## Contributing New Actions
+
+If you have discovered a new command for an existing camera model, you can easily add it by following these steps:
+
+1.  **Add the command method to the model class:**
+    *   Open the model file (e.g., `models/lamax_x10_1.py`).
+    *   Add a new method to the model class (e.g., `LamaxX10_1`) that returns the CGI endpoint for the new command. For example:
+        ```python
+        def get_screen_brightness(self):
+            return "getscreenbrightness.cgi"
+        ```
+
+2.  **Create a new `Action` class:**
+    *   In the same model file, create a new class that inherits from `models.base.Action`.
+    *   Implement the `get_name`, `get_help`, `add_arguments`, and `execute` methods.
+    *   The `get_name` method should return the command name for the CLI.
+    *   The `get_help` method should return a short description of the command.
+    *   The `add_arguments` method should define any command-line arguments that the command requires.
+    *   The `execute` method should call the new command method on the `CameraAPI` using `self.camera_api.call()`.
+
+    Here's an example for the `get_screen_brightness` command:
+    ```python
+    class GetScreenBrightness(Action):
+        @staticmethod
+        def get_name(): return "getscreenbrightness"
+        @staticmethod
+        def get_help(): return "Get screen brightness level."
+        def execute(self, args):
+            try:
+                response = self.camera_api.call('get_screen_brightness')
+                print(f"\nScreen Brightness: {response.get('level', 'N/A')}\n")
+            except CameraError as e:
+                print(f"Error getting screen brightness: {e}")
+    ```
+
+3.  **Add the new action to the model's `get_actions` method:**
+    *   In your model class, find the `get_actions` method and add your new `Action` class to the list.
+        ```python
+        def get_actions(self):
+            return [..., GetScreenBrightness, ...]
+        ```
+
+That's it! The new command will now be available through the CLI for that camera model.
+
 ## **Stress Test Script**
 
 The `stresstest.py` script is designed to test a camera's stability over a long recording session. It has been updated to support the multi-model architecture.

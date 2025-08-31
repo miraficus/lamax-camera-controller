@@ -142,6 +142,8 @@ class CameraModel(ABC):
     @abstractmethod
     def set_audio_encode(self, enable): pass
     @abstractmethod
+    def get_screen_brightness(self): pass
+    @abstractmethod
     def reset(self): pass
 
     @abstractmethod
