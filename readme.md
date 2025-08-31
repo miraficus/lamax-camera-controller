@@ -99,10 +99,66 @@ The available commands depend on the selected model. You can view all commands f
 `python main.py --model <model_name> --help`
 
 ### **LAMAX X9.1 Commands**
-*A comprehensive list of commands for the X9.1 will be generated here.*
+<!-- COMMANDS_START_X9_1 -->
+| Command | Description |
+| :--- | :--- |
+| `deletefile` | Delete a file from SD card. |
+| `downloadfile` | Download a file from the camera. |
+| `getallworkmodes` | Get all available work modes. |
+| `getbatterystatus` | Get battery status. |
+| `getcurrentstatus` | Get current camera status. |
+| `getcurrentworkmode` | Get the current work mode. |
+| `getdeviceinfo` | Get device information. |
+| `getfilecount` | Get file count on SD card. |
+| `getfileinfo` | Get file information. |
+| `getfilelist` | List files on the SD card. |
+| `getparameter` | Get the current value of a specific parameter. |
+| `getparameteroptions` | Get all available options for a specific setting. |
+| `getwifiinfo` | Get WiFi information. |
+| `sdcardformat` | Format SD card. |
+| `sdcardstatus` | Get SD card status. |
+| `setparameter` | Set the value for a specific setting. |
+| `setsystemtime` | Set system time. |
+| `setwifisettings` | Set WiFi settings. |
+| `setworkmode` | Set the current work mode. |
+| `startrecording` | Start video recording. |
+| `stoprecording` | Stop video recording. |
+| `takepicture` | Take a picture. |
+<!-- COMMANDS_END_X9_1 -->
 
 ### **LAMAX X10.1 Commands**
-*A comprehensive list of commands for the X10.1 will be generated here.*
+<!-- COMMANDS_START_X10_1 -->
+| Command | Description |
+| :--- | :--- |
+| `downloadfile` | Download a file from the camera. |
+| `getaudioencode` | Get audio encode status. |
+| `getbatterystatus` | Get battery status. |
+| `getbootaction` | Get boot action. |
+| `getcurrentstatus` | Get current camera status. |
+| `getdevicecapabilities` | Get device capabilities. |
+| `getdeviceinfo` | Get device information. |
+| `getfilecount` | Get file count on SD card. |
+| `getfilelist` | List files on the SD card. |
+| `getflip` | Get display flip status. |
+| `getledstate` | Get LED state. |
+| `getparameter` | Get the current value of a specific parameter. |
+| `getparameteroptions` | Get all available options for a specific setting. |
+| `getscreenautosleep` | Get screen auto sleep time. |
+| `gettimeosd` | Get time OSD status (NOT IMPLEMENTED). |
+| `getviewfield` | Get field of view. |
+| `reset` | Reset the camera. |
+| `sdcardformat` | Format SD card. |
+| `sdcardstatus` | Get SD card status. |
+| `setaudioencode` | Set audio encode status. |
+| `setbootaction` | Set boot action. |
+| `setflip` | Set display flip. |
+| `setledstate` | Set LED state. |
+| `setparameter` | Set the value for a specific setting. |
+| `setscreenautosleep` | Set screen auto sleep time (NOT IMPLEMENTED). |
+| `setsystemtime` | Set system time. |
+| `settimeosd` | Set time OSD. |
+| `setviewfield` | Set field of view (NOT IMPLEMENTED). |
+<!-- COMMANDS_END_X10_1 -->
 
 ## **Contributing New Camera Models**
 
@@ -126,8 +182,18 @@ That's it! The `main.py` script will automatically discover your new model and i
 
 ## **Stress Test Script**
 
-The `stresstest.py` script is designed to test a camera's stability over a long recording session. It has not yet been updated for the new multi-model architecture.
+The `stresstest.py` script is designed to test a camera's stability over a long recording session. It has been updated to support the multi-model architecture.
+
+### **How it Works**
+
+The script will fetch a model-specific test scenario (e.g., which workmode and settings to use) from the camera's plugin file. It then configures the camera, starts recording, and monitors its status for a specified duration.
 
 ### **How to Run**
 
-`python stresstest.py`
+You must specify which model you want to test.
+
+`python stresstest.py --model <model_name>`
+
+You can also specify the duration of the test:
+
+`python stresstest.py --model <model_name> --duration 120`
