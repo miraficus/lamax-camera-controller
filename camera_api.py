@@ -1,5 +1,6 @@
 import requests
 import json
+from errors import CameraConnectionError, InvalidResponseError, CommandNotSupportedError
 
 class CameraAPI:
     """
@@ -32,23 +33,19 @@ class CameraAPI:
             **kwargs: Keyword arguments for the model's method.
 
         Returns:
-            dict: The parsed response from the camera, or None on error.
+            dict: The parsed response from the camera.
+
+        Raises:
+            CommandNotSupportedError: If the command is not supported by the model.
+            CameraConnectionError: If there is a problem connecting to the camera.
+            InvalidResponseError: If the camera's response is invalid.
         """
         try:
             method_to_call = getattr(self.model, method_name)
             endpoint = method_to_call(*args, **kwargs)
             return self._send_command(endpoint)
-        except NotImplementedError as e:
-            print(f"Error: The command '{method_name}' is not implemented for the model '{self.model.get_model_name()}'.")
-            print(f"Details: {e}")
-            return None
-        except AttributeError:
-            print(f"Error: The command '{method_name}' does not exist for the model '{self.model.get_model_name()}'.")
-            return None
-        except Exception as e:
-            print(f"An unexpected error occurred while calling '{method_name}': {e}")
-            return None
-
+        except (NotImplementedError, AttributeError):
+            raise CommandNotSupportedError(method_name, self.model.get_model_name())
 
     def _parse_response(self, text_response):
         """
@@ -64,8 +61,7 @@ class CameraAPI:
             try:
                 return {"data": json.loads(stripped_response)}
             except json.JSONDecodeError:
-                print("Error: Could not decode JSON from response.")
-                return {"error": "Invalid JSON"}
+                raise InvalidResponseError("Could not decode JSON from response.")
             
         lines = stripped_response.split('\r\n')
         for line in lines:
@@ -92,8 +88,7 @@ class CameraAPI:
         Sends a GET request to the camera's CGI endpoint.
         """
         if not endpoint:
-            print("Error: No endpoint provided.")
-            return None
+            raise ValueError("No endpoint provided.")
 
         url = self.cgi_base_url + endpoint
         print(f"Executing: {url}")
@@ -103,8 +98,7 @@ class CameraAPI:
             print("Response received.")
             return self._parse_response(response.text)
         except requests.exceptions.RequestException as e:
-            print(f"Error communicating with camera: {e}")
-            return None
+            raise CameraConnectionError(f"Error communicating with camera: {e}")
 
     def download_file(self, remote_path, local_path, timeout=60):
         """
@@ -121,5 +115,4 @@ class CameraAPI:
             print(f"Successfully downloaded file to '{local_path}'")
             return True
         except requests.exceptions.RequestException as e:
-            print(f"Error downloading file: {e}")
-            return False
+            raise CameraConnectionError(f"Error downloading file: {e}")

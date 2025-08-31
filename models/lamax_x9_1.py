@@ -2,6 +2,7 @@ from models.base import CameraModel, Action
 from datetime import datetime
 from urllib.parse import quote
 import os
+from errors import CameraError
 
 # -----------------------------------------------------------------------------
 #
@@ -135,6 +136,7 @@ class LamaxX9_1(CameraModel):
     def set_boot_action(self, action): raise NotImplementedError("Not available on this model")
     def get_audio_encode(self): raise NotImplementedError("Not available on this model")
     def set_audio_encode(self, enable): raise NotImplementedError("Not available on this model")
+    def get_screen_brightness(self): raise NotImplementedError("Not available on this model")
     def reset(self): raise NotImplementedError("Not available on this model")
 
 
@@ -154,13 +156,13 @@ class GetParameter(Action):
         parser.add_argument("workmode", help="The workmode of the setting.")
         parser.add_argument("name", help="The name of the setting to get.")
     def execute(self, args):
-        response = self.camera_api.call('get_parameter', args.workmode, args.name)
-        if response:
+        try:
+            response = self.camera_api.call('get_parameter', args.workmode, args.name)
             print(f"\n--- Current Value for '{args.name}' in {args.workmode} ---")
             print(f"  Value: {response.get('value', 'N/A')}")
             print("-----------------------------------------------------\n")
-        else:
-            print(f"Failed to retrieve parameter '{args.name}'.")
+        except CameraError as e:
+            print(f"Failed to retrieve parameter '{args.name}': {e}")
 
 class GetParameterOptions(Action):
     @staticmethod
@@ -172,10 +174,10 @@ class GetParameterOptions(Action):
         parser.add_argument("workmode", help="The workmode of the setting.")
         parser.add_argument("name", help="The name of the setting.")
     def execute(self, args):
-        workmode = self.camera_api.model.map_workmode(args.workmode)
-        name = self.camera_api.model.map_setting_name(args.name)
-        response = self.camera_api.call('get_parameter_options', workmode, name)
-        if response:
+        try:
+            workmode = self.camera_api.model.map_workmode(args.workmode)
+            name = self.camera_api.model.map_setting_name(args.name)
+            response = self.camera_api.call('get_parameter_options', workmode, name)
             print(f"\n--- Options for '{args.name}' in {args.workmode} ---")
             options = response.get('item') or response.get('capability')
             current = response.get('value', 'N/A')
@@ -183,8 +185,8 @@ class GetParameterOptions(Action):
             if 'value' in response:
                  print(f"  Current: {current}")
             print("-------------------------------------------\n")
-        else:
-            print(f"Failed to retrieve options for '{args.name}'.")
+        except CameraError as e:
+            print(f"Failed to retrieve options for '{args.name}': {e}")
 
 class SetParameter(Action):
     @staticmethod
@@ -197,13 +199,16 @@ class SetParameter(Action):
         parser.add_argument("name", help="The name of the setting to change.")
         parser.add_argument("value", help="The new value for the setting.")
     def execute(self, args):
-        workmode = self.camera_api.model.map_workmode(args.workmode)
-        name = self.camera_api.model.map_setting_name(args.name)
-        response = self.camera_api.call('set_parameter', workmode, name, args.value)
-        if response and response.get('status') == 'Success':
-            print(f"Successfully set '{args.name}' to '{args.value}' in {args.workmode}.")
-        else:
-            print(f"Failed to set parameter '{args.name}'. Response: {response}")
+        try:
+            workmode = self.camera_api.model.map_workmode(args.workmode)
+            name = self.camera_api.model.map_setting_name(args.name)
+            response = self.camera_api.call('set_parameter', workmode, name, args.value)
+            if response and response.get('status') == 'Success':
+                print(f"Successfully set '{args.name}' to '{args.value}' in {args.workmode}.")
+            else:
+                print(f"Failed to set parameter '{args.name}'. Response: {response}")
+        except CameraError as e:
+            print(f"Failed to set parameter '{args.name}': {e}")
 
 class SDCardStatus(Action):
     @staticmethod
@@ -211,15 +216,15 @@ class SDCardStatus(Action):
     @staticmethod
     def get_help(): return "Get SD card status."
     def execute(self, args):
-        response = self.camera_api.call('get_sd_card_status')
-        if response:
+        try:
+            response = self.camera_api.call('get_sd_card_status')
             print("\n--- SD Card Status ---")
             print(f"  State: {response.get('sdstate', 'N/A')}")
             print(f"  Total Space: {response.get('total', 'N/A')}")
             print(f"  Used Space: {response.get('used', 'N/A')}")
             print("----------------------\n")
-        else:
-            print("Failed to retrieve SD card status.")
+        except CameraError as e:
+            print(f"Failed to retrieve SD card status: {e}")
 
 class SDCardFormat(Action):
     @staticmethod
@@ -227,16 +232,16 @@ class SDCardFormat(Action):
     @staticmethod
     def get_help(): return "Format SD card."
     def execute(self, args):
-        response = self.camera_api.call('format_sd_card')
-        if response:
+        try:
+            response = self.camera_api.call('format_sd_card')
             print("\n--- SD Card Format ---")
             print(f"  Status: {'OK' if response.get('sdstatus') == '1' else 'Failed'}")
             print(f"  Free Space: {response.get('sdfreespace', 'N/A')}")
             print(f"  Total Space: {response.get('sdtotalspace', 'N/A')}")
             print(f"  Partition Number: {response.get('partitionnum', 'N/A')}")
             print("----------------------\n")
-        else:
-            print("Failed to format SD card.")
+        except CameraError as e:
+            print(f"Failed to format SD card: {e}")
 
 class StartRecording(Action):
     @staticmethod
@@ -244,11 +249,11 @@ class StartRecording(Action):
     @staticmethod
     def get_help(): return "Start video recording."
     def execute(self, args):
-        response = self.camera_api.call('start_recording')
-        if response:
+        try:
+            response = self.camera_api.call('start_recording')
             print("Recording started.", response)
-        else:
-            print("Failed to start recording.")
+        except CameraError as e:
+            print(f"Failed to start recording: {e}")
 
 class StopRecording(Action):
     @staticmethod
@@ -256,11 +261,11 @@ class StopRecording(Action):
     @staticmethod
     def get_help(): return "Stop video recording."
     def execute(self, args):
-        response = self.camera_api.call('stop_recording')
-        if response:
+        try:
+            response = self.camera_api.call('stop_recording')
             print("Recording stopped.", response)
-        else:
-            print("Failed to stop recording.")
+        except CameraError as e:
+            print(f"Failed to stop recording: {e}")
 
 class TakePicture(Action):
     @staticmethod
@@ -268,11 +273,11 @@ class TakePicture(Action):
     @staticmethod
     def get_help(): return "Take a picture."
     def execute(self, args):
-        response = self.camera_api.call('take_picture')
-        if response:
+        try:
+            response = self.camera_api.call('take_picture')
             print("Picture taken.", response)
-        else:
-            print("Failed to take picture.")
+        except CameraError as e:
+            print(f"Failed to take picture: {e}")
 
 class GetAllWorkmodes(Action):
     @staticmethod
@@ -280,14 +285,14 @@ class GetAllWorkmodes(Action):
     @staticmethod
     def get_help(): return "Get all available work modes."
     def execute(self, args):
-        response = self.camera_api.call('get_all_workmodes')
-        if response:
+        try:
+            response = self.camera_api.call('get_all_workmodes')
             print("\n--- Available Work Modes ---")
             for key, value in response.items():
                 print(f"  {key.capitalize()}: {', '.join(value.split(','))}")
             print("----------------------------\n")
-        else:
-            print("Failed to retrieve work modes.")
+        except CameraError as e:
+            print(f"Failed to retrieve work modes: {e}")
 
 class SetWorkmode(Action):
     @staticmethod
@@ -298,12 +303,15 @@ class SetWorkmode(Action):
     def add_arguments(parser):
         parser.add_argument("workmode", help="The work mode to set.")
     def execute(self, args):
-        workmode = self.camera_api.model.map_workmode(args.workmode)
-        response = self.camera_api.call('set_workmode', workmode)
-        if response and response.get('status') == 'Success':
-            print(f"Work mode set to {args.workmode}.")
-        else:
-            print(f"Failed to set work mode. Response: {response}")
+        try:
+            workmode = self.camera_api.model.map_workmode(args.workmode)
+            response = self.camera_api.call('set_workmode', workmode)
+            if response and response.get('status') == 'Success':
+                print(f"Work mode set to {args.workmode}.")
+            else:
+                print(f"Failed to set work mode. Response: {response}")
+        except CameraError as e:
+            print(f"Failed to set work mode: {e}")
 
 class GetCurrentWorkmode(Action):
     @staticmethod
@@ -311,15 +319,15 @@ class GetCurrentWorkmode(Action):
     @staticmethod
     def get_help(): return "Get the current work mode."
     def execute(self, args):
-        response = self.camera_api.call('get_current_workmode')
-        if response:
+        try:
+            response = self.camera_api.call('get_current_workmode')
             print("\n--- Current Work Mode ---")
             print(f"  Mode: {response.get('workmode', 'N/A')}")
             if 'value' in response:
                 print(f"  Description: {response.get('value', 'N/A')}")
             print("-------------------------\n")
-        else:
-            print("Failed to retrieve current work mode.")
+        except CameraError as e:
+            print(f"Failed to retrieve current work mode: {e}")
 
 class GetCurrentStatus(Action):
     @staticmethod
@@ -327,14 +335,14 @@ class GetCurrentStatus(Action):
     @staticmethod
     def get_help(): return "Get current camera status."
     def execute(self, args):
-        response = self.camera_api.call('get_current_status')
-        if response:
+        try:
+            response = self.camera_api.call('get_current_status')
             print("\n--- Current Camera Status ---")
             for key, value in response.items():
                 print(f"  {key}: {value}")
             print("-----------------------------\n")
-        else:
-            print("Failed to retrieve camera status.")
+        except CameraError as e:
+            print(f"Failed to retrieve camera status: {e}")
 
 class GetDeviceInfo(Action):
     @staticmethod
@@ -342,14 +350,14 @@ class GetDeviceInfo(Action):
     @staticmethod
     def get_help(): return "Get device information."
     def execute(self, args):
-        response = self.camera_api.call('get_device_info')
-        if response:
+        try:
+            response = self.camera_api.call('get_device_info')
             print("\n--- Device Information ---")
             for key, value in response.items():
                 print(f"  {key}: {value}")
             print("--------------------------\n")
-        else:
-            print("Failed to retrieve device information.")
+        except CameraError as e:
+            print(f"Failed to retrieve device information: {e}")
 
 class SetSystemTime(Action):
     @staticmethod
@@ -360,15 +368,18 @@ class SetSystemTime(Action):
     def add_arguments(parser):
         parser.add_argument("datetime", help="YYYYMMDDHHMMSS, or leave empty for current time.", nargs='?', default=None)
     def execute(self, args):
-        time_str = args.datetime if args.datetime else datetime.now().strftime("%Y%m%d%H%M%S")
-        if len(time_str) != 14 or not time_str.isdigit():
-            print("Invalid datetime format. Please use YYYYMMDDHHMMSS.")
-            return
-        response = self.camera_api.call('set_system_time', time_str)
-        if response and response.get('status') == 'Success':
-            print("System time successfully set.")
-        else:
-            print(f"Failed to set system time. Response: {response}")
+        try:
+            time_str = args.datetime if args.datetime else datetime.now().strftime("%Y%m%d%H%M%S")
+            if len(time_str) != 14 or not time_str.isdigit():
+                print("Invalid datetime format. Please use YYYYMMDDHHMMSS.")
+                return
+            response = self.camera_api.call('set_system_time', time_str)
+            if response and response.get('status') == 'Success':
+                print("System time successfully set.")
+            else:
+                print(f"Failed to set system time. Response: {response}")
+        except CameraError as e:
+            print(f"Failed to set system time: {e}")
 
 class GetWifiInfo(Action):
     @staticmethod
@@ -376,14 +387,14 @@ class GetWifiInfo(Action):
     @staticmethod
     def get_help(): return "Get WiFi information."
     def execute(self, args):
-        response = self.camera_api.call('get_wifi_info')
-        if response:
+        try:
+            response = self.camera_api.call('get_wifi_info')
             print("\n--- WiFi information ---")
             for key, value in response.items():
                 print(f"  {key}: {value}")
             print("--------------------\n")
-        else:
-            print("Failed to retrieve WiFi information.")
+        except CameraError as e:
+            print(f"Failed to retrieve WiFi information: {e}")
 
 class SetWifiSettings(Action):
     @staticmethod
@@ -395,15 +406,18 @@ class SetWifiSettings(Action):
         parser.add_argument("ssid_prefix", help="The WiFi SSID prefix.")
         parser.add_argument("password", help="The WiFi password (10 chars for X9.1).")
     def execute(self, args):
-        if len(args.password) != 10:
-            print("Password must be exactly 10 characters long for LAMAX X9.1.")
-            return
-        full_ssid = f"{args.ssid_prefix}_aabbcc"
-        response = self.camera_api.call('set_wifi_settings', full_ssid, args.password)
-        if response:
-             print(f"Successfully set WiFi SSID to '{full_ssid}'.", response)
-        else:
-            print(f"WiFi settings command sent. Camera may not provide confirmation.")
+        try:
+            if len(args.password) != 10:
+                print("Password must be exactly 10 characters long for LAMAX X9.1.")
+                return
+            full_ssid = f"{args.ssid_prefix}_aabbcc"
+            response = self.camera_api.call('set_wifi_settings', full_ssid, args.password)
+            if response:
+                 print(f"Successfully set WiFi SSID to '{full_ssid}'.", response)
+            else:
+                print(f"WiFi settings command sent. Camera may not provide confirmation.")
+        except CameraError as e:
+            print(f"Failed to set WiFi settings: {e}")
 
 class GetBatteryStatus(Action):
     @staticmethod
@@ -411,15 +425,15 @@ class GetBatteryStatus(Action):
     @staticmethod
     def get_help(): return "Get battery status."
     def execute(self, args):
-        response = self.camera_api.call('get_battery_status')
-        if response:
+        try:
+            response = self.camera_api.call('get_battery_status')
             print("\n--- Battery Status ---")
             print(f"  Capacity: {response.get('capacity', 'N/A')}%")
             print(f"  Charging: {'Yes' if response.get('charge') == '1' else 'No'}")
             print(f"  On AC Power: {'Yes' if response.get('ac') == '1' else 'No'}")
             print("----------------------\n")
-        else:
-            print("Failed to retrieve battery status.")
+        except CameraError as e:
+            print(f"Failed to retrieve battery status: {e}")
 
 class GetFileCount(Action):
     @staticmethod
@@ -427,11 +441,11 @@ class GetFileCount(Action):
     @staticmethod
     def get_help(): return "Get file count on SD card."
     def execute(self, args):
-        response = self.camera_api.call('get_file_count')
-        if response:
+        try:
+            response = self.camera_api.call('get_file_count')
             print(f"\nFile Count: {response.get('count', 'N/A')}\n")
-        else:
-            print("Failed to retrieve file count.")
+        except CameraError as e:
+            print(f"Failed to retrieve file count: {e}")
 
 class GetFileList(Action):
     @staticmethod
@@ -443,24 +457,27 @@ class GetFileList(Action):
         parser.add_argument("--start", type=int, default=1, help="Start index.")
         parser.add_argument("--end", type=int, default=999, help="End index.")
     def execute(self, args):
-        response = self.camera_api.call('get_file_list', args.start, args.end)
-        if response and 'data' in response:
-            print("\n--- File List ---")
-            print(f"{'Size (MB)':<12}{'Duration (s)':<14}{'Created':<22}{'Path'}")
-            print(f"{'-----------':<12}{'------------':<14}{'--------------------':<22}{'----'}")
-            for file_info in response['data']:
-                try:
-                    size_mb = int(file_info.get('size', 0)) / (1024 * 1024)
-                    size_str = f"{size_mb:<12.2f}"
-                except (ValueError, TypeError):
-                    size_str = f"{'N/A':<12}"
-                duration = file_info.get('time', 'N/A')
-                created_date = file_info.get('create', 'N/A')
-                path = file_info.get('path', 'N/A')
-                print(f"{size_str}{duration:<14}{created_date:<22}{path}")
-            print("-----------------\n")
-        else:
-            print(f"Failed to retrieve file list. Response: {response}")
+        try:
+            response = self.camera_api.call('get_file_list', args.start, args.end)
+            if response and 'data' in response:
+                print("\n--- File List ---")
+                print(f"{'Size (MB)':<12}{'Duration (s)':<14}{'Created':<22}{'Path'}")
+                print(f"{'-----------':<12}{'------------':<14}{'--------------------':<22}{'----'}")
+                for file_info in response['data']:
+                    try:
+                        size_mb = int(file_info.get('size', 0)) / (1024 * 1024)
+                        size_str = f"{size_mb:<12.2f}"
+                    except (ValueError, TypeError):
+                        size_str = f"{'N/A':<12}"
+                    duration = file_info.get('time', 'N/A')
+                    created_date = file_info.get('create', 'N/A')
+                    path = file_info.get('path', 'N/A')
+                    print(f"{size_str}{duration:<14}{created_date:<22}{path}")
+                print("-----------------\n")
+            else:
+                print(f"Failed to retrieve file list. Response: {response}")
+        except CameraError as e:
+            print(f"Failed to retrieve file list: {e}")
 
 class DeleteFile(Action):
     @staticmethod
@@ -471,11 +488,11 @@ class DeleteFile(Action):
     def add_arguments(parser):
         parser.add_argument("path", help="The path of the file to delete.")
     def execute(self, args):
-        response = self.camera_api.call('delete_file', args.path)
-        if response:
+        try:
+            response = self.camera_api.call('delete_file', args.path)
             print(f"File '{args.path}' deleted.", response)
-        else:
-            print(f"Failed to delete file '{args.path}'.")
+        except CameraError as e:
+            print(f"Failed to delete file '{args.path}': {e}")
 
 class GetFileInfo(Action):
     @staticmethod
@@ -486,14 +503,14 @@ class GetFileInfo(Action):
     def add_arguments(parser):
         parser.add_argument("path", help="Path of the file.")
     def execute(self, args):
-        response = self.camera_api.call('get_file_info', args.path)
-        if response:
+        try:
+            response = self.camera_api.call('get_file_info', args.path)
             print("\n--- File Information ---")
             for key, value in response.items():
                 print(f"  {key}: {value}")
             print("------------------------\n")
-        else:
-            print(f"Failed to retrieve info for file '{args.path}'.")
+        except CameraError as e:
+            print(f"Failed to retrieve info for file '{args.path}': {e}")
 
 class DownloadFile(Action):
     @staticmethod
@@ -505,7 +522,10 @@ class DownloadFile(Action):
         parser.add_argument("remote_path", help="Remote path on camera.")
         parser.add_argument("local_path", nargs='?', help="Local path to save.")
     def execute(self, args):
-        local_path = args.local_path if args.local_path else os.path.basename(args.remote_path)
-        success = self.camera_api.download_file(args.remote_path, local_path)
-        if not success:
-            print("Download failed.")
+        try:
+            local_path = args.local_path if args.local_path else os.path.basename(args.remote_path)
+            success = self.camera_api.download_file(args.remote_path, local_path)
+            if not success:
+                print("Download failed.")
+        except CameraError as e:
+            print(f"Download failed: {e}")
