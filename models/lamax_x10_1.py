@@ -85,6 +85,15 @@ class LamaxX10_1(CameraModel):
     def set_led_state(self, enable): raise NotImplementedError("Unknown command")
     def set_viewfield(self, fov): raise NotImplementedError("Unknown command")
 
+    def get_stresstest_scenario(self):
+        # NOTE: Looping video command is not yet known for X10.1
+        return {
+            'workmode': 'video',
+            'settings': [
+                ('Resolution', '4K30')
+            ]
+        }
+
 # -----------------------------------------------------------------------------
 #
 # LAMAX X10.1 - ACTION DEFINITIONS

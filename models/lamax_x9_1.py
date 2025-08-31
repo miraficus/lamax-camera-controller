@@ -110,6 +110,15 @@ class LamaxX9_1(CameraModel):
         encoded_name = quote(name)
         return f"getsecondmenuitem.cgi?-workmode={workmode}&-name={encoded_name}"
 
+    def get_stresstest_scenario(self):
+        return {
+            'workmode': 'NormalVideo',
+            'settings': [
+                ('Looping Video', 'On'),
+                ('Resolution', '4K30')
+            ]
+        }
+
     # --- X10.1 specific commands, not implemented for X9.1 ---
     def get_led_state(self): raise NotImplementedError("Not available on this model")
     def set_led_state(self, enable): raise NotImplementedError("Not available on this model")

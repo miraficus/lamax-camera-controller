@@ -143,3 +143,8 @@ class CameraModel(ABC):
     def set_audio_encode(self, enable): pass
     @abstractmethod
     def reset(self): pass
+
+    @abstractmethod
+    def get_stresstest_scenario(self):
+        """Returns a dictionary defining the stress test for this model."""
+        pass
