@@ -1,162 +1,115 @@
-import time
-from datetime import datetime
+import argparse
 import sys
-from types import SimpleNamespace
-
-# You will need to have your CameraAPI and Action classes in files
-# named camera_api.py and actions.py in the same directory.
+import time
 from camera_api import CameraAPI
-from actions import (
-    Action,
-    SetSystemTime,
-    GetDeviceInfo,
-    GetWifiInfo,
-    GetBatteryStatus,
-    SDCardStatus,
-    SDCardFormat,
-    GetAllWorkmodes,
-    GetCurrentWorkmode,
-    SetWorkmode,
-    SetParameter,
-    StartRecording,
-    StopRecording,
-)
+from main import discover_models
 
-# --- Configuration ---
-CAMERA_IP = "192.168.0.1"
-CAMERA_MODEL = "hi3510"
-
-CGI_BASE_URL = f"http://{CAMERA_IP}/cgi-bin/{CAMERA_MODEL}/"
-FILE_BASE_URL = f"http://{CAMERA_IP}/"
-
-TEST_DURATION_MINUTES = 60
-MONITORING_INTERVAL_SECONDS = 10
+def clear_line():
+    """Clears the current line in the console."""
+    sys.stdout.write("\r\x1b[K")
+    sys.stdout.flush()
 
 def log(message):
     """Prints a message with a timestamp."""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
     print(f"[{timestamp}] {message}")
 
-
 def main():
-    """Main function to run the endurance test."""
-    api = CameraAPI(CGI_BASE_URL, FILE_BASE_URL)
-    log("--- Starting Camera Endurance Test ---")
+    """Main function to run the camera stress test."""
+    available_models = discover_models()
+    if not available_models:
+        log("Error: No camera models found. Exiting.")
+        sys.exit(1)
 
-    # --- Instantiate all required actions ---
-    # We pass a dummy parser object, as it's not used by the execute methods.
-    dummy_parser = None
-    set_system_time_action = SetSystemTime(dummy_parser, api)
-    get_device_info_action = GetDeviceInfo(dummy_parser, api)
-    get_wifi_details_action = GetWifiInfo(dummy_parser, api)
-    get_battery_status_action = GetBatteryStatus(dummy_parser, api)
-    sd_card_status_action = SDCardStatus(dummy_parser, api)
-    sd_card_format_action = SDCardFormat(dummy_parser, api)
-    get_all_workmodes_action = GetAllWorkmodes(dummy_parser, api)
-    get_current_workmode_action = GetCurrentWorkmode(dummy_parser, api)
-    set_workmode_action = SetWorkmode(dummy_parser, api)
-    set_parameter_action = SetParameter(dummy_parser, api)
-    start_recording_action = StartRecording(dummy_parser, api)
-    stop_recording_action = StopRecording(dummy_parser, api)
+    parser = argparse.ArgumentParser(description="Run a recording stress test on a supported action camera.")
+    parser.add_argument("--ip", default="192.168.0.1", help="The IP address of the camera.")
+    parser.add_argument(
+        "--model",
+        required=True,
+        choices=available_models.keys(),
+        help="The model of the camera to test."
+    )
+    parser.add_argument("--duration", type=int, default=60, help="Test duration in minutes.")
+    args = parser.parse_args()
+
+    log(f"--- Starting Camera Recording Stress Test for Model: {args.model} ---")
     
-    # --- 1. Setup and Initial Status Check ---
-    log("--- Phase 1: Setup and Status Check ---")
+    selected_model = available_models[args.model]
+    camera_api = CameraAPI(camera_ip=args.ip, model=selected_model)
 
-    # Ask user to format the SD card
-    confirm = input("Do you want to format the SD card before starting the test? (yes/no): ")
-    if confirm.lower() == 'yes':
-        log("Formatting SD card as requested...")
-        sd_card_format_action.execute(None)
-        log("Waiting 5 seconds for camera to process format...")
+    # 1. Get test scenario from model
+    scenario = selected_model.get_stresstest_scenario()
+    if not scenario:
+        log("Error: No stress test scenario defined for this model. Exiting.")
+        sys.exit(1)
+    
+    log(f"Test scenario: Workmode='{scenario['workmode']}', Settings={scenario['settings']}")
+
+    # 2. Check SD Card and prompt for format
+    log("Checking SD card status...")
+    camera_api.call('get_sd_card_status')
+    
+    format_sd = input("Do you want to format the SD card before starting? (yes/no): ").lower()
+    if format_sd == 'yes':
+        log("Formatting SD card...")
+        camera_api.call('format_sd_card')
         time.sleep(5)
-    else:
-        log("Skipping SD card format.")
 
-    set_system_time_action.execute(SimpleNamespace(datetime=None))
-    get_device_info_action.execute(None)
-    get_wifi_details_action.execute(None)
-    
-    # Get initial state for summary
-    initial_battery_response = api.send_command("getbatterycapacity.cgi?")
-    initial_sd_response = api.send_command("getsdstate.cgi?")
-    
-    get_all_workmodes_action.execute(None)
-    get_current_workmode_action.execute(None)
+    # 3. Configure camera for test
+    log("Configuring camera for test...")
+    camera_api.call('set_workmode', scenario['workmode'])
+    time.sleep(1)
 
-    # --- 2. Configure Camera for Recording ---
-    log("--- Phase 2: Configuring Camera ---")
-    
-    # Create dummy 'args' objects to pass parameters to the execute methods
-    set_workmode_action.execute(SimpleNamespace(workmode="NormalVideo"))
-    set_parameter_action.execute(SimpleNamespace(workmode="NormalVideo", name="Resolution", value="4K30"))
-    set_parameter_action.execute(SimpleNamespace(workmode="NormalVideo", name="Loop recording", value="On"))
+    for setting_name, setting_value in scenario['settings']:
+        log(f"Applying setting: {setting_name} = {setting_value}")
+        camera_api.call('set_parameter', scenario['workmode'], setting_name, setting_value)
+        time.sleep(1)
 
-    # --- 3. Start Recording ---
-    log("--- Phase 3: Starting Recording ---")
-    start_recording_action.execute(None)
-
+    # 4. Start recording
+    log("Starting recording...")
+    camera_api.call('start_recording')
     start_time = time.time()
-    test_successful = False
     
+    log(f"--- Monitoring for {args.duration} minutes ---")
+    print("Press Ctrl+C to stop the test early.")
+
     try:
-        # --- 4. Monitor Recording ---
-        log(f"--- Phase 4: Monitoring for {TEST_DURATION_MINUTES} minutes ---")
-        end_time = start_time + (TEST_DURATION_MINUTES * 60)
+        while True:
+            elapsed_time_s = time.time() - start_time
+            if elapsed_time_s > (args.duration * 60):
+                log(f"Test reached {args.duration} minutes. Stopping.")
+                break
 
-        while time.time() < end_time:
-            elapsed_minutes = (time.time() - start_time) / 60
-            log(f"--- Checking status (Elapsed: {elapsed_minutes:.1f}/{TEST_DURATION_MINUTES} min) ---")
+            # Get and display status
+            battery_response = camera_api.call('get_battery_status')
+            sd_response = camera_api.call('get_sd_card_status')
             
-            sd_response = api.send_command("getsdstate.cgi?")
-            battery_response = api.send_command("getbatterycapacity.cgi?")
+            battery_capacity = battery_response.get('capacity', 'N/A') if battery_response else 'N/A'
+            sd_used = sd_response.get('used', 'N/A') if sd_response else 'N/A'
+            
+            clear_line()
+            sys.stdout.write(
+                f"Elapsed: {int(elapsed_time_s // 60)}m {int(elapsed_time_s % 60)}s | "
+                f"Battery: {battery_capacity}% | "
+                f"SD Used: {sd_used}"
+            )
+            sys.stdout.flush()
 
-            if sd_response is None or battery_response is None:
-                log("CRITICAL: Camera has stopped responding. Test failed.")
-                sys.exit(1)
-            
-            log("SD Card Status:")
-            for key, value in sd_response.items():
-                print(f"    - {key.capitalize()}: {value}")
-                
-            log("Battery Status:")
-            for key, value in battery_response.items():
-                print(f"    - {key.capitalize()}: {value}")
-            
-            time.sleep(MONITORING_INTERVAL_SECONDS)
-        
-        test_successful = True
+            time.sleep(10)
 
+    except KeyboardInterrupt:
+        log("\nTest stopped by user.")
+    except Exception as e:
+        log(f"\nAn error occurred: {e}")
     finally:
-        # --- 5. Stop Recording and Summarize ---
-        log("--- Phase 5: Test finished. Stopping recording. ---")
-        stop_recording_action.execute(None)
+        # 5. Stop recording
+        log("\nStopping recording...")
+        camera_api.call('stop_recording')
         
-        final_battery_response = api.send_command("getbatterycapacity.cgi?")
-        final_sd_response = api.send_command("getsdstate.cgi?")
-        
-        log("--- Endurance Test Summary ---")
-        if test_successful:
-            log("Result: SUCCESS - Test completed the full duration.")
-        else:
-            log("Result: FAILED - Test was interrupted or camera became unresponsive.")
-        
-        total_duration = (time.time() - start_time) / 60
-        log(f"Total Test Duration: {total_duration:.2f} minutes.")
-
-        if initial_battery_response and final_battery_response:
-            start_cap = initial_battery_response.get('capacity', 'N/A')
-            end_cap = final_battery_response.get('capacity', 'N/A')
-            log(f"Battery: Started at {start_cap}, Ended at {end_cap}")
-
-        if initial_sd_response and final_sd_response:
-            start_used = initial_sd_response.get('used', 'N/A')
-            end_used = final_sd_response.get('used', 'N/A')
-            log(f"SD Card Usage: Started with {start_used} used, Ended with {end_used} used.")
-        
-        log("----------------------------")
-    
-    log("--- Endurance Test Completed Successfully! ---")
-
+        log("\n--- Test Finished ---")
+        final_file_count = camera_api.call('get_file_count')
+        if final_file_count:
+            log(f"Final file count: {final_file_count.get('count', 'N/A')}")
 
 if __name__ == "__main__":
     main()

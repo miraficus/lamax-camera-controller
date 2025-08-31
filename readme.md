@@ -1,132 +1,199 @@
-# **LAMAX Action Camera WiFi Controller**
+# **Universal Action Camera WiFi Controller**
 
 ## **Overview**
 
-This project provides a Python-based command-line interface (CLI) to control a LAMAX action camera over its WiFi hotspot. The control protocol was determined by reverse-engineering the HTTP GET requests sent by the official mobile application (LAMAX Hi Cam (`com.gku.alex`) version `3.5-build20190329`).
+This project provides a Python-based command-line interface (CLI) to control action cameras over their WiFi hotspots. The control protocols were determined by reverse-engineering the HTTP GET requests sent by the official mobile applications.
 
 The primary goal of this tool is to enable programmatic control and synchronization of multiple cameras, making it ideal for multi-camera setups like 360° video rigs, custom time-lapse sequences, or any application requiring automated camera operation.
 
+What makes this tool unique is its **pluggable architecture**. Adding support for a new camera is as simple as creating a new Python file in the `models` directory.
+
 ## **Supported Devices**
 
-LAMAX X9.1 Action Camera (Hi3559V200), SW Version V1.0.0.6
+*   **LAMAX X9.1** (Hi3559V200), SW Version V1.0.0.6
+*   **LAMAX X10.1** (gkuvision-dv-3559-mn34120-linux), SW Version V1.0.0.1
 
 ## **Features**
 
-* **Full Camera Control:** Start/stop recording and take pictures.  
-* **Device Status Monitoring:** Get real-time information on SD card status, battery level, WiFi settings, and device attributes.  
-* **File Management:** List all files on the SD card, download high-resolution videos and low-resolution proxies. You can also delete files directly from the camera.  
-* **Settings Configuration:** Change the camera's work mode (e.g., NormalVideo, PhotoLapse) and modify specific parameters like resolution, loop recording, and lens angle.  
-* **Extensible Architecture:** The project is built with a modular class-based system, making it easy to add new commands as more of the camera's API is discovered.  
-* **Automated Endurance Testing:** Includes a standalone script to perform long-duration recording tests, monitoring the camera's stability and logging its status until it either completes the test or fails.
+*   **Multi-Model Support:** Control different camera models with the same interface.
+*   **Pluggable Architecture:** Easily add support for new cameras by creating a self-contained model file.
+*   **Full Camera Control:** Start/stop recording and take pictures.
+*   **Device Status Monitoring:** Get real-time information on SD card status, battery level, WiFi settings, and device attributes.
+*   **File Management:** List, download, and delete files directly from the camera's SD card.
+*   **Settings Configuration:** Change the camera's work mode and modify specific parameters like resolution and flip status.
 
 ## **Project Structure**
 
-The project is organized into the following key files:
+The project is organized around a simple and extensible plugin architecture:
 
-* main.py: The main entry point for the CLI. It dynamically discovers and loads all available commands.  
-* camera\_api.py: Contains the core CameraAPI class that handles all low-level communication with the camera, including sending commands and parsing responses.  
-* actions.py: Defines all the user-facing commands. Each command is its own class that inherits from a base Action class.  
-* stresstest.py: A standalone script for running automated recording tests.
+*   `main.py`: The main entry point for the CLI. It dynamically discovers and loads camera models and their commands.
+*   `camera_api.py`: Contains the core `CameraAPI` class that handles low-level communication with the camera. It's model-agnostic.
+*   `models/`: This directory contains the plugins. Each `.py` file represents a camera model.
+    *   `base.py`: Defines the abstract base classes that all models and actions must implement.
+    *   `lamax_x9_1.py`: The plugin for the LAMAX X9.1.
+    *   `lamax_x10_1.py`: The plugin for the LAMAX X10.1.
+*   `stresstest.py`: A standalone script for running automated recording tests.
 
 ## **Setup and Installation**
 
 ### **Prerequisites**
 
-* Python 3.6+  
-* The requests library
+*   Python 3.6+
+*   The `requests` library
 
 ### **Installation**
 
-1. **Clone the repository**  
-
-2. **(optionally) Create and enter venv:**
-
-   ```
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-2. **Install the required Python libraries:**  
-   `pip install -r requirements.txt`
-
+1.  **Clone the repository.**
+2.  **(Optionally) Create and enter a venv:**
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+3.  **Install the required Python libraries:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ## **Usage**
 
-All interaction with the camera is done through the main script. You must be connected to the camera's WiFi network for the script to work. If needed, change the camera's IP address in `main.py`.
+All interaction with the camera is done through `main.py`. You must be connected to the camera's WiFi network for the script to work.
 
 ### **Basic Command Structure**
 
-python main.py \<command\> \[arguments...\]
+The command structure requires you to specify which camera model you are controlling.
+
+```bash
+python main.py --model <model_name> <command> [arguments...]
+```
 
 ### **Examples**
 
-* **Get a general status update:**  
-  python main.py sdcardstatus
+*   **See available commands for the LAMAX X10.1:**
+    ```bash
+    python main.py --model X10_1 --help
+    ```
 
-* **List all files on the SD card:**  
-  python main.py getfilelist
+*   **Get the battery status from a LAMAX X9.1:**
+    ```bash
+    python main.py --model X9_1 getbatterystatus
+    ```
 
-* **Start recording:**  
-  python main.py startrecording
+*   **Get the available resolutions for video on a LAMAX X10.1:**
+    ```bash
+    python main.py --model X10_1 getparameteroptions video Resolution
+    ```
 
-* **Change the video resolution:**  
-  python main.py setparameter NormalVideo Resolution 4K30
+*   **Set the flip status on a LAMAX X10.1:**
+    ```bash
+    python main.py --model X10_1 setflip on
+    ```
 
-* **Download a high-resolution video:**  
-  python main.py downloadfile "sd/DCIM/100GKUDV/NORM0001.MP4" my\_video.mp4
+*   **Download a file from a LAMAX X9.1:**
+    ```bash
+    python main.py --model X9_1 downloadfile "sd/DCIM/100GKUDV/NORM0001.MP4" my_video.mp4
+    ```
 
 ## **Available Commands**
 
-Below is a list of all implemented commands.
+The available commands depend on the selected model. You can view all commands for a model by running:
+`python main.py --model <model_name> --help`
 
-### **Basic Controls & Status**
-
+### **LAMAX X9.1 Commands**
+<!-- COMMANDS_START_X9_1 -->
 | Command | Description |
-| :---- | :---- |
-| startrecording | Starts video recording. |
-| stoprecording | Stops video recording. |
-| takepicture | Takes a single photo (or starts recording when in video workmode). |
-| sdcardstatus | Gets the SD card's state, total space, and used space. |
-| getbatterystatus | Gets the current battery capacity and charging status. |
-| getdeviceinfo | Retrieves model name, serial number, and firmware version. |
-| setsystemtime | Syncs the camera's clock with your computer's time. |
+| :--- | :--- |
+| `deletefile` | Delete a file from SD card. |
+| `downloadfile` | Download a file from the camera. |
+| `getallworkmodes` | Get all available work modes. |
+| `getbatterystatus` | Get battery status. |
+| `getcurrentstatus` | Get current camera status. |
+| `getcurrentworkmode` | Get the current work mode. |
+| `getdeviceinfo` | Get device information. |
+| `getfilecount` | Get file count on SD card. |
+| `getfileinfo` | Get file information. |
+| `getfilelist` | List files on the SD card. |
+| `getparameter` | Get the current value of a specific parameter. |
+| `getparameteroptions` | Get all available options for a specific setting. |
+| `getwifiinfo` | Get WiFi information. |
+| `sdcardformat` | Format SD card. |
+| `sdcardstatus` | Get SD card status. |
+| `setparameter` | Set the value for a specific setting. |
+| `setsystemtime` | Set system time. |
+| `setwifisettings` | Set WiFi settings. |
+| `setworkmode` | Set the current work mode. |
+| `startrecording` | Start video recording. |
+| `stoprecording` | Stop video recording. |
+| `takepicture` | Take a picture. |
+<!-- COMMANDS_END_X9_1 -->
 
-### **File Management**
-
+### **LAMAX X10.1 Commands**
+<!-- COMMANDS_START_X10_1 -->
 | Command | Description |
-| :---- | :---- |
-| getfilecount | Returns the total number of files on the SD card. |
-| getfilelist | Displays a formatted list of all files. |
-| getfileinfo \<path\> | Gets detailed information for a specific file. |
-| deletefile \<path\> | Deletes a specific file from the SD card. |
-| downloadfile \<remote\> \[local\] | Downloads a file. |
-| sdcardformat | Formats the SD card (requires confirmation). |
+| :--- | :--- |
+| `downloadfile` | Download a file from the camera. |
+| `getaudioencode` | Get audio encode status. |
+| `getbatterystatus` | Get battery status. |
+| `getbootaction` | Get boot action. |
+| `getcurrentstatus` | Get current camera status. |
+| `getdevicecapabilities` | Get device capabilities. |
+| `getdeviceinfo` | Get device information. |
+| `getfilecount` | Get file count on SD card. |
+| `getfilelist` | List files on the SD card. |
+| `getflip` | Get display flip status. |
+| `getledstate` | Get LED state. |
+| `getparameter` | Get the current value of a specific parameter. |
+| `getparameteroptions` | Get all available options for a specific setting. |
+| `getscreenautosleep` | Get screen auto sleep time. |
+| `gettimeosd` | Get time OSD status (NOT IMPLEMENTED). |
+| `getviewfield` | Get field of view. |
+| `reset` | Reset the camera. |
+| `sdcardformat` | Format SD card. |
+| `sdcardstatus` | Get SD card status. |
+| `setaudioencode` | Set audio encode status. |
+| `setbootaction` | Set boot action. |
+| `setflip` | Set display flip. |
+| `setledstate` | Set LED state. |
+| `setparameter` | Set the value for a specific setting. |
+| `setscreenautosleep` | Set screen auto sleep time (NOT IMPLEMENTED). |
+| `setsystemtime` | Set system time. |
+| `settimeosd` | Set time OSD. |
+| `setviewfield` | Set field of view (NOT IMPLEMENTED). |
+<!-- COMMANDS_END_X10_1 -->
 
-### **Settings & Configuration**
+## **Contributing New Camera Models**
 
-| Command | Description |
-| :---- | :---- |
-| getallworkmodes | Lists all available camera modes (e.g., NormalVideo). |
-| getcurrentworkmode | Shows the currently active work mode. |
-| setworkmode \<mode\> | Switches the camera to a different work mode. |
-| getprimarymenu \<mode\> | Lists the main settings available for a given work mode. |
-| getsecondarymenu \<mode\> \<name\> | Lists the available options for a specific setting. |
-| setparameter \<mode\> \<name\> \<value\> | Sets a new value for a specific setting. |
+This project is designed to be easily extensible. To add support for a new camera, you only need to create a single new file in the `models/` directory.
+
+### **Steps:**
+
+1.  **Create a new file:** e.g., `models/my_camera.py`.
+2.  **Define the Model Class:**
+    *   Create a class that inherits from `models.base.CameraModel`.
+    *   Implement all the abstract methods from the base class (`get_model_name`, `get_cli_name`, `get_actions`, and all the command methods).
+    *   The command methods should return the specific CGI endpoint string for your camera. If a command is not supported, raise `NotImplementedError`.
+3.  **Define the Action Classes:**
+    *   For each command your camera supports, create a class that inherits from `models.base.Action`.
+    *   Implement the abstract methods: `get_name`, `get_help`, `add_arguments`, and `execute`.
+    *   The `execute` method should call the appropriate method on the `CameraAPI` using `self.camera_api.call('your_command_method', ...)`.
+4.  **Link Actions to Model:**
+    *   In your model class, the `get_actions` method should return a list of all the `Action` classes you defined.
+
+That's it! The `main.py` script will automatically discover your new model and its commands.
 
 ## **Stress Test Script**
 
-The stresstest.py script is designed to test the camera's stability over a long recording session.
+The `stresstest.py` script is designed to test a camera's stability over a long recording session. It has been updated to support the multi-model architecture.
 
 ### **How it Works**
 
-1. **Prompts** the user to format the SD card.  
-2. **Gathers** initial status information (battery, SD card).  
-3. **Configures** the camera to record in NormalVideo at 4K30 with loop recording on.  
-4. **Starts** recording.  
-5. **Monitors** the camera's status every 10 seconds, logging elapsed time, battery, and SD card usage.  
-6. **Stops** if the camera becomes unresponsive or after 60 minutes.  
-7. **Provides** a final summary of the test run.
+The script will fetch a model-specific test scenario (e.g., which workmode and settings to use) from the camera's plugin file. It then configures the camera, starts recording, and monitors its status for a specified duration.
 
 ### **How to Run**
 
-python stresstest.py  
+You must specify which model you want to test.
+
+`python stresstest.py --model <model_name>`
+
+You can also specify the duration of the test:
+
+`python stresstest.py --model <model_name> --duration 120`

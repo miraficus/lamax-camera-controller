@@ -2,60 +2,57 @@ import requests
 import json
 
 class CameraAPI:
-    """Handles communication with the camera's API."""
+    """
+    Handles communication with the camera's API.
+    This class acts as a thin wrapper that delegates calls to a
+    specific camera model's implementation.
+    """
 
-    def __init__(self, camera_ip, model_definition):
+    def __init__(self, camera_ip, model):
         """
-        Initializes the CameraAPI with a specific camera model.
+        Initializes the CameraAPI with a specific camera model instance.
 
         Args:
             camera_ip (str): The IP address of the camera.
-            model_definition (dict): The model-specific definition containing
-                                     commands and base paths.
+            model (CameraModel): An instance of a CameraModel subclass.
         """
         self.camera_ip = camera_ip
-        self.model_definition = model_definition
-        self.commands = self.model_definition.get("commands", {})
-
-        cgi_path = self.model_definition.get("cgi_base_path", "/cgi-bin/hi3510/")
-        self.cgi_base_url = f"http://{self.camera_ip}{cgi_path}"
+        self.model = model
+        self.cgi_base_url = f"http://{self.camera_ip}{self.model.cgi_base_path}"
         self.file_base_url = f"http://{self.camera_ip}/"
 
-
-    def get_command(self, action_name, **kwargs):
+    def call(self, method_name, *args, **kwargs):
         """
-        Retrieves and formats a command string for a given action.
+        Calls a method on the camera model to get a command endpoint,
+        sends it to the camera, and returns the parsed response.
 
         Args:
-            action_name (str): The generic name of the action (e.g., 'start_recording').
-            **kwargs: Keyword arguments to format the command string.
+            method_name (str): The name of the method to call on the model.
+            *args: Positional arguments for the model's method.
+            **kwargs: Keyword arguments for the model's method.
 
         Returns:
-            str: The fully formatted command string.
-
-        Raises:
-            KeyError: If the action_name is not found in the model's command set.
+            dict: The parsed response from the camera, or None on error.
         """
         try:
-            base_command = self.commands[action_name]
-            return base_command.format(**kwargs)
-        except KeyError:
-            # This provides a clear error message for developers if a command is missing.
-            raise KeyError(f"Command '{action_name}' not defined for model '{self.model_definition.get('model_name', 'Unknown')}'.")
-        except Exception as e:
-            # Catch other potential formatting errors
-            print(f"Error formatting command '{action_name}': {e}")
+            method_to_call = getattr(self.model, method_name)
+            endpoint = method_to_call(*args, **kwargs)
+            return self._send_command(endpoint)
+        except NotImplementedError as e:
+            print(f"Error: The command '{method_name}' is not implemented for the model '{self.model.get_model_name()}'.")
+            print(f"Details: {e}")
             return None
+        except AttributeError:
+            print(f"Error: The command '{method_name}' does not exist for the model '{self.model.get_model_name()}'.")
+            return None
+        except Exception as e:
+            print(f"An unexpected error occurred while calling '{method_name}': {e}")
+            return None
+
 
     def _parse_response(self, text_response):
         """
         Parses the camera's line-based text response into a Python dictionary.
-
-        Args:
-            text_response (str): The raw text response from the camera.
-
-        Returns:
-            dict: A dictionary of the parsed key-value pairs.
         """
         response_data = {}
         if not text_response:
@@ -63,7 +60,6 @@ class CameraAPI:
         
         stripped_response = text_response.strip()
 
-        # Handle JSON response for file lists
         if stripped_response.startswith('[') and stripped_response.endswith(']'):
             try:
                 return {"data": json.loads(stripped_response)}
@@ -71,16 +67,13 @@ class CameraAPI:
                 print("Error: Could not decode JSON from response.")
                 return {"error": "Invalid JSON"}
             
-        # Handle var-style responses
         lines = stripped_response.split('\r\n')
         for line in lines:
             clean_line = line.strip().replace('var ', '').rstrip(';')
             if '=' in clean_line:
-                # Handle key-value pairs
                 parts = clean_line.split('=', 1)
                 key = parts[0]
                 value = parts[1].strip('"')
-                # Sometimes multiple vars are on one line, separated by ';'
                 if ';' in value:
                     sub_parts = value.split(';')
                     response_data[key] = sub_parts[0]
@@ -90,23 +83,18 @@ class CameraAPI:
                             response_data[sub_key.replace('var ', '')] = sub_val.strip('"')
                 else:
                     response_data[key] = value
-            else:
-                # Handle simple text responses like "Success"
+            elif clean_line:
                 response_data['status'] = clean_line
         return response_data
 
-    def send_command(self, endpoint, params=None, timeout=10):
+    def _send_command(self, endpoint, timeout=10):
         """
-        Sends a command to the camera.
-
-        Args:
-            endpoint (str): The CGI script to call (e.g., "getsdstate.cgi").
-            params (dict, optional): A dictionary of parameters to send.
-            timeout (int, optional): The request timeout in seconds. Defaults to 10.
-
-        Returns:
-            dict: The parsed response from the camera, or None on error.
+        Sends a GET request to the camera's CGI endpoint.
         """
+        if not endpoint:
+            print("Error: No endpoint provided.")
+            return None
+
         url = self.cgi_base_url + endpoint
         print(f"Executing: {url}")
         try:
@@ -121,28 +109,17 @@ class CameraAPI:
     def download_file(self, remote_path, local_path, timeout=60):
         """
         Downloads a file from the camera.
-
-        Args:
-            remote_path (str): The remote path of the file on the camera.
-            local_path (str): The local path to save the file.
-            timeout (int, optional): The request timeout in seconds. Defaults to 60.
         """
         url = self.file_base_url + remote_path
-        
         print(f"Attempting to download '{remote_path}' from '{url}'")
-
         try:
-            print("Using GET for file...")
             response = requests.get(url, timeout=timeout, stream=True)
-            
             response.raise_for_status()
-
             with open(local_path, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
             print(f"Successfully downloaded file to '{local_path}'")
             return True
-
         except requests.exceptions.RequestException as e:
             print(f"Error downloading file: {e}")
             return False

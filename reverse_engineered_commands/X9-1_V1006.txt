@@ -1,4 +1,5 @@
 # Data gathered on Android 14 with PCAPdroid and LAMAX Hi Cam (com.gku.alex) app version 3.5-build20190329
+# Connected camera is LAMAX X9.1 Action Camera (Hi3559V200), SW Version V1.0.0.6
 
 ## The following is true of all GET requests:
 Hypertext Transfer Protocol
