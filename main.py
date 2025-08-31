@@ -33,49 +33,52 @@ def main():
         print("Error: No camera models found. Exiting.")
         sys.exit(1)
 
-    parser = argparse.ArgumentParser(
-        description="Control an action camera over WiFi using a model-specific plugin system.",
-        formatter_class=argparse.RawTextHelpFormatter
-    )
-    parser.add_argument("--ip", default="192.168.0.1", help="The IP address of the camera.")
-    parser.add_argument(
+    # --- Pre-parser to find the model ---
+    # This parser is created only to find the --model argument.
+    # It has add_help=False so it doesn't conflict with the main parser's help.
+    model_parser = argparse.ArgumentParser(add_help=False)
+    model_parser.add_argument(
         "--model",
         required=True,
         choices=available_models.keys(),
         help="The model of the camera to control."
     )
+    # We use parse_known_args to grab just the --model argument and leave the rest.
+    model_args, _ = model_parser.parse_known_args()
+    selected_model = available_models[model_args.model]
 
-    # This is a bit of a trick to get the model-specific subparsers working.
-    # We parse the known arguments first to see which model was selected.
-    args, remaining_argv = parser.parse_known_args()
+    # --- Main parser ---
+    # Now we build the main parser, using the model_parser as a parent.
+    # This makes the --model argument available in the final parsed args.
+    parser = argparse.ArgumentParser(
+        description="Control an action camera over WiFi using a model-specific plugin system.",
+        parents=[model_parser] # Inherit the --model argument
+    )
+    parser.add_argument("--ip", default="192.168.0.1", help="The IP address of the camera.")
 
-    selected_model = available_models.get(args.model)
-    if not selected_model:
-        print(f"Error: Model '{args.model}' not found.")
-        sys.exit(1)
-
-    # Now, we add the subparsers for the actions of the selected model.
     subparsers = parser.add_subparsers(dest="command", help="The command to execute.", required=True)
 
     action_classes = {}
     for action_class in selected_model.get_actions():
         command_name = action_class.get_name()
-        action_parser = subparsers.add_parser(command_name, help=action_class.get_help())
+        action_parser = subparsers.add_parser(
+            command_name,
+            help=action_class.get_help(),
+            formatter_class=argparse.RawTextHelpFormatter
+        )
         action_class.add_arguments(action_parser)
         action_classes[command_name] = action_class
 
-    # We parse the arguments again, this time with the subparsers.
-    # We use the 'remaining_argv' so that the main parser doesn't complain about the command.
-    final_args = parser.parse_args(remaining_argv)
+    # Parse all arguments with the fully constructed parser.
+    args = parser.parse_args()
 
-    # --- Initialize CameraAPI with the selected model ---
+    # --- Initialize CameraAPI and execute action ---
     camera_api = CameraAPI(camera_ip=args.ip, model=selected_model)
 
-    # --- Instantiate and execute the selected action ---
-    if final_args.command:
-        action_class_to_run = action_classes[final_args.command]
+    if args.command:
+        action_class_to_run = action_classes[args.command]
         action_instance = action_class_to_run(camera_api)
-        action_instance.execute(final_args)
+        action_instance.execute(args)
 
 if __name__ == "__main__":
     main()
