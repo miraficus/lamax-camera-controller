@@ -16,10 +16,14 @@ class LamaxX10_1(CameraModel):
         super().__init__("LAMAX X10.1", "/cgi-bin/hi3510/")
         # TODO: User needs to verify and complete these mappings.
         self.workmode_map = {
-            'photo': '0', 'multi': '1', 'video': '20'
+            'photo': '0', 'timer': '1',
+            'burst': '10', 'photo-timelapse': '11',
+            'video': '20', 'looping': '21', 'video-timelapse': '22', 'slowmotion': '24',
         }
         self.setting_map = {
-            'Resolution': '0'
+            'Resolution': '0', # photo: 12M, 8M, 5M, 3M; video: 4K30, 2.7K30, 1440P60(4:3), 1440P30(4:3), 1080P120, 1080P60, 1080P30, 720P240-30,
+            'Timelapse Interval': '1',
+            'Video Loop Time': '7',
         }
 
     @staticmethod
@@ -64,11 +68,12 @@ class LamaxX10_1(CameraModel):
     def get_time_osd(self): raise NotImplementedError("Unknown command") # Not in notes
     def set_time_osd(self, enable): return f"settimeosd.cgi?&-enable={enable}"
     def get_screen_auto_sleep(self): return "getscreenautosleep.cgi"
-    def set_screen_auto_sleep(self, time): raise NotImplementedError("Unknown command") # Not in notes
+    def set_screen_auto_sleep(self, time): return f"setscreenautosleep.cgi?&-time={time}"
     def get_boot_action(self): return "getbootaction.cgi"
     def set_boot_action(self, action): return f"setbootaction.cgi?&-action={action}"
     def get_audio_encode(self): return "getaudioencode.cgi"
     def set_audio_encode(self, enable): return f"setaudioencode.cgi?&-enable={enable}"
+    def get_screen_brightness(self): return "getscreenbrightness.cgi"
     def reset(self): return "reset.cgi"
 
     # --- Not Implemented Yet ---

@@ -129,3 +129,7 @@ Line-based text data: text/html (1 lines)
 
 # Restart camera
 [Request URI: /cgi-bin/hi3510/reset.cgi?]
+
+getscreenbrightness.cgi?
+
+setscreenautosleep.cgi?&-time={time} # time is not entered as "5" but "5MIN"
