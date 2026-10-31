@@ -30,7 +30,7 @@ public final class MainActivity extends Activity {
     private volatile Network wifi;
     private ConnectivityManager connectivity;
     private boolean connected,legacy,destroyed,receiverRegistered;
-    private String base="http://192.168.0.1",device="",mode="Normal Photo",tab="Galerie",filter="Vše";
+    private String base="http://192.168.0.1",device="",mode="NormalPhoto",tab="Galerie",filter="Vše";
     private TextView status,transfer,selectionText;
     private FrameLayout content;
     private LinearLayout navigation;
@@ -51,7 +51,7 @@ public final class MainActivity extends Activity {
         base=getPreferences(MODE_PRIVATE).getString("base",base);
         legacy=getPreferences(MODE_PRIVATE).getBoolean("legacy",false);
         connectivity=getSystemService(ConnectivityManager.class);
-        modes.addAll(Arrays.asList("Normal Photo","Normal Video","Timing Photo","Burst Photo","Timelapse Photo","TimeLapse Video","Car Looping","Slow Motion"));
+        modes.addAll(Arrays.asList("NormalPhoto","NormalVideo","TimerPhoto","Burst","PhotoLapse","VideoLapse","CarMode","SlowRec"));
         build();
         if(Build.VERSION.SDK_INT>=33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=android.content.pm.PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
@@ -207,7 +207,7 @@ public final class MainActivity extends Activity {
         },result->{@SuppressWarnings("unchecked") List<String> values=(List<String>)result[0];if(!values.isEmpty()){modes.clear();modes.addAll(new LinkedHashSet<>(values));}mode=(String)result[1];if(tab.equals("Kamera"))showTab();});
     }
     private void showCamera(){
-        LinearLayout body=scrollContent();body.addView(text("Ovládání kamery",25,TEXT));body.addView(text("Fotografování je ověřené. Režimy, video, nastavení a živý náhled čekají na test v aplikaci.",14,MUTED));
+        LinearLayout body=scrollContent();body.addView(text("Ovládání kamery",25,TEXT));body.addView(text("Na Androidu 16 ověřeno fotografování a menší náhled. Kamera přijala přepnutí NormalVideo / NormalPhoto. Video a parametry čekají na test.",14,MUTED));
         body.addView(button("Načíst režimy a aktuální stav",this::loadModes));
         Spinner choose=new Spinner(this);List<String> options=legacy?Arrays.asList("Foto · 0","Časovač · 1","Série · 10","Časosběr foto · 11","Video · 20","Smyčka · 21","Časosběr video · 22","Zpomalení · 24"):modes;
         ArrayAdapter<String> modeAdapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,options);choose.setAdapter(modeAdapter);
@@ -220,7 +220,7 @@ public final class MainActivity extends Activity {
         Button photo=button("●  Pořídit fotografii",()->command("Fotografie","photo.cgi?&-type=photo",true));photo.setTextColor(BG);photo.setBackgroundTintList(ColorStateList.valueOf(ACCENT));body.addView(photo);
         body.addView(text("Před focením nastav fotografický režim. Změny režimu lze nyní otestovat tlačítkem výše.",12,MUTED));
         LinearLayout rec=row();rec.addView(button("● Nahrávat",()->command("Start videa","record.cgi?&-cmd=start",false)),new LinearLayout.LayoutParams(0,-2,1));rec.addView(button("■ Zastavit",()->command("Stop videa","record.cgi?&-cmd=stop",false)),new LinearLayout.LayoutParams(0,-2,1));body.addView(rec);
-        body.addView(button("Živý náhled · menší stream",()->preview(false)));body.addView(button("Živý náhled · větší stream",()->preview(true)));
+        body.addView(button("Živý náhled · menší (ověřený)",()->preview(false)));body.addView(button("Živý náhled · větší (test)",()->preview(true)));
         body.addView(text("Parametry z kamery",20,TEXT));
         body.addView(button("Nastavení aktuálního režimu",()->menu(false)));body.addView(button("Systémové nastavení kamery",()->menu(true)));
         body.addView(button("Srovnat datum a čas s telefonem",()->command("Čas","setsystime.cgi?-time="+new java.text.SimpleDateFormat("yyyyMMddHHmmss",Locale.ROOT).format(new Date()),false)));
@@ -269,12 +269,12 @@ public final class MainActivity extends Activity {
         body.addView(text("Pro V1.0.0.4 ponech vypnuté. Nové API načítá názvy režimů a nastavení přímo z kamery.",13,MUTED));
         body.addView(text("Ukládání",20,TEXT));body.addView(text("Fotografie: Pictures/X10Connect\nVidea: Movies/X10Connect\n\nStahování pokračuje na pozadí. Nedokončené soubory se nezveřejní v galerii. Již uložený soubor se stejnou cestou a velikostí se přeskočí.",14,MUTED));
         body.addView(button("Zrušit probíhající stahování",()->{if(DownloadService.running)startService(new Intent(this,DownloadService.class).setAction(DownloadService.CANCEL));else toast("Nic se nestahuje.");}));
-        body.addView(text("X10 Connect 0.1.0",18,TEXT));body.addView(text("Neoficiální klient pro LAMAX X10.1. Android 10+. Bez účtu a cloudu. Wi-Fi kamery nemá internet; to je v pořádku. Při zapnuté Wi-Fi kamera omezuje některá vlastní tlačítka.",13,MUTED));
+        body.addView(text("X10 Connect "+BuildConfig.VERSION_NAME,18,TEXT));body.addView(text("Neoficiální klient pro LAMAX X10.1. Android 10+. Bez účtu a cloudu. Wi-Fi kamery nemá internet; to je v pořádku. Při zapnuté Wi-Fi kamera omezuje některá vlastní tlačítka.",13,MUTED));
     }
     private void showLog(){
         LinearLayout body=scrollContent();body.addView(text("Diagnostika",25,TEXT));
         body.addView(button("Obnovit záznam",this::showTab));body.addView(button("Sdílet záznam",()->{
-            Intent share=new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_SUBJECT,"X10 Connect diagnostika").putExtra(Intent.EXTRA_TEXT,"X10 Connect 0.1.0 · Android "+Build.VERSION.RELEASE+"\n"+AppLog.read(this));startActivity(Intent.createChooser(share,"Sdílet diagnostiku"));
+            Intent share=new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_SUBJECT,"X10 Connect diagnostika").putExtra(Intent.EXTRA_TEXT,"X10 Connect "+BuildConfig.VERSION_NAME+" · Android "+Build.VERSION.RELEASE+"\n"+AppLog.read(this));startActivity(Intent.createChooser(share,"Sdílet diagnostiku"));
         }));
         TextView log=text(AppLog.read(this),12,MUTED);log.setTypeface(Typeface.MONOSPACE);log.setTextIsSelectable(true);body.addView(log);
     }

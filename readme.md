@@ -2,7 +2,7 @@
 
 ## X10 Connect Android preview
 
-The `android` branch includes [X10 Connect](android/README.md), a standalone Android 10+ client with a media gallery, batch downloads, camera controls, experimental modes/settings and RTSP preview. The **Android APK** workflow runs unit tests, lint and produces an installable debug APK. Camera protocol tests are documented separately; the Android implementation still needs testing on a physical phone.
+The `android` branch includes [X10 Connect](android/README.md), a standalone Android 10+ client with a media gallery, batch downloads, camera controls, experimental modes/settings and RTSP preview. The **Android APK** workflow runs unit tests, lint and produces an installable debug APK. The owner has tested connection, file listing, photo capture and the smaller RTSP preview on Android 16 with V1.0.0.4. The larger RTSP preview failed; downloads through Android and other controls still need testing. See the [device test results](docs/device-tests-v1.0.0.4.md).
 
 ## X10.1 APK research and read-only testing
 

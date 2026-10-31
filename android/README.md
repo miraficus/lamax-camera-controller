@@ -4,10 +4,10 @@ Neoficiální, samostatně napsaný klient pro LAMAX X10.1. Používá otevřen�
 
 ## Kompatibilita
 
-- Minimum **Android 10 (API 29)**, cílové API **35 (Android 15)**. Určeno také pro Android 16; skutečné chování na telefonu a kameře je nutné ověřit.
+- Minimum **Android 10 (API 29)**, cílové API **35 (Android 15)**. Majitel otestoval verzi 0.1.0 na Androidu 16 s V1.0.0.4: spojení, seznam médií, fotografování a menší RTSP náhled fungují. Ostatní kombinace telefonu a firmwaru zatím nejsou ověřené.
 - Aplikace nemá přibalené nativní knihovny; není omezena na 32bitový ARM jako původní APK.
 - Původní LAMAX Hi Cam 3.5 má minimum Android 4.4, target Android 8.0 a pouze 32bitové ARM knihovny. Target není maximální podporovaná verze Androidu. Přesná hranice nefunkčnosti původní aplikace není známá a liší se podle zařízení.
-- Android 10 je zvolené minimum kvůli systémovému panelu Wi-Fi a ukládání přes MediaStore bez přístupu k celé galerii. Podporu Androidu 8/9 lze doplnit jiným připojováním a ukládáním; není nutné znát datum, kdy původní aplikace přestala fungovat.
+- Android 10 je zvolené minimum kvůli systémovému panelu Wi-Fi a ukládání přes MediaStore bez přístupu k celé galerii. Podpora Androidu 8/9 se podle rozhodnutí majitele neplánuje.
 - Česká první verze, nativní Android Views, Java 17. Bez frameworku pro webový obsah a bez knihoven pro střih videa.
 
 ## Co je připraveno
@@ -19,7 +19,7 @@ Neoficiální, samostatně napsaný klient pro LAMAX X10.1. Používá otevřen�
 | Nastavení | Adresa kamery, systémový panel Wi-Fi, přepnutí NewAPP/starší API, zrušení stahování |
 | Diagnostika | Místní záznam CGI požadavků a odpovědí, sdílení textu přes systémový dialog |
 
-Protokol pro stav zařízení, seznam souborů, HTTP stažení JPG a pořízení fotografie byl [ověřen na V1.0.0.4 přes Python/curl](../docs/device-tests-v1.0.0.4.md). **Android aplikace je první testovací implementace.** Její síťové směrování, MediaStore, galerie a ovládání čekají na ověření na skutečném telefonu. Video, změny režimu, parametry a RTSP dosud nebyly ověřeny na kameře; jsou zahrnuté podle APK a rozboru jejího programu a lze je testovat přímo v aplikaci.
+Protokol pro stav zařízení, seznam souborů, HTTP stažení JPG a pořízení fotografie byl [ověřen na V1.0.0.4 přes Python/curl](../docs/device-tests-v1.0.0.4.md). **Android aplikace je testovací implementace.** [První test 0.1.0 na Androidu 16](../docs/device-tests-v1.0.0.4.md#test-x10-connect-010-na-androidu-16) potvrdil komunikaci, načtení 79–82 médií, vznik tří nových fotografií a menší RTSP náhled. Kamera přijala změny `NormalVideo` a `NormalPhoto`; nezávislé ověření videorežimu ještě chybí. Větší RTSP náhled v této kombinaci nefungoval a příčina není známá. Ukládání do MediaStore, dávkové stahování, video a parametry čekají na ověření; ovládání zůstává dostupné.
 
 ## První použití
 
@@ -35,7 +35,7 @@ Stahování běží jako foreground service s průběhem a zrušením v oznámen
 
 V kartě Kamera se režimy a parametry NewAPP načítají z `getallworkmode`, `getcurworkmode`, `getprimarymenuitem`, `getsecondmenuitem` a zapisují pomocí `setcurworkmode`/`setcurparameter`. Pro V1.0.0.4 ponechat **Starší číselné API** vypnuté. Pokud některý dotaz selže, diagnostika ukáže přesnou odpověď. Změnové požadavky se automaticky neopakují, aby timeout nezpůsobil dvojí fotografování nebo přepnutí.
 
-RTSP používá vestavěný `VideoView`: `rtsp://<kamera>:554/livestream/12` (menší) nebo `/11` (větší). Během tohoto přehrávání je proces dočasně připojen k Wi-Fi síti; původní vazba se při odchodu obnoví. Podpora konkrétního kodeku závisí na telefonu. Není-li náhled kompatibilní, ostatní HTTP funkce jsou samostatné. Náhled není nezbytný pro stažení souborů.
+RTSP používá vestavěný `VideoView`: `rtsp://<kamera>:554/livestream/12` (menší) nebo `/11` (větší). Během tohoto přehrávání je proces dočasně připojen k Wi-Fi síti; původní vazba se při odchodu obnoví. Menší `/12` majitel potvrdil jako funkční na Androidu 16; větší `/11` nefungoval. Z dodaného logu nelze určit příčinu, protože neobsahuje RTSP chybu. Podpora konkrétního kodeku závisí na telefonu. Není-li náhled kompatibilní, ostatní HTTP funkce jsou samostatné. Náhled není nezbytný pro stažení souborů.
 
 Ve výchozím UI nejsou příkazy na formátování karty, obnovu továrního nastavení, aktualizaci firmwaru nebo změnu Wi-Fi hesla. Systémové menu tyto položky filtruje. Neověřené fotografické a video funkce zůstávají dostupné.
 
@@ -55,6 +55,14 @@ cd android
 ```
 
 Výstup: `app/build/outputs/apk/debug/app-debug.apk`. Jednotkové testy ověřují parser odpovědí, formát záznamů V1.0.0.4, obě podoby dat, velké velikosti videí, cesty médií, URL a chybové odpovědi při HTTP 200. Nejde o testy proti skutečné kameře. K ověření v telefonu slouží sestavené debug APK.
+
+## Změny 0.1.1
+
+- Android 10 zůstává minimem; podpora 8/9 se neplánuje.
+- Výchozí názvy režimů odpovídají skutečné odpovědi V1.0.0.4 (`NormalPhoto`, `NormalVideo`, `TimerPhoto`, `Burst`, `PhotoLapse`, `CarMode`, `VideoLapse`, `SlowRec`). Po připojení se dál načítají přímo z kamery.
+- Menší náhled je označen jako ověřený, větší zůstává dostupný jako test. Přímo v přehrávači lze přepínat mezi oběma streamy bez návratu do aplikace.
+- RTSP diagnostika rozlišuje stream, zapisuje telefon, rozměry videa, formáty stop, přípravu a první snímek, chybové kódy a čekání na přípravu přes 25 sekund. Nejde o potvrzenou opravu většího streamu.
+- Dlouhé odpovědi mají v logu explicitní značku zkrácení; parser dostává celou odpověď.
 
 ## Kontroly prvního sestavení
 

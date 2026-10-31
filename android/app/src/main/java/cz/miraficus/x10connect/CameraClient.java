@@ -29,7 +29,7 @@ public final class CameraClient {
         URL url=new URL(base+relative);
         HttpURLConnection c=(HttpURLConnection)network.openConnection(url, java.net.Proxy.NO_PROXY);
         c.setConnectTimeout(6000); c.setReadTimeout(15000); c.setInstanceFollowRedirects(false);
-        c.setRequestProperty("Accept-Encoding","identity"); c.setRequestProperty("User-Agent","X10Connect/0.1");
+        c.setRequestProperty("Accept-Encoding","identity"); c.setRequestProperty("User-Agent","X10Connect/"+BuildConfig.VERSION_NAME);
         return c;
     }
     public String get(String endpoint) throws Exception {
@@ -38,7 +38,7 @@ public final class CameraClient {
             int status=c.getResponseCode();
             String raw;
             try(InputStream in=status>=400?c.getErrorStream():c.getInputStream()) { raw=new String(readBounded(in,4*1024*1024),StandardCharsets.UTF_8); }
-            AppLog.add(context,"GET "+endpoint+" → HTTP "+status+"\n"+raw.substring(0,Math.min(raw.length(),5000)));
+            AppLog.add(context,"GET "+endpoint+" → HTTP "+status+"\n"+raw.substring(0,Math.min(raw.length(),5000))+(raw.length()>5000?"\n[Záznam zkrácen na 5000 znaků; zpracována byla celá odpověď ("+raw.length()+" znaků).]":""));
             if(status!=200) throw new IOException("HTTP "+status+": "+raw.substring(0,Math.min(raw.length(),180)));
             Protocol.checkResult(raw);
             return raw;
