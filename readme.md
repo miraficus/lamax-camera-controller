@@ -1,5 +1,9 @@
 # **Universal Action Camera WiFi Controller**
 
+## X10 Connect Android preview
+
+Download [X10 Connect 0.2.0 for Android 10+](https://github.com/miraficus/lamax-camera-controller/releases/tag/android-v0.2.0). English/Czech interface, media downloads, photo controls, RTSP preview and experimental TCP/UDP playback. See the [Android project and testing notes](https://github.com/miraficus/lamax-camera-controller/tree/android/android). The app source lives on the `android` branch.
+
 ## X10.1 APK research and read-only testing
 
 The fork includes [analysis of LAMAX Hi Cam 3.5-build20190329](docs/lamax-hi-cam-3.5/README.md) (Czech), an endpoint inventory with source locations, and a standalone Python 3.9+ client in `tools/lamax_readonly.py`.

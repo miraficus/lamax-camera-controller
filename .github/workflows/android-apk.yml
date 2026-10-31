@@ -72,12 +72,16 @@ jobs:
             android/app/build/reports/tests/
             android/app/build/reports/lint-results-debug.html
           if-no-files-found: ignore
-      - name: Publish optional preview
-        if: github.event_name == 'workflow_dispatch' && inputs.publish_preview
+      - name: Publish requested prerelease
+        if: (github.event_name == 'workflow_dispatch' && inputs.publish_preview) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[android-prerelease]'))
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if ! gh release view android-preview >/dev/null 2>&1; then
-            gh release create android-preview --prerelease --target "$(git rev-parse HEAD)" --title 'X10 Connect — Android preview' --notes 'Unofficial test build for LAMAX X10.1. See android/README.md for tested features and installation.'
+          version=$(python3 -c "import re,pathlib; print(re.search(r\"versionName '([^']+)'\", pathlib.Path('android/app/build.gradle').read_text()).group(1))")
+          tag="android-v$version"
+          asset="X10Connect-$version.apk"
+          cp X10Connect-debug.apk "$asset"
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --prerelease --target "$(git rev-parse HEAD)" --title "X10 Connect $version — Android preview" --notes-file android/RELEASE_NOTES.md
           fi
-          gh release upload android-preview X10Connect-debug.apk --clobber
+          gh release upload "$tag" "$asset" --clobber
