@@ -1,0 +1,1188 @@
+[
+  {
+    "template": "getallworkmode.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 187
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "getcurworkmode.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 200
+      },
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 210
+      },
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 231
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "setcurworkmode.cgi?-workmode=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 212
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "setcurparameter.cgi?-workmode=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 229
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "setcurparameter.cgi?-workmode=System&-name=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 247
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "setsystime.cgi?-time=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 255
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "reset.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 257
+      },
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 202
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "sdcommand.cgi?-format&-partition=1",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 259
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "settimerinfo.cgi?&-time=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 266
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "settimelapseinfo.cgi?-time=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 272
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "getcurallinfo.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 279
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "getallinfo.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/net/HttpProxy.java",
+        "line": 279
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "POST /cgi-bin/hi3510/fileupload.cgi HTTP/1.1\\r\\n",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/updateapp/UpgradeManager.java",
+        "line": 192
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "getdeviceattr.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/HomeActivity.java",
+        "line": 898
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "getdeviceattr.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/WelcomeActivity.java",
+        "line": 151
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "/record.cgi?&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record.cgi?&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=photo",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=photoburst",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=phototimelapse&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=phototimelapse&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=phototimer&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=phototimer&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=continuous&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/photo.cgi?&-type=continuous&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=common&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=common&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=loop&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=loop&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=timelapse&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=timelapse&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=recsnap&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=recsnap&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=slow&-cmd=start",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/record2.cgi?&-type=slow&-cmd=stop",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Command.java",
+        "line": 29
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/getfilecount.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/RemoteFileManager.java",
+        "line": 14
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/getfilelistinfoios.cgi?&-start=%d&-end=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/RemoteFileManager.java",
+        "line": 20
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/getfileinfo.cgi?&-name=%s",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/RemoteFileManager.java",
+        "line": 33
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/deletefile.cgi?&-name=%s",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/RemoteFileManager.java",
+        "line": 38
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "http://%s%s/deleteallfiles.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/RemoteFileManager.java",
+        "line": 43
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "http://%s%s/sdcommand.cgi?-format&-partition=1",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/RemoteFileManager.java",
+        "line": 48
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "http://%s%s/upgrade.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/RemoteFileManager.java",
+        "line": 53
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "http://%s%s/getallinfo.cgi??",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 26
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/getvideoinfo.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 31
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setvideoinfo.cgi?&-resolution=%s&-fps=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 36
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getbatterycapacity.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 42
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/getsdstate.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 78
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/getviewfield.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 116
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setviewfield.cgi?&-fov=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 128
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getlooprecord.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 133
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setlooprecord.cgi?&-enable=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 142
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getflip.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 147
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setflip.cgi?&-enable=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 156
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getburstinfo.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 161
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setburstinfo.cgi?&-time=%d&-count=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 192
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/gettimelapseinfo.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 197
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/settimelapseinfo.cgi?&-time=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 202
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/gettimerinfo.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 207
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/settimerinfo.cgi?&-time=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 212
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getrecordtimelapse.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 217
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setrecordtimelapse.cgi?&-time=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 222
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getbootaction.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 227
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setbootaction.cgi?&-action=%s",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 232
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getaudioencode.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 237
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setaudioencode.cgi?&-enable=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 246
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getvideonorm.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 251
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setvideonorm.cgi?&-videonorm=%s",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 263
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getdeviceattr.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 271
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setsystime.cgi?&-time=%04d%02d%02d%02d%02d%02d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 279
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getspotmeter.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 284
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setspotmeter.cgi?&-enable=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 293
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/gettimeosd.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 298
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/settimeosd.cgi?&-enable=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 307
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getledstate.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 317
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setledstate.cgi?&-enable=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 326
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getbuzzer.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 331
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setbuzzer.cgi?&-enable=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 340
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/reset.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 345
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "destructive_or_update"
+  },
+  {
+    "template": "/setwifi.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 349
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "/setwifista.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 367
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/setwifista.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 381
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getautoshutdown.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 386
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setautoshutdown.cgi?&-time=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 391
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getscreenautosleep.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 396
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setscreenautosleep.cgi?&-time=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 401
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getscreenbrightness.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 406
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setscreenbrightness.cgi?&-brightness=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 411
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getpoweronuimode.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 416
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setpoweronuimode.cgi?&-uimode=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 421
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/wifisleep.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 522
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getbitrate.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 576
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setbitrate.cgi?&-bitrate=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 581
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getwifichannel.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 586
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setwifichannel.cgi?&-wifichannel=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 591
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getdevcapabilities.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 596
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/getworkmode.cgi?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 601
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setworkmode.cgi?&-workmode=%d?",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 606
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "http://%s%s/getcapability.cgi?&-workmode=%d&-type=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 611
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/getparameter.cgi?&-workmode=%d&-type=%d",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 617
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "http://%s%s/setparameter.cgi?&-workmode=%d&-type=%d&-value=%s",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/biz/Setting.java",
+        "line": 623
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "getprimarymenuitem.cgi?-workmode=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 40
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "getprimarymenuitem.cgi?-workmode=System",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 101
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "getsecondmenuitem.cgi?-workmode=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 182
+      },
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 271
+      },
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 287
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "record.cgi?-cmd=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 249
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "write_or_unknown"
+  },
+  {
+    "template": "getsecondmenuitem.cgi?-workmode=System&-name=",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 306
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  },
+  {
+    "template": "getwifi.cgi",
+    "evidence": [
+      {
+        "source": "com/hisilicon/dv/ui/data/SetDataUtils.java",
+        "line": 328
+      }
+    ],
+    "verification": "APK only; not tested on user camera",
+    "category": "read_candidate"
+  }
+]

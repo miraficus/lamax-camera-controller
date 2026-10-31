@@ -1,0 +1,52 @@
+{
+  "apk_filename": "LAMAX+Hi+Cam_3.5-build20190329_APKPure.apk",
+  "apk_sha256": "6028a10e3a6f90842bddf0f91635995247e64f2d12d19412a44d3c806230b93c",
+  "package": "com.gku.alex",
+  "versionName": "3.5-build20190329",
+  "versionCode": 68,
+  "minSdkVersion": 19,
+  "targetSdkVersion": 26,
+  "analysis_date": "2026-10-31",
+  "jadx_version": "1.5.6",
+  "jadx_errors": 2,
+  "reference_repository": "https://github.com/mich41v4294/lamax-camera-controller",
+  "reference_commit": "03058350ae996a9083264ca377ee9ad3fa1068ae",
+  "firmware_server_check": "HTTP GET timed out after 15 seconds, 0 bytes; not proof server is permanently offline",
+  "bundled_firmware": [
+    {
+      "name": "uImage",
+      "size": 3507626,
+      "sha256": "45a8ee4134c33326c167c3de0b55b6bef8c834a4d02523402d68088628fb30fb"
+    },
+    {
+      "name": "rootfs.ubifs",
+      "size": 5111808,
+      "sha256": "bdf78944c5e946194ecac2454bc7f0008180b06eb569aac71602b8c06d1188b2"
+    },
+    {
+      "name": "config",
+      "size": 560,
+      "sha256": "4d556a694bcef5f6c2c4dd86821d6ca7baf269a49927842af1f94912b894fff8"
+    },
+    {
+      "name": "rawparambak",
+      "size": 131072,
+      "sha256": "31e3197de8a38aef6bcaf885a1c0879df66900e401e2b14e388f8e8fe5ffae55"
+    },
+    {
+      "name": "rawparam",
+      "size": 131072,
+      "sha256": "31e3197de8a38aef6bcaf885a1c0879df66900e401e2b14e388f8e8fe5ffae55"
+    },
+    {
+      "name": "appfs.ubifs",
+      "size": 10092544,
+      "sha256": "17b418d41ea891d75a12ee4f03142e3c713ec9042671b5bdade745508dc1144a"
+    },
+    {
+      "name": "media_app_zip.bin",
+      "size": 3408947,
+      "sha256": "999b7c43a8f19f0f99b9eec1e353edc6a1f4a3fdfa79f6153f65a1005b798ed8"
+    }
+  ]
+}
