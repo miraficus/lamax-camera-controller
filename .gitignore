@@ -217,3 +217,10 @@ __marimo__/
 # Local camera captures and incomplete downloads
 /camera-data/
 *.part
+
+# Android local builds and SDK configuration
+android/.gradle/
+android/**/build/
+android/local.properties
+*.apk
+*.aab

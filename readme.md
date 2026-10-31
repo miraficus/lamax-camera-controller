@@ -1,5 +1,9 @@
 # **Universal Action Camera WiFi Controller**
 
+## X10 Connect Android preview
+
+The `android` branch includes [X10 Connect](android/README.md), a standalone Android 10+ client with a media gallery, batch downloads, camera controls, experimental modes/settings and RTSP preview. The **Android APK** workflow runs unit tests, lint and produces an installable debug APK. Camera protocol tests are documented separately; the Android implementation still needs testing on a physical phone.
+
 ## X10.1 APK research and read-only testing
 
 The fork includes [analysis of LAMAX Hi Cam 3.5-build20190329](docs/lamax-hi-cam-3.5/README.md) (Czech), an endpoint inventory with source locations, and a standalone Python 3.9+ client in `tools/lamax_readonly.py`.
@@ -15,7 +19,7 @@ python3 tools/lamax_readonly.py list > camera-data/files.json
 python3 -m unittest discover -s tools -p test_lamax_readonly.py -v
 ```
 
-The existing `compatibility_test.py` also changes settings; use the standalone read-only client for the first device checks. The basic file-transfer path is device-validated; Android development and an APK build workflow are the planned next stage.
+The existing `compatibility_test.py` also changes settings; use the standalone read-only client for the first device checks. The basic file-transfer path is device-validated; the Android preview and APK build workflow are available on the `android` branch.
 
 ## Camera firmware V1.0.0.4 findings
 
