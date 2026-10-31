@@ -15,6 +15,16 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures { buildConfig true }
+    signingConfigs {
+        debug {
+            if (System.getenv("X10_DEBUG_KEYSTORE")) {
+                storeFile file(System.getenv("X10_DEBUG_KEYSTORE"))
+                storePassword "android"
+                keyAlias "androiddebugkey"
+                keyPassword "android"
+            }
+        }
+    }
     buildTypes {
         release { minifyEnabled false }
     }
