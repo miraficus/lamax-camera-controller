@@ -71,6 +71,14 @@ Majitel dodal log z 31. 10. 2026, 20:35–20:39. Kamera má stále V1.0.0.4 / Ne
 
 Podklady k interpretaci událostí: [Android MediaPlayer](https://developer.android.com/reference/android/media/MediaPlayer). RTSP DESCRIBE popisuje médium bez spuštění přehrávání: [RFC 2326, DESCRIBE](https://www.rfc-editor.org/rfc/rfc2326.html#section-10.2). Od 0.1.2 lze vyžádat oba popisy přímo tlačítkem v aplikaci; odpověď serveru a SDP pomohou odlišit odmítnutí streamu od problému přehrávače.
 
+## Test DESCRIBE v 0.1.2, 20:51–20:52
+
+Majitel dodal nový konec logu ze Samsung SM-S928B / Android 16. V 20:52:10 přehrávač při prvním video snímku potvrdil rozměry 1024 × 576.
+
+- Stream `/livestream/12`: `RTSP/1.0 200 OK`, `Content-Type: application/sdp`, `Content-Length: 385`, server `Hisilicon RTSP Streaming Media Server/1.0.0`. SDP uvádí `H264/90000`, 15 fps, `profile-level-id=4D001F`, `packetization-mode=1`, `x-dimensions:1024,576`.
+- Stream `/livestream/11`: přímo kamera vrací `RTSP/1.0 400 Bad Request` na DESCRIBE, bez Content-Length. Také následný pokus o přehrání selhal za 116 ms s `1/-2147483648`. Odmítnutí tohoto DESCRIBE požadavku je prokázané; důvod není známý a neprokazuje nefunkčnost streamu ve všech režimech či konfiguracích. Nepodporovaný kodek v telefonu tím nebyl prokázán.
+- Tlačítko diagnostiky skutečně získalo odpovědi obou streamů přímo z kamery. Desetisekundová příprava a buffering malého náhledu zůstávají pozorovanými vlastnostmi této kombinace.
+
 ## Zatím neověřeno
 
 Start/stop videa, ostatní režimy a parametry, příčina selhání většího RTSP streamu, stažení a uložení přes Android MediaStore, hromadné stahování, obnova přerušeného přenosu, chování velmi velkých souborů, více než 100 položek, jiné telefony/verze firmwaru, synchronizace času a aktualizace firmwaru. Tyto výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.

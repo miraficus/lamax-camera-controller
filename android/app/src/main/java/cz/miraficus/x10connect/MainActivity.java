@@ -304,6 +304,11 @@ public final class MainActivity extends Activity {
         body.addView(button("Obnovit záznam",this::showTab));body.addView(button("Sdílet záznam",()->{
             Intent share=new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_SUBJECT,"X10 Connect diagnostika").putExtra(Intent.EXTRA_TEXT,"X10 Connect "+BuildConfig.VERSION_NAME+" · Android "+Build.VERSION.RELEASE+"\n"+AppLog.read(this));startActivity(Intent.createChooser(share,"Sdílet diagnostiku"));
         }));
+        body.addView(button("Smazat záznam",()->{
+            try{AppLog.clear(this);showTab();toast("Záznam smazán. Nové události se zapisují dál.");}
+            catch(java.io.IOException e){error(e);}
+        }));
+        body.addView(text("Smazání odstraní dosavadní historii. Nové události se zapisují dál.",12,MUTED));
         TextView log=text(AppLog.read(this),12,MUTED);log.setTypeface(Typeface.MONOSPACE);log.setTextIsSelectable(true);body.addView(log);
     }
 }

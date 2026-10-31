@@ -18,6 +18,10 @@ public final class AppLog {
             try (FileWriter out = new FileWriter(file,true)) { out.write(line); }
         } catch (IOException ignored) { }
     }
+    public static synchronized void clear(Context context) throws IOException {
+        File file = new File(context.getFilesDir(), "diagnostics.txt");
+        if (file.exists() && !file.delete()) throw new IOException("Záznam se nepodařilo smazat.");
+    }
     public static synchronized String read(Context context) {
         try (FileInputStream in = new FileInputStream(new File(context.getFilesDir(),"diagnostics.txt"))) {
             return new String(CameraClient.readBounded(in,200000), java.nio.charset.StandardCharsets.UTF_8);

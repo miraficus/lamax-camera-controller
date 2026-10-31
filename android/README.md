@@ -56,6 +56,11 @@ cd android
 
 Výstup: `app/build/outputs/apk/debug/app-debug.apk`. Jednotkové testy ověřují parser odpovědí, formát záznamů V1.0.0.4, obě podoby dat, velké velikosti videí, cesty médií, URL a chybové odpovědi při HTTP 200. Nejde o testy proti skutečné kameře. K ověření v telefonu slouží sestavené debug APK.
 
+## Změny 0.1.3
+
+- **Diagnostika → Smazat záznam** odstraní dosavadní historii jedním klepnutím a ihned obnoví zobrazení. Sdílení pak obsahuje jen nově zapsané události. Zápis i smazání sdílí stejný zámek; událost dokončená po smazání se může zapsat do nové historie.
+- Na kameře byla ověřena diagnostika DESCRIBE: `/12` vrací status `RTSP/1.0 200 OK` a SDP s H.264, 1024 × 576, 15 fps. `/11` vrací přímo z kamery `RTSP/1.0 400 Bad Request`. Příčina odmítnutí tohoto požadavku ještě není známá.
+
 ## Změny 0.1.2
 
 - Po spoušti se počet souborů kontroluje po 1,5 / 4,5 / 9 / 16 / 30 sekundách. Seznam se obnoví při změně počtu. Spoušť se nikdy automaticky neopakuje. Kontroly pokračují i po prvním novém souboru kvůli sériím; při další spoušti je nahradí nové sledování. Přijatý příkaz neznamená potvrzený vznik snímku. U samospouště počkat na dokončení před změnou režimu.
