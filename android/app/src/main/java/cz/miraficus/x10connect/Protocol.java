@@ -27,16 +27,16 @@ public final class Protocol {
         if (!"http".equals(uri.getScheme()) || uri.getHost() == null || uri.getUserInfo() != null
                 || uri.getQuery() != null || uri.getFragment() != null
                 || !(uri.getPath().isEmpty() || uri.getPath().equals("/")))
-            throw new IllegalArgumentException("Zadej HTTP adresu kamery, např. 192.168.0.1");
+            throw new IllegalArgumentException("Enter a camera HTTP address, e.g. 192.168.0.1");
         // Only local IPv4 targets. Avoid sending camera commands to remote websites.
         String host = uri.getHost();
-        if (!host.matches("\\d{1,3}(\\.\\d{1,3}){3}")) throw new IllegalArgumentException("Použij místní IPv4 adresu kamery");
+        if (!host.matches("\\d{1,3}(\\.\\d{1,3}){3}")) throw new IllegalArgumentException("Use the camera local IPv4 address");
         String[] parts = host.split("\\.");
         int[] ip = Arrays.stream(parts).mapToInt(Integer::parseInt).toArray();
-        for (int n : ip) if (n > 255) throw new IllegalArgumentException("Neplatná IP adresa");
+        for (int n : ip) if (n > 255) throw new IllegalArgumentException("Invalid IP address");
         boolean local = ip[0] == 10 || ip[0] == 127 || (ip[0] == 192 && ip[1] == 168)
                 || (ip[0] == 172 && ip[1] >= 16 && ip[1] <= 31) || (ip[0] == 169 && ip[1] == 254);
-        if (!local || uri.getPort() == 0 || uri.getPort() > 65535) throw new IllegalArgumentException("Je potřeba místní adresa kamery");
+        if (!local || uri.getPort() == 0 || uri.getPort() > 65535) throw new IllegalArgumentException("A local camera address is required");
         return "http://" + host + (uri.getPort() > 0 ? ":" + uri.getPort() : "");
     }
     public static String encode(String value) {
@@ -47,9 +47,9 @@ public final class Protocol {
         if (!path.startsWith("sd/DCIM/") || path.contains("\\") || path.contains("%")
                 || path.contains("?") || path.contains("#") || path.contains(":")
                 || Arrays.asList(path.split("/", -1)).contains("..") || path.chars().anyMatch(c -> c < 32))
-            throw new IllegalArgumentException("Nepovolená cesta média");
+            throw new IllegalArgumentException("Invalid media path");
         if (!path.toUpperCase(Locale.ROOT).matches(".*\\.(JPG|JPEG|MP4|LRV|THM|DNG)$"))
-            throw new IllegalArgumentException("Nepodporovaný typ média");
+            throw new IllegalArgumentException("Unsupported media type");
         return path;
     }
     public static String encodedPath(String path) {
@@ -61,8 +61,8 @@ public final class Protocol {
     public static void checkResult(String raw) {
         Matcher m = Pattern.compile("SvrFuncResult\\s*=\\s*\"([^\"]*)\"").matcher(raw);
         if (m.find() && !m.group(1).equals("0") && !m.group(1).equalsIgnoreCase("Success"))
-            throw new IllegalStateException("Kamera: " + m.group(1));
-        if (raw.trim().isEmpty()) throw new IllegalStateException("Prázdná odpověď kamery");
+            throw new IllegalStateException("Camera: " + m.group(1));
+        if (raw.trim().isEmpty()) throw new IllegalStateException("Empty camera response");
     }
     public static List<Media> parseFiles(String raw) throws Exception {
         JSONArray array = new JSONArray(raw);
@@ -71,7 +71,7 @@ public final class Protocol {
             JSONObject o = array.getJSONObject(i);
             String path = mediaPath(o.getString("path"));
             long size = Long.parseLong(o.get("size").toString());
-            if (size < 0) throw new IllegalArgumentException("Neplatná velikost souboru");
+            if (size < 0) throw new IllegalArgumentException("Invalid file size");
             result.add(new Media(path, o.optString("create", ""), size, o.optString("time", "0")));
         }
         return result;

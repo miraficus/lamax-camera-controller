@@ -79,6 +79,15 @@ Majitel dodal nový konec logu ze Samsung SM-S928B / Android 16. V 20:52:10 pře
 - Stream `/livestream/11`: přímo kamera vrací `RTSP/1.0 400 Bad Request` na DESCRIBE, bez Content-Length. Také následný pokus o přehrání selhal za 116 ms s `1/-2147483648`. Odmítnutí tohoto DESCRIBE požadavku je prokázané; důvod není známý a neprokazuje nefunkčnost streamu ve všech režimech či konfiguracích. Nepodporovaný kodek v telefonu tím nebyl prokázán.
 - Tlačítko diagnostiky skutečně získalo odpovědi obou streamů přímo z kamery. Desetisekundová příprava a buffering malého náhledu zůstávají pozorovanými vlastnostmi této kombinace.
 
+## Test 0.1.3: 121 souborů a další fotografie
+
+Majitel dodal log 31. 10. 2026, 21:01–21:02, Android 16 / SM-S928B / V1.0.0.4.
+
+- `getfilecount` hlásí 121. Dotazy `start=1,end=100` a `start=101,end=121` uspěly a klient zaznamenal 121 hlavních médií. Tím je poprvé potvrzené stránkování nad 100 položek na skutečné kameře.
+- V seznamu jsou dvě desetisnímkové skupiny `B0010088.JPG` až `B0010097.JPG` a `B0020098.JPG` až `B0020107.JPG`, dále devět souborů `L0030108.JPG` až `L0030116.JPG`, `LPSE0117.MP4` a `SLOW0118.MP4`. Tyto soubory existují; dodaný výpis sám neobsahuje všechny příkazy potřebné k přiřazení skupin konkrétním stiskům aplikace, proto není označen celý režimový protokol jako ověřený.
+- Malý stream opět vykreslil 1024 × 576 po přibližně 10,5 s a vykazoval buffering. DESCRIBE 12 vrací stejné H.264 / 15 fps SDP, DESCRIBE 11 opět 400. Automaticky zkoušet jiné adresy zatím kamera netestovala; 0.2.0 doplňuje tlačítko pro čtení popisů 10–19 a volitelné přehrávání přes Media3 TCP/UDP.
+- `getprimarymenuitem` pro `NormalPhoto` uspělo: položky `Resolution,Lens angle,Exposure,ISO,White balance,DNG,Time stamp,Scene mode` a aktuální hodnoty `12M,Medium,AUTO,AUTO,AUTO,JPEG,Off,Auto`. Načtení primárního menu je potvrzené; načtení dalších voleb a zápis jednotlivých parametrů tím potvrzené nejsou.
+
 ## Zatím neověřeno
 
-Start/stop videa, ostatní režimy a parametry, příčina selhání většího RTSP streamu, stažení a uložení přes Android MediaStore, hromadné stahování, obnova přerušeného přenosu, chování velmi velkých souborů, více než 100 položek, jiné telefony/verze firmwaru, synchronizace času a aktualizace firmwaru. Tyto výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.
+Start/stop videa, ostatní režimy a parametry, příčina selhání většího RTSP streamu, stažení a uložení přes Android MediaStore, hromadné stahování, obnova přerušeného přenosu, chování velmi velkých souborů, jiné telefony/verze firmwaru, synchronizace času a aktualizace firmwaru. Tyto výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.

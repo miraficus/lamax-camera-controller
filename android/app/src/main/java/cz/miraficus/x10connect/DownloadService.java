@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Foreground queue; pending MediaStore items are removed on cancellation or failure. */
-public final class DownloadService extends Service {
+public final class DownloadService extends LocalizedService {
     public static final String EVENT="cz.miraficus.x10connect.DOWNLOAD";
     public static final String CANCEL="cancel";
     public static volatile boolean running;
@@ -22,7 +22,7 @@ public final class DownloadService extends Service {
     private long lastUpdate;
     @Override public void onCreate() {
         super.onCreate(); manager=getSystemService(NotificationManager.class);
-        manager.createNotificationChannel(new NotificationChannel("downloads","Stahování z kamery",NotificationManager.IMPORTANCE_LOW));
+        manager.createNotificationChannel(new NotificationChannel("downloads",getString(R.string.ui_camera_downloads),NotificationManager.IMPORTANCE_LOW));
         String orphan=getSharedPreferences("transfer",MODE_PRIVATE).getString("pending",null);
         if(orphan!=null) {
             try(Cursor row=getContentResolver().query(Uri.parse(orphan),new String[]{MediaStore.MediaColumns.IS_PENDING},null,null,null)){
@@ -38,7 +38,7 @@ public final class DownloadService extends Service {
         return new Notification.Builder(this,"downloads").setSmallIcon(R.drawable.ic_camera)
                 .setContentTitle("X10 Connect").setContentText(text).setContentIntent(open)
                 .setOngoing(true).setOnlyAlertOnce(true).setProgress(100,Math.max(0,percent),percent<0)
-                .addAction(new Notification.Action.Builder(null,"Zrušit",stop).build()).build();
+                .addAction(new Notification.Action.Builder(null,getString(R.string.ui_cancel),stop).build()).build();
     }
     private void update(String text,int percent,boolean finished) {
         sendBroadcast(new Intent(EVENT).setPackage(getPackageName()).putExtra("text",text).putExtra("percent",percent).putExtra("finished",finished));
@@ -51,7 +51,7 @@ public final class DownloadService extends Service {
         if(CANCEL.equals(intent.getAction())) { cancelled.set(true); if(!running)stopSelf(); return START_NOT_STICKY; }
         if(running)return START_NOT_STICKY;
         running=true;cancelled.set(false);
-        startForeground(ID,notification("Připravuji stahování…",-1));
+        startForeground(ID,notification(getString(R.string.ui_preparing_download),-1));
         String base=intent.getStringExtra("base"), json=intent.getStringExtra("files");
         Network network=intent.getParcelableExtra("network");
         new Thread(()->runQueue(base,json,network),"camera-download").start();
@@ -76,11 +76,11 @@ public final class DownloadService extends Service {
                     values.put(MediaStore.MediaColumns.IS_PENDING,1);
                     Uri collection=media.video()?MediaStore.Video.Media.EXTERNAL_CONTENT_URI:MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                     target=getContentResolver().insert(collection,values);
-                    if(target==null)throw new IOException("Nelze vytvořit soubor v telefonu");
+                    if(target==null)throw new IOException(getString(R.string.ui_cannot_create_a_file_on_the_phone));
                     getSharedPreferences("transfer",MODE_PRIVATE).edit().putString("pending",target.toString()).apply();
                     update(index+"/"+list.size()+"  "+media.name(),0,false);
                     try(OutputStream out=getContentResolver().openOutputStream(target,"w")) {
-                        if(out==null)throw new IOException("Nelze otevřít cílový soubor");
+                        if(out==null)throw new IOException(getString(R.string.ui_cannot_open_the_destination_file));
                         camera.transfer(media,out,cancelled,(bytes,total)->{
                             long now=SystemClock.elapsedRealtime();
                             if(now-lastUpdate>400) {
@@ -95,16 +95,16 @@ public final class DownloadService extends Service {
                     getSharedPreferences("saved",MODE_PRIVATE).edit().putString(key,target.toString()).apply();
                     target=null;saved++;
                 } catch(Exception e) {
-                    failed++;AppLog.add(this,"Stažení "+media.name()+": "+e);
-                    update("Chyba: "+media.name()+" · "+e.getMessage(),-1,false);
+                    failed++;AppLog.add(this,getString(R.string.ui_download_95)+media.name()+": "+e);
+                    update(getString(R.string.ui_error_prefix)+media.name()+" · "+e.getMessage(),-1,false);
                 } finally {
                     if(target!=null)try{getContentResolver().delete(target,null,null);}catch(Exception ignored){}
                     getSharedPreferences("transfer",MODE_PRIVATE).edit().remove("pending").apply();
                 }
             }
-            String result=(cancelled.get()?"Zrušeno. ":"Hotovo. ")+"Uloženo "+saved+", přeskočeno "+skipped+", chyby "+failed+".";
+            String result=(cancelled.get()?getString(R.string.ui_cancelled):getString(R.string.ui_done))+getString(R.string.ui_saved)+saved+getString(R.string.ui_skipped)+skipped+getString(R.string.ui_errors)+failed+".";
             AppLog.add(this,result);update(result,100,true);
-        } catch(Exception e) {AppLog.add(this,"Fronta: "+e);update("Stahování selhalo: "+e.getMessage(),-1,true);}
+        } catch(Exception e) {AppLog.add(this,"Queue: "+e);update(getString(R.string.ui_download_failed)+e.getMessage(),-1,true);}
         finally {running=false;stopForeground(STOP_FOREGROUND_REMOVE);stopSelf();}
     }
     private boolean readable(Uri uri,long size) {

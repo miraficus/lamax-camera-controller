@@ -20,11 +20,11 @@ public final class AppLog {
     }
     public static synchronized void clear(Context context) throws IOException {
         File file = new File(context.getFilesDir(), "diagnostics.txt");
-        if (file.exists() && !file.delete()) throw new IOException("Záznam se nepodařilo smazat.");
+        if (file.exists() && !file.delete()) throw new IOException(context.getString(R.string.ui_could_not_clear_the_log));
     }
     public static synchronized String read(Context context) {
         try (FileInputStream in = new FileInputStream(new File(context.getFilesDir(),"diagnostics.txt"))) {
             return new String(CameraClient.readBounded(in,200000), java.nio.charset.StandardCharsets.UTF_8);
-        } catch(IOException e) { return "Zatím žádné požadavky."; }
+        } catch(IOException e) { return context.getString(R.string.ui_no_requests_yet); }
     }
 }

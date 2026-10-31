@@ -20,7 +20,7 @@ public class RtspResponseTest {
         assertEquals("RTSP/1.0 404 Not Found",r.status);assertEquals("",r.body);
     }
     @Test public void reportsMissingLength() throws Exception {
-        assertTrue(read("RTSP/1.0 200 OK\r\nCSeq: 1\r\n\r\n").diagnostic().contains("Bez Content-Length"));
+        assertTrue(read("RTSP/1.0 200 OK\r\nCSeq: 1\r\n\r\n").diagnostic().contains("No Content-Length"));
     }
     @Test public void rejectsTruncatedBody() throws Exception {
         try { read("RTSP/1.0 200 OK\r\nContent-Length: 5\r\n\r\na");fail(); }catch(EOFException expected){}

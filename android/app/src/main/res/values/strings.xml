@@ -1,0 +1,146 @@
+<resources>
+    <string name="gallery" formatted="false">"Gallery"</string>
+    <string name="camera" formatted="false">"Camera"</string>
+    <string name="settings" formatted="false">"Settings"</string>
+    <string name="diagnostics" formatted="false">"Diagnostics"</string>
+    <string name="all" formatted="false">"All"</string>
+    <string name="photos" formatted="false">"Photos"</string>
+    <string name="videos" formatted="false">"Videos"</string>
+    <string name="system_language" formatted="false">"Follow system"</string>
+    <string name="ui_photos_pictures_x10connect_videos_movies_x10conn" formatted="false">"Photos → Pictures/X10Connect · videos → Movies/X10Connect"</string>
+    <string name="ui_error" formatted="false">"Error · "</string>
+    <string name="ui_connect_to_the_camera_wi_fi" formatted="false">"Connect to the camera Wi-Fi"</string>
+    <string name="ui_disconnected" formatted="false">"disconnected"</string>
+    <string name="ui_connected" formatted="false">"connected"</string>
+    <string name="ui_connecting" formatted="false">"Connecting…"</string>
+    <string name="ui_the_camera_did_not_return_its_identity" formatted="false">"The camera did not return its identity"</string>
+    <string name="ui_loading_files" formatted="false">"Loading files…"</string>
+    <string name="ui_connect" formatted="false">"Connect"</string>
+    <string name="ui_download_selected" formatted="false">"Download selected"</string>
+    <string name="ui_refresh" formatted="false">"Refresh"</string>
+    <string name="ui_files_selected" formatted="false">" files · selected "</string>
+    <string name="ui_select_all" formatted="false">"Select all"</string>
+    <string name="ui_cancel" formatted="false">"Cancel"</string>
+    <string name="ui_no_media_on_the_card_try_refreshing_the_list" formatted="false">"No media on the card.\nTry refreshing the list."</string>
+    <string name="ui_your_camera_without_the_cloud_1_enable_wi_fi_on_" formatted="false">"Your camera, without the cloud.\n\n1. Enable Wi-Fi on the camera.\n2. Use the Wi-Fi button to connect your phone.\n3. Tap Connect.\n\nA connection without internet is expected."</string>
+    <string name="ui_photo" formatted="false">"PHOTO · "</string>
+    <string name="ui_download" formatted="false">"Download"</string>
+    <string name="ui_close" formatted="false">"Close"</string>
+    <string name="ui_open_saved_file" formatted="false">"Open saved file"</string>
+    <string name="ui_select_files_using_the_checkboxes" formatted="false">"Select files using the checkboxes."</string>
+    <string name="ui_a_download_is_already_running_see_the_notificati" formatted="false">"A download is already running. See the notification for progress."</string>
+    <string name="ui_connect_to_the_camera_wi_fi_22" formatted="false">"Connect to the camera Wi-Fi."</string>
+    <string name="ui_select_fewer_files_at_a_time" formatted="false">"Select fewer files at a time."</string>
+    <string name="ui_download_started" formatted="false">"Download started…"</string>
+    <string name="ui_initial_file_count_unavailable" formatted="false">"Initial file count unavailable: "</string>
+    <string name="ui_unexpected_response" formatted="false">"Unexpected response: "</string>
+    <string name="ui_request_accepted_waiting_for_files" formatted="false">"Request accepted · waiting for files…"</string>
+    <string name="ui_after_shutter_initial_count" formatted="false">"After shutter: initial count="</string>
+    <string name="ui_after_30_s" formatted="false">", after 30 s="</string>
+    <string name="ui_a_count_change_alone_cannot_identify_the_origina" formatted="false">"; a count change alone cannot identify the originating request."</string>
+    <string name="ui_new_file_not_confirmed_yet_try_refresh" formatted="false">"New file not confirmed yet · try Refresh"</string>
+    <string name="ui_the_camera_accepted_the_shutter_request_but_its_" formatted="false">"The camera accepted the shutter request, but its file count has not increased."</string>
+    <string name="ui_camera_controls" formatted="false">"Camera controls"</string>
+    <string name="ui_photo_capture_and_the_small_preview_were_tested_" formatted="false">"Photo capture and the small preview were tested on Android 16. NormalVideo / NormalPhoto requests were accepted. Recording and settings still need testing."</string>
+    <string name="ui_load_modes_and_current_status" formatted="false">"Load modes and current status"</string>
+    <string name="ui_photo_0" formatted="false">"Photo · 0"</string>
+    <string name="ui_timer_1" formatted="false">"Timer · 1"</string>
+    <string name="ui_burst_10" formatted="false">"Burst · 10"</string>
+    <string name="ui_photo_lapse_11" formatted="false">"Photo lapse · 11"</string>
+    <string name="ui_loop_21" formatted="false">"Loop · 21"</string>
+    <string name="ui_video_lapse_22" formatted="false">"Video lapse · 22"</string>
+    <string name="ui_slow_motion_24" formatted="false">"Slow motion · 24"</string>
+    <string name="ui_apply_selected_mode" formatted="false">"Apply selected mode"</string>
+    <string name="ui_mode" formatted="false">"Mode: "</string>
+    <string name="ui_take_photo" formatted="false">"●  Take photo"</string>
+    <string name="ui_select_a_photo_mode_before_shooting_let_the_time" formatted="false">"Select a photo mode before shooting. Let the timer finish before changing mode. New files are checked for up to 30 seconds."</string>
+    <string name="ui_photo_47" formatted="false">"Photo"</string>
+    <string name="ui_record" formatted="false">"● Record"</string>
+    <string name="ui_stop" formatted="false">"■ Stop"</string>
+    <string name="ui_start_recording" formatted="false">"Start recording"</string>
+    <string name="ui_stop_recording" formatted="false">"Stop recording"</string>
+    <string name="ui_live_preview_small_tested" formatted="false">"Live preview · small (tested)"</string>
+    <string name="ui_live_preview_large_experimental" formatted="false">"Live preview · large (experimental)"</string>
+    <string name="ui_camera_settings" formatted="false">"Camera settings"</string>
+    <string name="ui_current_mode_settings" formatted="false">"Current mode settings"</string>
+    <string name="ui_camera_system_settings" formatted="false">"Camera system settings"</string>
+    <string name="ui_sync_date_and_time_with_phone" formatted="false">"Sync date and time with phone"</string>
+    <string name="ui_time" formatted="false">"Time"</string>
+    <string name="ui_additional_recording_commands_experimental" formatted="false">"Additional recording commands · experimental"</string>
+    <string name="ui_the_camera_did_not_return_a_settings_list" formatted="false">"The camera did not return a settings list."</string>
+    <string name="ui_camera_system_experimental" formatted="false">"Camera system · experimental"</string>
+    <string name="ui_mode_62" formatted="false">"Mode · "</string>
+    <string name="ui_the_camera_did_not_return_options" formatted="false">"The camera did not return options: "</string>
+    <string name="ui_experimental" formatted="false">" · experimental"</string>
+    <string name="ui_numeric_mode_0_photo_20_video" formatted="false">"Numeric mode (0 photo, 20 video)"</string>
+    <string name="ui_load_resolutions" formatted="false">"Load resolutions"</string>
+    <string name="ui_invalid_mode" formatted="false">"Invalid mode"</string>
+    <string name="ui_the_camera_did_not_return_any_options" formatted="false">"The camera did not return any options."</string>
+    <string name="ui_resolution_experimental" formatted="false">"Resolution · experimental"</string>
+    <string name="ui_resolution" formatted="false">"Resolution"</string>
+    <string name="ui_connection" formatted="false">"Connection"</string>
+    <string name="ui_camera_address" formatted="false">"Camera address"</string>
+    <string name="ui_save_address" formatted="false">"Save address"</string>
+    <string name="ui_address_saved" formatted="false">"Address saved"</string>
+    <string name="ui_choose_wi_fi_network" formatted="false">"Choose Wi-Fi network"</string>
+    <string name="ui_connect_and_load_card" formatted="false">"Connect and load card"</string>
+    <string name="ui_use_legacy_numeric_api_instead_of_newapp" formatted="false">"Use legacy numeric API instead of NewAPP"</string>
+    <string name="ui_leave_this_off_for_v1_0_0_4_newapp_loads_mode_an" formatted="false">"Leave this off for V1.0.0.4. NewAPP loads mode and setting names from the camera."</string>
+    <string name="ui_storage" formatted="false">"Storage"</string>
+    <string name="ui_photos_pictures_x10connect_videos_movies_x10conn_80" formatted="false">"Photos: Pictures/X10Connect\nVideos: Movies/X10Connect\n\nDownloads continue in the background. Incomplete files stay hidden from the gallery. Existing saved files with the same path and size are skipped."</string>
+    <string name="ui_cancel_current_download" formatted="false">"Cancel current download"</string>
+    <string name="ui_no_download_is_running" formatted="false">"No download is running."</string>
+    <string name="ui_unofficial_lamax_x10_1_client_android_10_no_acco" formatted="false">"Unofficial LAMAX X10.1 client. Android 10+. No account or cloud. The camera Wi-Fi has no internet. Some camera buttons are disabled while Wi-Fi is on."</string>
+    <string name="ui_refresh_log" formatted="false">"Refresh log"</string>
+    <string name="ui_share_log" formatted="false">"Share log"</string>
+    <string name="ui_share_diagnostics" formatted="false">"Share diagnostics"</string>
+    <string name="ui_x10_connect_diagnostics" formatted="false">"X10 Connect diagnostics"</string>
+    <string name="ui_clear_log" formatted="false">"Clear log"</string>
+    <string name="ui_log_cleared_new_events_will_still_be_recorded" formatted="false">"Log cleared. New events will still be recorded."</string>
+    <string name="ui_clearing_removes_existing_history_new_events_wil" formatted="false">"Clearing removes existing history. New events will still be recorded."</string>
+    <string name="ui_camera_downloads" formatted="false">"Camera downloads"</string>
+    <string name="ui_preparing_download" formatted="false">"Preparing download…"</string>
+    <string name="ui_cannot_create_a_file_on_the_phone" formatted="false">"Cannot create a file on the phone"</string>
+    <string name="ui_cannot_open_the_destination_file" formatted="false">"Cannot open the destination file"</string>
+    <string name="ui_download_95" formatted="false">"Download "</string>
+    <string name="ui_cancelled" formatted="false">"Cancelled. "</string>
+    <string name="ui_done" formatted="false">"Done. "</string>
+    <string name="ui_saved" formatted="false">"Saved "</string>
+    <string name="ui_skipped" formatted="false">", skipped "</string>
+    <string name="ui_errors" formatted="false">", errors "</string>
+    <string name="ui_download_failed" formatted="false">"Download failed: "</string>
+    <string name="ui_connect_your_phone_to_the_camera_wi_fi_and_tap_c" formatted="false">"Connect your phone to the camera Wi-Fi and tap Connect."</string>
+    <string name="ui_preview_unavailable" formatted="false">"Preview unavailable"</string>
+    <string name="ui_invalid_file_count" formatted="false">"Invalid file count: "</string>
+    <string name="ui_the_camera_returned_an_empty_page_refresh_the_li" formatted="false">"The camera returned an empty page. Refresh the list."</string>
+    <string name="ui_files_camera_reports" formatted="false">"Files: camera reports "</string>
+    <string name="ui_main_media_files" formatted="false">", main media files "</string>
+    <string name="ui_download_http" formatted="false">"Download: HTTP "</string>
+    <string name="ui_download_cancelled" formatted="false">"Download cancelled"</string>
+    <string name="ui_size_mismatch" formatted="false">"Size mismatch: "</string>
+    <string name="ui_downloaded" formatted="false">"Downloaded "</string>
+    <string name="ui_could_not_clear_the_log" formatted="false">"Could not clear the log."</string>
+    <string name="ui_no_requests_yet" formatted="false">"No requests yet."</string>
+    <string name="ui_connect_your_phone_to_the_camera_wi_fi" formatted="false">"Connect your phone to the camera Wi-Fi."</string>
+    <string name="ui_back_to_app" formatted="false">"Back to app"</string>
+    <string name="ui_original_player_tested" formatted="false">"Original player · tested"</string>
+    <string name="ui_media3_tcp_experimental" formatted="false">"Media3 TCP · experimental"</string>
+    <string name="ui_media3_udp_automatic_experimental" formatted="false">"Media3 UDP / automatic · experimental"</string>
+    <string name="ui_small_12" formatted="false">"Small · 12"</string>
+    <string name="ui_large_11" formatted="false">"Large · 11"</string>
+    <string name="ui_play_number" formatted="false">"Play number"</string>
+    <string name="ui_describe_streams_12_and_11" formatted="false">"Describe streams 12 and 11"</string>
+    <string name="ui_scan_streams_1019" formatted="false">"Scan streams 10–19"</string>
+    <string name="ui_stop_scan" formatted="false">"Stop scan"</string>
+    <string name="ui_to_try_reducing_stalls_select_media3_tcp_and_tap" formatted="false">"To try reducing stalls, select Media3 TCP and tap Play number. Stream 12 advertises 15 fps. Scanning only reads descriptions and may take up to 40 seconds."</string>
+    <string name="ui_wait_for_stream_diagnostics_to_finish" formatted="false">"Wait for stream diagnostics to finish."</string>
+    <string name="ui_connecting_to_stream" formatted="false">"Connecting to stream "</string>
+    <string name="ui_preview_was_not_ready_within_25_seconds_try_anot" formatted="false">"Preview was not ready within 25 seconds. Try another player or the small stream."</string>
+    <string name="ui_cannot_play_preview" formatted="false">"Cannot play preview: "</string>
+    <string name="ui_preview_stopped_scanning_available_streams" formatted="false">"Preview stopped. Scanning available streams…"</string>
+    <string name="ui_describing_stream" formatted="false">"Describing stream "</string>
+    <string name="ui_no_video_stream_confirmed" formatted="false">"No video stream confirmed."</string>
+    <string name="ui_available_streams" formatted="false">"Available streams: "</string>
+    <string name="ui_details_are_in_diagnostics_enter_a_stream_number" formatted="false">"Details are in Diagnostics. Enter a stream number to play it."</string>
+    <string name="ui_error_prefix">"Error: "</string>
+</resources>

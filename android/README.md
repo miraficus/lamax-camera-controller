@@ -8,7 +8,7 @@ Neoficiální, samostatně napsaný klient pro LAMAX X10.1. Používá otevřen�
 - Aplikace nemá přibalené nativní knihovny; není omezena na 32bitový ARM jako původní APK.
 - Původní LAMAX Hi Cam 3.5 má minimum Android 4.4, target Android 8.0 a pouze 32bitové ARM knihovny. Target není maximální podporovaná verze Androidu. Přesná hranice nefunkčnosti původní aplikace není známá a liší se podle zařízení.
 - Android 10 je zvolené minimum kvůli systémovému panelu Wi-Fi a ukládání přes MediaStore bez přístupu k celé galerii. Podpora Androidu 8/9 se podle rozhodnutí majitele neplánuje.
-- Česká první verze, nativní Android Views, Java 17. Bez frameworku pro webový obsah a bez knihoven pro střih videa.
+- České a anglické rozhraní, nativní Android Views, Java 17. Bez frameworku pro webový obsah a bez knihoven pro střih videa.
 
 ## Co je připraveno
 
@@ -86,6 +86,18 @@ Dne 31. 10. 2026 prošlo `testDebugUnitTest` (12 testů), `lintDebug` (bez chyb,
 
 Workflow **Android APK** sestaví větev `android` automaticky při změnách projektu. Obsahuje unit testy, lint a sestavení debug APK. Ruční spuštění používá také větev `android`; workflow musí být zaregistrované na výchozí větvi, aby GitHub zobrazil tlačítko **Run workflow**.
 
-Výsledek je artifact **X10Connect-debug-apk**. Volba **publish_preview** při ručním spuštění dovolí přiložit APK také do veřejného prerelease `android-preview`, odkud jej lze stáhnout bez přihlášení ke GitHubu. První instalace vyžaduje povolit instalaci aplikace z použitého prohlížeče/správce souborů.
+Výsledek je artifact **X10Connect-debug-apk**. Volba **publish_preview** při ručním spuštění dovolí přiložit APK také do veřejného verzovaného prerelease `android-v<version>`, odkud jej lze stáhnout bez přihlášení ke GitHubu. První instalace vyžaduje povolit instalaci aplikace z použitého prohlížeče/správce souborů.
 
 Od 0.1.1 CI používá explicitní cestu podpisového klíče (`X10_DEBUG_KEYSTORE`) a uchovává jej v Actions cache. Původní workflow 0.1.0 mělo chybnou cestu cache, takže jeho klíč nebyl uložen a při přechodu z 0.1.0 je jednou nutné aplikaci odinstalovat. Tím se smažou nastavení a diagnostika aplikace, uložená média v systémové galerii zůstávají. Pokud cache zanikne, může být potřeba před instalací dalšího sestavení odinstalovat původní preview. Lokální a CI debug podpisy jsou různé. Pro stabilní veřejné vydání se později nastaví vlastní chráněný release klíč; aktuální preview není podepsané distribučním klíčem.
+
+## 0.2.0 — English, Czech, stream discovery and transport options
+
+English resources are the default; `values-cs` contains matching Czech strings. Settings offers system / Czech / English. System Czech or Slovak selects Czech; all other languages select English. Protocol exceptions and low-level RTSP diagnostics use stable English text. Firmware menu/mode names are preserved exactly as sent by the camera. Changing language rebuilds the current activity and the connection can be loaded again.
+
+The preview retains the tested native player as its default. Select **Media3 TCP** or **Media3 UDP / automatic**, then **Play number** to try the new player. Media3 1.9.3 is pinned for compatibility with compile SDK 35; no native decoder libraries are bundled. The new player uses a 3–10 second target buffer, starting at 500 ms and rebuffering at 1.5 seconds. These are application buffering settings, not a guarantee of end-to-end delay or increased frame rate. The camera advertises 15 fps on stream 12. TCP may reduce packet-loss-related stalls; device testing is still required. The original player is available for comparison.
+
+**Scan streams 10–19** stops playback and sequentially reads RTSP DESCRIBE responses. It reports IDs with HTTP-like RTSP 200 and a video SDP entry. A successful description does not prove playback works or that quality is higher. IDs 0–999 can also be entered manually for playback. The scan is cancellable and does not send SETUP/PLAY, record or modify camera settings. This is a bounded test of nearby addresses, not a scan of the network.
+
+Official reference: https://developer.android.com/media/media3/exoplayer/rtsp
+
+Publishing: a push commit explicitly marked `[android-prerelease]`, or the existing manual `publish_preview` input, publishes a versioned prerelease `android-v<version>` with an APK asset. Ordinary pushes continue to produce Actions artifacts only. Run manual publishing from the **android** branch to reuse that branch's signing-key cache. The release notes are in `android/RELEASE_NOTES.md`.
