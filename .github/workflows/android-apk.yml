@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      X10_DEBUG_KEYSTORE: ${{ runner.temp }}/x10-signing/debug.keystore
+      X10_DEBUG_KEYSTORE: /tmp/x10-signing/debug.keystore
     permissions:
       contents: write
     steps:
