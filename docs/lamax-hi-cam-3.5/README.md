@@ -1,5 +1,7 @@
 # LAMAX X10.1 – rozbor LAMAX Hi Cam a první testovací klient
 
+> Aktualizace: základní přenos fotek a dálkové fotografování byly následně ověřeny na V1.0.0.4. Viz [výsledky testů na zařízení](../device-tests-v1.0.0.4.md). Níže uvedená omezení popisují stav při původní statické analýze.
+
 Datum: 31. 10. 2026. Podklad: uživatelem dodané APK, screenshoty HTTP serveru kamery a veřejný referenční projekt. APK nebylo instalováno ani spuštěno. Kamera nebyla při analýze dostupná.
 
 ## Hlavní výsledek

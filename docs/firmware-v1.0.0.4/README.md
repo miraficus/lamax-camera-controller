@@ -1,5 +1,7 @@
 # LAMAX X10.1 V1.0.0.4 – soubory stažené z kamery
 
+> Aktualizace: základní přenos fotek a dálkové fotografování byly následně ověřeny na V1.0.0.4. Viz [výsledky testů na zařízení](../device-tests-v1.0.0.4.md). Níže uvedená omezení popisují stav při původní statické analýze.
+
 Analýza 31. 10. 2026 navazuje na [rozbor APK](../lamax-hi-cam-3.5/README.md). Podkladem je uživatelem dodaný `Lamax.zip`, fotografie menu s verzí V1.0.0.4 a screenshoty adresářů HTTP serveru. Programy kamery nebyly spuštěny, emulovány ani modifikovány. Žádný požadavek na kameru nebyl při tomto rozboru odeslán.
 
 ## Co jsme získali

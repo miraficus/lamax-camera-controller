@@ -4,7 +4,7 @@
 
 The fork includes [analysis of LAMAX Hi Cam 3.5-build20190329](docs/lamax-hi-cam-3.5/README.md) (Czech), an endpoint inventory with source locations, and a standalone Python 3.9+ client in `tools/lamax_readonly.py`.
 
-This client only queries device status, lists media, and downloads an explicitly selected media file. Its six local HTTP simulator tests pass; it has **not yet been tested with the owner's camera**. The discovered APK command inventory is not a list of confirmed X10.1 capabilities.
+This client only queries device status, lists media, and downloads an explicitly selected media file. Its six local HTTP simulator tests pass. Device status, a 78-entry file list, and individual JPG downloads have now been verified on the owner's X10.1 V1.0.0.4; remote photo capture was separately verified with `curl`. See [device test results](docs/device-tests-v1.0.0.4.md) for evidence and limitations. The discovered APK command inventory is not a list of confirmed X10.1 capabilities.
 
 Connect to the camera Wi-Fi, then run from the repository root:
 
@@ -15,7 +15,7 @@ python3 tools/lamax_readonly.py list > camera-data/files.json
 python3 -m unittest discover -s tools -p test_lamax_readonly.py -v
 ```
 
-The existing `compatibility_test.py` also changes settings; use the standalone read-only client for the first device checks. Android development and an APK build workflow are planned after device validation.
+The existing `compatibility_test.py` also changes settings; use the standalone read-only client for the first device checks. The basic file-transfer path is device-validated; Android development and an APK build workflow are the planned next stage.
 
 ## Camera firmware V1.0.0.4 findings
 
