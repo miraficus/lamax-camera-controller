@@ -17,6 +17,10 @@ python3 -m unittest discover -s tools -p test_lamax_readonly.py -v
 
 The existing `compatibility_test.py` also changes settings; use the standalone read-only client for the first device checks. Android development and an APK build workflow are planned after device validation.
 
+## Camera firmware V1.0.0.4 findings
+
+[Static analysis of files downloaded from the X10.1](docs/firmware-v1.0.0.4/README.md) confirms that `main_app` retains symbols and debug information. Compiled CGI tables map file listing, metadata, photo and record endpoints to named handlers. The X2 archive bundled with the APK uses a different loader and C library; it is not a verified replacement firmware. The report includes comparison hashes and an offline ELF inspection tool. Camera binaries and device-specific data are not committed.
+
 ## **Overview**
 
 This project provides a Python-based command-line interface (CLI) to control action cameras over their WiFi hotspots. The control protocols were determined by reverse-engineering the HTTP GET requests sent by the official mobile applications.

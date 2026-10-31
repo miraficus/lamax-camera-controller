@@ -1,0 +1,254 @@
+[
+  {
+    "camera_path": "CZ.lang",
+    "camera_bytes": 7874,
+    "camera_sha256": "514b0969ab06ac6a4d2123eac5ce4a86e5ae3e7e2869a33f9dc2ab2f33231cef",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "DE.lang",
+    "camera_bytes": 8032,
+    "camera_sha256": "7521b940c4c42eb25937ab0da6e99e43f4eae2bd345a97245b10fe710f58deaa",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "HU.lang",
+    "camera_bytes": 7961,
+    "camera_sha256": "93e3a0383406c68e2463b1c42f215b4f82c8c1591b5ad67b23358cd2a77b4951",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "LT.lang",
+    "camera_bytes": 7943,
+    "camera_sha256": "04c27e0ec0e6161b714ea58b78961e4bf40549cc8c9c1d31d63aa59ce15aabe2",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "PL.lang",
+    "camera_bytes": 7653,
+    "camera_sha256": "2bcc011102e64c7a1d9f5b48078f7d0bc0c7a8c4653cb6d083e831dfc74951ed",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "SE.lang",
+    "camera_bytes": 7636,
+    "camera_sha256": "669fe6ecc4b90546f4f5b90c5f47ef12e408f7bb928bad5ee91cc866707219e2",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "SK.lang",
+    "camera_bytes": 7916,
+    "camera_sha256": "6cde507c6ad84f3943c9825dfa60efd6eb507d46c79f5a0b7cb61309b53f7a70",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "de (1).lang",
+    "camera_bytes": 7348,
+    "camera_sha256": "fc2b62163ea3fb13317ec169db3d1fb5bcb4a42930bcad1102c9b91088270177",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "en.lang",
+    "camera_bytes": 8092,
+    "camera_sha256": "9b07d89676d8608fecebe33562c87dc1492d568e99bfd65b44a05f3aba53d3f7",
+    "x2_path": "en.lang",
+    "x2_bytes": 4287,
+    "x2_sha256": "3f173aa50dad20d766ef8c83eaa695b54651d5cc831639f15fbf1bde6fa43a3a",
+    "identical": false
+  },
+  {
+    "camera_path": "entropy.bin",
+    "camera_bytes": 21,
+    "camera_sha256": "389c60d335d852c0babec74738eba99edbcf1047cc871d7252082c0060198857",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "es (1).lang",
+    "camera_bytes": 7482,
+    "camera_sha256": "34b7fbd3ad0bc4b9442cf716174e86c6642eb42ae2b96eae06d02176834e31dc",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "es.lang",
+    "camera_bytes": 7482,
+    "camera_sha256": "34b7fbd3ad0bc4b9442cf716174e86c6642eb42ae2b96eae06d02176834e31dc",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "fr.lang",
+    "camera_bytes": 7592,
+    "camera_sha256": "f0f29e9d5e18d8a1d986b6de26778ee02d6477d4865e5dbe99b4898272865e80",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "higv.bin",
+    "camera_bytes": 118298,
+    "camera_sha256": "3049b864c577153d09b019c3065acced9455c332dab8529dff6d719ae004e4d3",
+    "x2_path": "higv.bin",
+    "x2_bytes": 86921,
+    "x2_sha256": "d79b59fe50d2c029ab0fb14560196dcdf93f7f8c3dc6d2a32552fa1ed8110556",
+    "identical": false
+  },
+  {
+    "camera_path": "hostapd",
+    "camera_bytes": 482548,
+    "camera_sha256": "0c0be004351cbf4bf5212f2490207aeb958dd238ade9454d12d734307efd0f9e",
+    "x2_path": "hostapd",
+    "x2_bytes": 230324,
+    "x2_sha256": "a7b842e50e0f287ba78dc679ac04bbf6b206db0e1a18a358eb8d328b6f1709a3",
+    "identical": false
+  },
+  {
+    "camera_path": "it.lang",
+    "camera_bytes": 7467,
+    "camera_sha256": "c0daa88977a6dff4cc56b8f8c16e3e168271353a1355a80ea886a525da6a8e6d",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "ja.lang",
+    "camera_bytes": 8354,
+    "camera_sha256": "0c1d22875575f805b4a0dbaa7ce34898654063f574c1d03fdcf4dab38a299f51",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "main_app",
+    "camera_bytes": 7501872,
+    "camera_sha256": "1afb96452aafb23999598abfd3d3d875c8373ab455f0ca49f65b82f547ff5f6e",
+    "x2_path": "main_app",
+    "x2_bytes": 3311224,
+    "x2_sha256": "c7e2dc71c45c7569d0785e42602c2a603d98567741e9d4464667079b0d98858f",
+    "identical": false
+  },
+  {
+    "camera_path": "res/font/PF14.ubf",
+    "camera_bytes": 2428,
+    "camera_sha256": "97f37416eb7da53e9e6e4ef8eb57fc4ad8af7bbc09db05d1a823804764f98b18",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "res/font/PF16.ubf",
+    "camera_bytes": 1247886,
+    "camera_sha256": "e6321d69daecc4ee4cb8d4ae00e877bdc18d94089fa4eff590895a1ef604ad5f",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "res/font/vector.ttf",
+    "camera_bytes": 32980,
+    "camera_sha256": "0d3c1055eb5c2a5f16a5f274957daae533a9b02637b0e7352246129d63810f6c",
+    "x2_path": "res/font/vector.ttf",
+    "x2_bytes": 211284,
+    "x2_sha256": "d1126556a88618a3b805f0c31d56e53106ac29893b01ec1b66e8916800b9827b",
+    "identical": false
+  },
+  {
+    "camera_path": "res/sound/captone.pcm",
+    "camera_bytes": 40348,
+    "camera_sha256": "39349f1da6fd16c96c111a99c1e68f19135410450905bc0bb1ee06552c457db2",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "res/sound/keytone.pcm",
+    "camera_bytes": 4458,
+    "camera_sha256": "3ed49f5406786d6cda2f6e2ed7b193fe35025acb162381b4ccb08cf6c6d712c8",
+    "x2_path": "res/sound/keytone.pcm",
+    "x2_bytes": 4458,
+    "x2_sha256": "3ed49f5406786d6cda2f6e2ed7b193fe35025acb162381b4ccb08cf6c6d712c8",
+    "identical": true
+  },
+  {
+    "camera_path": "res/sound/offtone.pcm",
+    "camera_bytes": 52226,
+    "camera_sha256": "70fe1d282e3fcb51c41251fc35bad1bdd23a79e342225e6e1474de5ed170f68c",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "ru.lang",
+    "camera_bytes": 11177,
+    "camera_sha256": "c4b5faad1cb575aad374d491d4ac8ccca39b8c32658f29123ad59c47523dadf3",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "ua.lang",
+    "camera_bytes": 10814,
+    "camera_sha256": "e088581cbd894bc34f0e34e715d323d3da4c3d2c26505937a6f1103b480e90a9",
+    "x2_path": null,
+    "x2_bytes": null,
+    "x2_sha256": null,
+    "identical": null
+  },
+  {
+    "camera_path": "zh.lang",
+    "camera_bytes": 7961,
+    "camera_sha256": "290e6d53c3d61653e2645c9385ddd972009b8e77d8ec333f526fb02ee027e1ca",
+    "x2_path": "zh.lang",
+    "x2_bytes": 4243,
+    "x2_sha256": "21269d76b5a9622131d44409d30f8be81f25bd5848b83fd1046af13fe0e98de8",
+    "identical": false
+  },
+  {
+    "camera_path": "zh_HK.lang",
+    "camera_bytes": 2800,
+    "camera_sha256": "7d152e96656e5a81f9d1de618952f7301808093a6e22e08e1f3245689a5c6524",
+    "x2_path": "zh_HK.lang",
+    "x2_bytes": 4234,
+    "x2_sha256": "5db2583d35d3ebf5998a1fb3925c89669ed8cefff702dca317764a6d7968e119",
+    "identical": false
+  }
+]

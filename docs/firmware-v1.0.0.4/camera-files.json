@@ -1,0 +1,142 @@
+[
+  {
+    "path": "CZ.lang",
+    "size": 7874,
+    "sha256": "514b0969ab06ac6a4d2123eac5ce4a86e5ae3e7e2869a33f9dc2ab2f33231cef"
+  },
+  {
+    "path": "DE.lang",
+    "size": 8032,
+    "sha256": "7521b940c4c42eb25937ab0da6e99e43f4eae2bd345a97245b10fe710f58deaa"
+  },
+  {
+    "path": "HU.lang",
+    "size": 7961,
+    "sha256": "93e3a0383406c68e2463b1c42f215b4f82c8c1591b5ad67b23358cd2a77b4951"
+  },
+  {
+    "path": "LT.lang",
+    "size": 7943,
+    "sha256": "04c27e0ec0e6161b714ea58b78961e4bf40549cc8c9c1d31d63aa59ce15aabe2"
+  },
+  {
+    "path": "PL.lang",
+    "size": 7653,
+    "sha256": "2bcc011102e64c7a1d9f5b48078f7d0bc0c7a8c4653cb6d083e831dfc74951ed"
+  },
+  {
+    "path": "SE.lang",
+    "size": 7636,
+    "sha256": "669fe6ecc4b90546f4f5b90c5f47ef12e408f7bb928bad5ee91cc866707219e2"
+  },
+  {
+    "path": "SK.lang",
+    "size": 7916,
+    "sha256": "6cde507c6ad84f3943c9825dfa60efd6eb507d46c79f5a0b7cb61309b53f7a70"
+  },
+  {
+    "path": "de (1).lang",
+    "size": 7348,
+    "sha256": "fc2b62163ea3fb13317ec169db3d1fb5bcb4a42930bcad1102c9b91088270177"
+  },
+  {
+    "path": "en.lang",
+    "size": 8092,
+    "sha256": "9b07d89676d8608fecebe33562c87dc1492d568e99bfd65b44a05f3aba53d3f7"
+  },
+  {
+    "path": "entropy.bin",
+    "size": 21,
+    "sha256": "389c60d335d852c0babec74738eba99edbcf1047cc871d7252082c0060198857"
+  },
+  {
+    "path": "es (1).lang",
+    "size": 7482,
+    "sha256": "34b7fbd3ad0bc4b9442cf716174e86c6642eb42ae2b96eae06d02176834e31dc"
+  },
+  {
+    "path": "es.lang",
+    "size": 7482,
+    "sha256": "34b7fbd3ad0bc4b9442cf716174e86c6642eb42ae2b96eae06d02176834e31dc"
+  },
+  {
+    "path": "fr.lang",
+    "size": 7592,
+    "sha256": "f0f29e9d5e18d8a1d986b6de26778ee02d6477d4865e5dbe99b4898272865e80"
+  },
+  {
+    "path": "higv.bin",
+    "size": 118298,
+    "sha256": "3049b864c577153d09b019c3065acced9455c332dab8529dff6d719ae004e4d3"
+  },
+  {
+    "path": "hostapd",
+    "size": 482548,
+    "sha256": "0c0be004351cbf4bf5212f2490207aeb958dd238ade9454d12d734307efd0f9e"
+  },
+  {
+    "path": "it.lang",
+    "size": 7467,
+    "sha256": "c0daa88977a6dff4cc56b8f8c16e3e168271353a1355a80ea886a525da6a8e6d"
+  },
+  {
+    "path": "ja.lang",
+    "size": 8354,
+    "sha256": "0c1d22875575f805b4a0dbaa7ce34898654063f574c1d03fdcf4dab38a299f51"
+  },
+  {
+    "path": "main_app",
+    "size": 7501872,
+    "sha256": "1afb96452aafb23999598abfd3d3d875c8373ab455f0ca49f65b82f547ff5f6e"
+  },
+  {
+    "path": "res/font/PF14.ubf",
+    "size": 2428,
+    "sha256": "97f37416eb7da53e9e6e4ef8eb57fc4ad8af7bbc09db05d1a823804764f98b18"
+  },
+  {
+    "path": "res/font/PF16.ubf",
+    "size": 1247886,
+    "sha256": "e6321d69daecc4ee4cb8d4ae00e877bdc18d94089fa4eff590895a1ef604ad5f"
+  },
+  {
+    "path": "res/font/vector.ttf",
+    "size": 32980,
+    "sha256": "0d3c1055eb5c2a5f16a5f274957daae533a9b02637b0e7352246129d63810f6c"
+  },
+  {
+    "path": "res/sound/captone.pcm",
+    "size": 40348,
+    "sha256": "39349f1da6fd16c96c111a99c1e68f19135410450905bc0bb1ee06552c457db2"
+  },
+  {
+    "path": "res/sound/keytone.pcm",
+    "size": 4458,
+    "sha256": "3ed49f5406786d6cda2f6e2ed7b193fe35025acb162381b4ccb08cf6c6d712c8"
+  },
+  {
+    "path": "res/sound/offtone.pcm",
+    "size": 52226,
+    "sha256": "70fe1d282e3fcb51c41251fc35bad1bdd23a79e342225e6e1474de5ed170f68c"
+  },
+  {
+    "path": "ru.lang",
+    "size": 11177,
+    "sha256": "c4b5faad1cb575aad374d491d4ac8ccca39b8c32658f29123ad59c47523dadf3"
+  },
+  {
+    "path": "ua.lang",
+    "size": 10814,
+    "sha256": "e088581cbd894bc34f0e34e715d323d3da4c3d2c26505937a6f1103b480e90a9"
+  },
+  {
+    "path": "zh.lang",
+    "size": 7961,
+    "sha256": "290e6d53c3d61653e2645c9385ddd972009b8e77d8ec333f526fb02ee027e1ca"
+  },
+  {
+    "path": "zh_HK.lang",
+    "size": 2800,
+    "sha256": "7d152e96656e5a81f9d1de618952f7301808093a6e22e08e1f3245689a5c6524"
+  }
+]

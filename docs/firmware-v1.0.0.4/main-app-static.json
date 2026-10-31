@@ -1,0 +1,192 @@
+{
+  "filename": "main_app",
+  "bytes": 7501872,
+  "sha256": "1afb96452aafb23999598abfd3d3d875c8373ab455f0ca49f65b82f547ff5f6e",
+  "elf_class": 32,
+  "little_endian": true,
+  "machine": "EM_ARM",
+  "interpreter": "/lib/ld-uClibc.so.0",
+  "needed": [
+    "libpthread.so.0",
+    "libm.so.0",
+    "librt.so.0",
+    "libstdc++.so.6",
+    "libdl.so.0",
+    "libgcc_s.so.1",
+    "libc.so.0",
+    "ld-uClibc.so.0"
+  ],
+  "has_symtab": true,
+  "has_debug_info": true,
+  "cgi_tables": [
+    {
+      "name": "s_stDefaultCGI",
+      "address": "0x37a448",
+      "capacity": 14,
+      "populated": 14,
+      "entries": [
+        {
+          "endpoint": "getdeviceattr.cgi",
+          "internal_command": "getdeviceattr&-act=get&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_SYS_DevAttr",
+          "handler_address": "0x107a68",
+          "entry_address": "0x37a448"
+        },
+        {
+          "endpoint": "getsdstate.cgi",
+          "internal_command": "getsdstate&-act=get&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_SYS_GetSDStatus",
+          "handler_address": "0x107f48",
+          "entry_address": "0x37a4b0"
+        },
+        {
+          "endpoint": "getsystime.cgi",
+          "internal_command": "getsystime&-act=get&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_SYS_SysTimeCfg",
+          "handler_address": "0x1089d8",
+          "entry_address": "0x37a518"
+        },
+        {
+          "endpoint": "setsystime.cgi",
+          "internal_command": "setsystime&-act=set&",
+          "operation_tag": "set",
+          "handler": "Hisnet_CMD_SYS_SysTimeCfg",
+          "handler_address": "0x1089d8",
+          "entry_address": "0x37a580"
+        },
+        {
+          "endpoint": "reset.cgi",
+          "internal_command": "reset&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_SYS_Reset",
+          "handler_address": "0x109044",
+          "entry_address": "0x37a5e8"
+        },
+        {
+          "endpoint": "sdcommand.cgi",
+          "internal_command": "sdcommand&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_SYS_SDCommand",
+          "handler_address": "0x108350",
+          "entry_address": "0x37a650"
+        },
+        {
+          "endpoint": "getbatterycapacity.cgi",
+          "internal_command": "getbatterycapacity&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_SYS_GetBatteryStatus",
+          "handler_address": "0x109288",
+          "entry_address": "0x37a6b8"
+        },
+        {
+          "endpoint": "setwifi.cgi",
+          "internal_command": "wifiattr&-act=set&",
+          "operation_tag": "set",
+          "handler": "Hisnet_CMD_SYS_WifiAttrCfg",
+          "handler_address": "0x109500",
+          "entry_address": "0x37a720"
+        },
+        {
+          "endpoint": "getwifi.cgi",
+          "internal_command": "wifiattr&-act=get&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_SYS_WifiAttrCfg",
+          "handler_address": "0x109500",
+          "entry_address": "0x37a788"
+        },
+        {
+          "endpoint": "getfilecount.cgi",
+          "internal_command": "getfilecount&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_FILE_GetFileNum",
+          "handler_address": "0x106bf0",
+          "entry_address": "0x37a7f0"
+        },
+        {
+          "endpoint": "getfilelist.cgi",
+          "internal_command": "getfilelist&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_FILE_GetFileList",
+          "handler_address": "0x106e58",
+          "entry_address": "0x37a858"
+        },
+        {
+          "endpoint": "getfileinfo.cgi",
+          "internal_command": "getfileinfo&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_FILE_GetFileInfo",
+          "handler_address": "0x107288",
+          "entry_address": "0x37a8c0"
+        },
+        {
+          "endpoint": "deletefile.cgi",
+          "internal_command": "deletefile&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_FILE_DeleteFile",
+          "handler_address": "0x107524",
+          "entry_address": "0x37a928"
+        },
+        {
+          "endpoint": "deleteallfiles.cgi",
+          "internal_command": "deleteallfiles&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_FILE_DeleteAllFiles",
+          "handler_address": "0x107798",
+          "entry_address": "0x37a990"
+        }
+      ]
+    },
+    {
+      "name": "s_stGkuCGI",
+      "address": "0x37c23c",
+      "capacity": 60,
+      "populated": 5,
+      "entries": [
+        {
+          "endpoint": "record.cgi",
+          "internal_command": "record&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_MEDIA_Record",
+          "handler_address": "0x2a0ed8",
+          "entry_address": "0x37c23c"
+        },
+        {
+          "endpoint": "photo.cgi",
+          "internal_command": "photo&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_MEDIA_Photo",
+          "handler_address": "0x2a12d4",
+          "entry_address": "0x37c2a4"
+        },
+        {
+          "endpoint": "getfilelistinfoios.cgi",
+          "internal_command": "getfilelistinfoios&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_Fileinfog",
+          "handler_address": "0x2a16d8",
+          "entry_address": "0x37c30c"
+        },
+        {
+          "endpoint": "getfilelistinfo.cgi",
+          "internal_command": "getfilelistinfo&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_Fileinfog",
+          "handler_address": "0x2a16d8",
+          "entry_address": "0x37c374"
+        },
+        {
+          "endpoint": "getcurallinfo.cgi",
+          "internal_command": "getcurallinfo&",
+          "operation_tag": "get",
+          "handler": "Hisnet_CMD_CURAllinfog",
+          "handler_address": "0x2a0c2c",
+          "entry_address": "0x37c3dc"
+        }
+      ]
+    }
+  ],
+  "evidence_level": "static inspection only; no execution or live API test"
+}

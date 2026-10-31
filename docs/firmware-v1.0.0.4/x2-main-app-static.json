@@ -1,0 +1,24 @@
+{
+  "filename": "main_app",
+  "bytes": 3311224,
+  "sha256": "c7e2dc71c45c7569d0785e42602c2a603d98567741e9d4464667079b0d98858f",
+  "elf_class": 32,
+  "little_endian": true,
+  "machine": "EM_ARM",
+  "interpreter": "/lib/ld-linux.so.3",
+  "needed": [
+    "libffmpeg_demuxer.so",
+    "libpthread.so.0",
+    "libm.so.6",
+    "librt.so.1",
+    "libstdc++.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux.so.3"
+  ],
+  "has_symtab": false,
+  "has_debug_info": false,
+  "cgi_tables": [],
+  "evidence_level": "static inspection only; no execution or live API test"
+}
