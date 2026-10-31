@@ -28,6 +28,8 @@ public final class MainActivity extends Activity {
         @Override protected int sizeOf(String key,Bitmap value){return value.getByteCount();}
     };
     private volatile Network wifi;
+    private volatile boolean thumbnailsPaused;
+    private int photoWatch;
     private ConnectivityManager connectivity;
     private boolean connected,legacy,destroyed,receiverRegistered;
     private String base="http://192.168.0.1",device="",mode="NormalPhoto",tab="Galerie",filter="Vše";
@@ -57,13 +59,14 @@ public final class MainActivity extends Activity {
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
     }
     @Override public void onStart(){
-        super.onStart();wifi=CameraClient.wifi(this);updateStatus();
+        super.onStart();thumbnailsPaused=false;wifi=CameraClient.wifi(this);updateStatus();
         NetworkRequest request=new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build();
         connectivity.registerNetworkCallback(request,networkCallback);
         IntentFilter f=new IntentFilter(DownloadService.EVENT);
         if(Build.VERSION.SDK_INT>=33)registerReceiver(progressReceiver,f,Context.RECEIVER_NOT_EXPORTED);else registerLegacyProgressReceiver(f);
         receiverRegistered=true;
+        if(adapter!=null)adapter.notifyDataSetChanged();
         transfer.setText(getSharedPreferences("transfer",MODE_PRIVATE).getString("status","Fotky → Pictures/X10Connect · videa → Movies/X10Connect"));
     }
     // API 29–32 only: the signature permission restricts senders to this app.
@@ -73,7 +76,7 @@ public final class MainActivity extends Activity {
         registerReceiver(progressReceiver,filter,getPackageName()+".permission.DOWNLOAD",null);
     }
     @Override public void onStop(){
-        super.onStop();connectivity.unregisterNetworkCallback(networkCallback);
+        super.onStop();thumbnailsPaused=true;connectivity.unregisterNetworkCallback(networkCallback);
         if(receiverRegistered){unregisterReceiver(progressReceiver);receiverRegistered=false;}
     }
     @Override public void onDestroy(){destroyed=true;ui.removeCallbacksAndMessages(null);commands.shutdownNow();thumbnails.shutdownNow();super.onDestroy();}
@@ -162,9 +165,10 @@ public final class MainActivity extends Activity {
             TextView info=text((item.video()?"VIDEO · ":"FOTO · ")+item.sizeText(),11,MUTED);card.addView(info);image.setOnClickListener(v->mediaActions(item));card.setOnLongClickListener(v->{choose.setChecked(!choose.isChecked());return true;});
             String key=base+"|"+item.path;image.setTag(key);Bitmap cached=cache.get(key);
             if(cached!=null)image.setImageBitmap(cached);
-            else if(!DownloadService.running && fetching.add(key)){
+            else if(!thumbnailsPaused && !DownloadService.running && fetching.add(key)){
                 CameraClient camera=client();
                 thumbnails.execute(()->{Bitmap bitmap=null;try{
+                    if(thumbnailsPaused || DownloadService.running)return;
                     byte[] data;try{data=camera.image(item.thumbnail());}catch(Exception e){if(item.video())throw e;data=camera.image(item.path);}
                     BitmapFactory.Options bounds=new BitmapFactory.Options();bounds.inJustDecodeBounds=true;BitmapFactory.decodeByteArray(data,0,data.length,bounds);
                     BitmapFactory.Options opts=new BitmapFactory.Options();opts.inSampleSize=1;
@@ -195,7 +199,31 @@ public final class MainActivity extends Activity {
         }catch(Exception e){error(e);}
     }
     private void command(String label,String endpoint,boolean photo){
-        async(()->{String raw=client().get(endpoint);if(!raw.contains("Success") && !raw.contains("SUCCESS") && !raw.contains("SvrFuncResult=\"0\""))throw new IllegalStateException("Neočekávaná odpověď: "+raw);return raw;},raw->{toast(label+": "+raw.trim());if(photo)ui.postDelayed(this::refresh,1500);});
+        async(()->{
+            CameraClient c=client(); int before=-1;
+            if(photo)try{before=Integer.parseInt(Protocol.vars(c.get("getfilecount.cgi?")).get("count"));}catch(Exception e){AppLog.add(this,"Výchozí počet pro spoušť není známý: "+e);}
+            String raw=c.get(endpoint);
+            if(!raw.contains("Success") && !raw.contains("SUCCESS") && !raw.contains("SvrFuncResult=\"0\""))throw new IllegalStateException("Neočekávaná odpověď: "+raw);
+            return new String[]{raw,Integer.toString(before)};
+        },result->{toast(label+": "+result[0].trim());if(photo)watchPhotos(Integer.parseInt(result[1]));});
+    }
+    private void watchPhotos(int before){
+        final int generation=++photoWatch;
+        final String origin=base;
+        final int[] lastCount={before};
+        status.setText("Požadavek přijat · čekám na soubory…");
+        // Read-only checks, never resend the shutter. Continue after the first change for burst shots.
+        for(int delay:new int[]{1500,4500,9000,16000,30000})ui.postDelayed(()->{
+            if(destroyed || generation!=photoWatch || !connected || !base.equals(origin) || DownloadService.running)return;
+            async(()->Integer.parseInt(Protocol.vars(client().get("getfilecount.cgi?")).get("count")),count->{
+                if(generation!=photoWatch || !base.equals(origin))return;
+                if(count!=lastCount[0]){lastCount[0]=count;refresh();}
+                if(delay==30000){
+                    AppLog.add(this,"Po spoušti: počet před="+before+", po 30 s="+count+"; změna počtu sama nerozlišuje jednotlivé požadavky.");
+                    if(before>=0 && count<=before){status.setText("Nový soubor zatím nepotvrzen · zkus Obnovit");toast("Kamera přijala spoušť, ale počet souborů se nezvýšil.");}
+                }
+            });
+        },delay);
     }
     private void loadModes(){
         if(legacy)return;
@@ -218,7 +246,7 @@ public final class MainActivity extends Activity {
             async(()->{String raw=client().get(endpoint);if(!raw.contains("Success") && !raw.contains("SUCCESS"))throw new IllegalStateException(raw);return selectedMode;},m->{mode=m;toast("Režim: "+m);});
         }));
         Button photo=button("●  Pořídit fotografii",()->command("Fotografie","photo.cgi?&-type=photo",true));photo.setTextColor(BG);photo.setBackgroundTintList(ColorStateList.valueOf(ACCENT));body.addView(photo);
-        body.addView(text("Před focením nastav fotografický režim. Změny režimu lze nyní otestovat tlačítkem výše.",12,MUTED));
+        body.addView(text("Před focením nastav fotografický režim. U samospouště počkej na dokončení před změnou režimu. Nové soubory kontrolujeme až 30 s.",12,MUTED));
         LinearLayout rec=row();rec.addView(button("● Nahrávat",()->command("Start videa","record.cgi?&-cmd=start",false)),new LinearLayout.LayoutParams(0,-2,1));rec.addView(button("■ Zastavit",()->command("Stop videa","record.cgi?&-cmd=stop",false)),new LinearLayout.LayoutParams(0,-2,1));body.addView(rec);
         body.addView(button("Živý náhled · menší (ověřený)",()->preview(false)));body.addView(button("Živý náhled · větší (test)",()->preview(true)));
         body.addView(text("Parametry z kamery",20,TEXT));

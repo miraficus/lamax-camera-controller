@@ -56,6 +56,15 @@ cd android
 
 Výstup: `app/build/outputs/apk/debug/app-debug.apk`. Jednotkové testy ověřují parser odpovědí, formát záznamů V1.0.0.4, obě podoby dat, velké velikosti videí, cesty médií, URL a chybové odpovědi při HTTP 200. Nejde o testy proti skutečné kameře. K ověření v telefonu slouží sestavené debug APK.
 
+## Změny 0.1.2
+
+- Po spoušti se počet souborů kontroluje po 1,5 / 4,5 / 9 / 16 / 30 sekundách. Seznam se obnoví při změně počtu. Spoušť se nikdy automaticky neopakuje. Kontroly pokračují i po prvním novém souboru kvůli sériím; při další spoušti je nahradí nové sledování. Přijatý příkaz neznamená potvrzený vznik snímku. U samospouště počkat na dokončení před změnou režimu.
+- Načítání dalších miniatur se pozastaví, když aktivita není v popředí (včetně živého náhledu), a při stahování. Již probíhající požadavek může doběhnout. Jde o omezení souběžného provozu, ne o prokázanou příčinu RTSP chyby.
+- Údaj `0x0` při přípravě se nezobrazuje jako skutečné rozlišení. Rozměry se znovu načtou při prvním video snímku.
+- V přehrávači je tlačítko **Zjistit parametry obou streamů**. Zastaví náhled a pošle pouze `DESCRIBE` na streamy 12 a 11. Neposílá `SETUP` ani `PLAY`. Výsledek (RTSP status, hlavičky a SDP, pokud ho kamera vrátí) je v diagnostice; následně lze znovu zapnout náhled.
+- Čtení RTSP odpovědí má limity 16 KiB hlaviček / 64 KiB těla, timeouty a uzavření socketu při odchodu. Protokolový parser ověřují simulované odpovědi v JVM testech. Kamera tuto novou diagnostiku ještě netestovala.
+- Na Samsung SM-S928B s Androidem 16 je z 0.1.1 zaznamenaná příprava malého streamu kolem 10,3 s a jeho občasný buffering. Velký stream selhal po 63 ms s obecnou chybou `1/-2147483648`. Samotný kód neurčuje příčinu.
+
 ## Změny 0.1.1
 
 - Android 10 zůstává minimem; podpora 8/9 se neplánuje.

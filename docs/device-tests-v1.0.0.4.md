@@ -51,6 +51,26 @@ Dlouhé JSON odpovědi jsou v diagnostice 0.1.0 omezené na prvních 5000 znaků
 
 Čas kamery se liší od času logu: např. požadavek v 20:17:20 vytvořil soubor s `create=2026/10/31 21:25:03`. Příčina posunu ani příkaz synchronizace času zatím ověřené nejsou. Klient tato data zachovává, nic automaticky nepřepisuje.
 
+## Test X10 Connect 0.1.1 na Samsung SM-S928B, Android 16
+
+Majitel dodal log z 31. 10. 2026, 20:35–20:39. Kamera má stále V1.0.0.4 / NewAPP. Tento test identifikuje telefon přímo v RTSP diagnostice.
+
+| Funkce | Výsledek a rozsah důkazu |
+| --- | --- |
+| Dostupnost kamery | V 20:35:45 selhal TCP connect na port 80, ale v 20:36:51 již HTTP dotazy fungovaly. První chyba sama neprokazuje trvalou chybu klienta ani její příčinu. |
+| Seznam médií | 85, 86 a 87 položek; hlášené počty souhlasí s počtem načtených médií. Zkrácení diagnostiky je nyní výslovně označené. |
+| Aktuální režim | `getcurworkmode.cgi` na začátku hlásí `NormalVideo`. |
+| Menší RTSP 12 | Tři dokončené přípravy za 10440, 10321 a 10287 ms. Následuje `info 3`, tedy první video snímek. `701` / `702` dokládají přerušování kvůli načítání do bufferu. Jeden rozběh byl přerušen novou volbou streamu. |
+| Rozměry RTSP | `onPrepared` vrací `0x0` a nejsou vypsané formáty stop. Není to důkaz rozlišení videa 0 × 0; přehrávač v této chvíli rozměry neposkytl. |
+| Větší RTSP 11 | V 20:37:41 selže za 63 ms: `what=1`, `extra=-2147483648`. Jde o obecnou chybu přehrávače. Neprokazuje konkrétní kodek, rozlišení ani to, zda kamera stream odmítla. |
+| Normální foto | `NormalPhoto` a spoušť vrátí `Success`; vznikne `SING0086.JPG`, 3019867 B, počet 85 → 86. |
+| Samospoušť | `TimerPhoto` přijato v 20:38:50, spoušť v 20:38:52. Obnova v 20:38:53–54 stále hlásí 86. V další obnově je `DLAY0087.JPG`, 3080025 B, čas vytvoření 20:38:54. Čas a název odpovídají opožděnému výsledku samospouště; samostatný snímek displeje ani přímé sledování pořízení nejsou dodané. |
+| Burst | Režim přijat v 20:39:03 a spoušť v 20:39:04. Seznam v 20:39:06 obsahuje pouze nový `DLAY0087.JPG` s dřívějším časem vytvoření. Tím nelze doložit úspěšné sériové snímání. |
+| Nová videa | V seznamu existují `NORM0083.MP4`, `NORM0084.MP4`, `NORM0085.MP4`. Dodaný log neobsahuje příkazy, které je vytvořily; samo o sobě to nepotvrzuje funkčnost start/stop ovládání aplikace. |
+| Čas | Nový `SING0086.JPG` má čas 20:38:42, blízký požadavku 20:38:43. Způsob srovnání času není v logu. |
+
+Podklady k interpretaci událostí: [Android MediaPlayer](https://developer.android.com/reference/android/media/MediaPlayer). RTSP DESCRIBE popisuje médium bez spuštění přehrávání: [RFC 2326, DESCRIBE](https://www.rfc-editor.org/rfc/rfc2326.html#section-10.2). Od 0.1.2 lze vyžádat oba popisy přímo tlačítkem v aplikaci; odpověď serveru a SDP pomohou odlišit odmítnutí streamu od problému přehrávače.
+
 ## Zatím neověřeno
 
 Start/stop videa, ostatní režimy a parametry, příčina selhání většího RTSP streamu, stažení a uložení přes Android MediaStore, hromadné stahování, obnova přerušeného přenosu, chování velmi velkých souborů, více než 100 položek, jiné telefony/verze firmwaru, synchronizace času a aktualizace firmwaru. Tyto výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.

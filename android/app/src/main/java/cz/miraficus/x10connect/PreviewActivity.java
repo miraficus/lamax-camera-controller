@@ -17,6 +17,10 @@ public final class PreviewActivity extends Activity {
     private boolean high;
     private String host;
     private Runnable timeout;
+    private Network cameraNetwork;
+    private final java.util.concurrent.ExecutorService probes=java.util.concurrent.Executors.newSingleThreadExecutor();
+    private volatile java.net.Socket probeSocket;
+    private volatile boolean probing, stopped;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -28,6 +32,7 @@ public final class PreviewActivity extends Activity {
             Toast.makeText(this, "Připoj telefon k Wi-Fi kamery.", Toast.LENGTH_LONG).show();
             finish(); return;
         }
+        cameraNetwork=wifi;
         try { host = new java.net.URI(Protocol.base(getIntent().getStringExtra("base"))).getHost(); }
         catch (Exception e) { AppLog.add(this, "RTSP adresa: " + e); finish(); return; }
 
@@ -46,6 +51,7 @@ public final class PreviewActivity extends Activity {
         Button large = new Button(this); large.setText("Větší · test"); large.setOnClickListener(v -> open(true));
         choices.addView(small, new LinearLayout.LayoutParams(0, -2, 1));
         choices.addView(large, new LinearLayout.LayoutParams(0, -2, 1)); root.addView(choices);
+        Button describe=new Button(this); describe.setText("Zjistit parametry obou streamů"); describe.setOnClickListener(v -> describeStreams()); root.addView(describe);
         info = new TextView(this); info.setTextColor(0xffeef4fa); info.setPadding(24, 16, 24, 16); root.addView(info);
         video = new VideoView(this);
         root.addView(video, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
@@ -54,6 +60,7 @@ public final class PreviewActivity extends Activity {
     }
 
     private void open(boolean larger) {
+        if(probing){Toast.makeText(this,"Počkej na dokončení diagnostiky streamů.",Toast.LENGTH_SHORT).show();return;}
         final int current = ++attempt;
         high = larger;
         if (timeout != null) handler.removeCallbacks(timeout);
@@ -73,7 +80,7 @@ public final class PreviewActivity extends Activity {
             if (current != attempt) return;
             handler.removeCallbacks(timeout);
             int width = player.getVideoWidth(), height = player.getVideoHeight();
-            info.setText("Stream " + stream + " · " + width + " × " + height);
+            info.setText("Stream " + stream + (width>0 && height>0 ? " · " + width + " × " + height : " · přehrávač zatím nehlásí rozměry"));
             AppLog.add(this, "RTSP " + stream + " prepared " + width + "x" + height + " za " + (SystemClock.elapsedRealtime() - started) + " ms");
             try {
                 for (android.media.MediaPlayer.TrackInfo track : player.getTrackInfo())
@@ -82,6 +89,11 @@ public final class PreviewActivity extends Activity {
             video.start();
         });
         video.setOnInfoListener((player, what, extra) -> {
+            if(current==attempt && what==3){
+                int width=player.getVideoWidth(), height=player.getVideoHeight();
+                if(width>0 && height>0)info.setText("Stream "+stream+" · "+width+" × "+height);
+                AppLog.add(this,"RTSP "+stream+" rozměry při prvním snímku "+width+"x"+height);
+            }
             if (current == attempt && (what == 3 || what == 701 || what == 702))
                 AppLog.add(this, "RTSP " + stream + " info " + what + "/" + extra + (what == 3 ? " · první video snímek" : " · buffering"));
             return false;
@@ -100,7 +112,40 @@ public final class PreviewActivity extends Activity {
         }
     }
 
+    private void describeStreams() {
+        if(probing)return;
+        probing=true; ++attempt;
+        if(timeout!=null)handler.removeCallbacks(timeout);
+        video.stopPlayback();
+        info.setText("Náhled zastaven. Zjišťuji popis streamů 12 a 11…");
+        probes.execute(() -> {
+            for(String stream:new String[]{"12","11"}) {
+                if(stopped)break;
+                String url="rtsp://"+host+":554/livestream/"+stream;
+                try(java.net.Socket socket=cameraNetwork.getSocketFactory().createSocket()) {
+                    probeSocket=socket;
+                    if(stopped)break;
+                    socket.connect(new java.net.InetSocketAddress(host,554),4000);
+                    socket.setSoTimeout(4000);
+                    // DESCRIBE only: no SETUP, PLAY, recording or settings changes.
+                    String request="DESCRIBE "+url+" RTSP/1.0\r\nCSeq: 1\r\nAccept: application/sdp\r\nUser-Agent: X10Connect/"+BuildConfig.VERSION_NAME+"\r\n\r\n";
+                    socket.getOutputStream().write(request.getBytes(java.nio.charset.StandardCharsets.US_ASCII));
+                    socket.getOutputStream().flush();
+                    RtspResponse response=RtspResponse.read(socket.getInputStream());
+                    AppLog.add(this,"RTSP DESCRIBE "+stream+"\n"+response.diagnostic());
+                } catch(Exception e) { AppLog.add(this,"RTSP DESCRIBE "+stream+": "+e); }
+                finally { probeSocket=null; }
+            }
+            probing=false;
+            handler.post(() -> { if(!stopped)info.setText("Parametry jsou v Diagnostice. Pro přehrávání znovu zvol menší nebo větší stream."); });
+        });
+    }
+
     @Override public void onStop() {
+        stopped=true;
+        java.net.Socket socket=probeSocket;
+        if(socket!=null)try{socket.close();}catch(java.io.IOException ignored){}
+        probes.shutdownNow();
         ++attempt; handler.removeCallbacksAndMessages(null);
         if (video != null) video.stopPlayback();
         if (connectivity != null) connectivity.bindProcessToNetwork(previous);
