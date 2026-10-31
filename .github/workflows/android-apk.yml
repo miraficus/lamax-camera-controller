@@ -23,6 +23,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      X10_DEBUG_KEYSTORE: ${{ runner.temp }}/x10-signing/debug.keystore
     permissions:
       contents: write
     steps:
@@ -43,8 +45,14 @@ jobs:
       - name: Keep preview signing identity between builds
         uses: actions/cache@v4
         with:
-          path: ~/.android/debug.keystore
-          key: x10-debug-keystore-v1-${{ github.repository_id }}
+          path: ${{ env.X10_DEBUG_KEYSTORE }}
+          key: x10-debug-keystore-v2-${{ github.repository_id }}
+      - name: Create preview signing key if not cached
+        run: |
+          if [ ! -f "$X10_DEBUG_KEYSTORE" ]; then
+            mkdir -p "$(dirname "$X10_DEBUG_KEYSTORE")"
+            keytool -genkeypair -noprompt -keystore "$X10_DEBUG_KEYSTORE" -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000
+          fi
       - name: Test, lint and assemble
         working-directory: android
         run: bash ./gradlew --no-daemon testDebugUnitTest lintDebug assembleDebug
