@@ -101,3 +101,17 @@ The preview retains the tested native player as its default. Select **Media3 TCP
 Official reference: https://developer.android.com/media/media3/exoplayer/rtsp
 
 Publishing: a push commit explicitly marked `[android-prerelease]`, or the existing manual `publish_preview` input, publishes a versioned prerelease `android-v<version>` with an APK asset. Ordinary pushes continue to produce Actions artifacts only. Run manual publishing from the **android** branch to reuse that branch's signing-key cache. The release notes are in `android/RELEASE_NOTES.md`.
+
+## 0.2.1 — Export web files without the SD card
+
+In **Settings → Camera web files (ZIP)** choose **Export web files to ZIP (without SD)**. Keep the phone on the camera Wi-Fi. Export runs as a foreground service with progress and cancellation. The completed archive is saved to **Downloads/X10Connect**; **Share latest ZIP** opens the system share sheet. Archives are not uploaded or published automatically.
+
+The exporter reads recognized thttpd directory listings starting at `/` and downloads their static files recursively, including `res/pic`. It excludes the SD/storage roots, CGI paths, query links, redirects, external origins, parent/path traversal and recognizable symbolic links. No upgrade, format, upload or settings requests are sent. Media downloads and another export cannot run at the same time; additional thumbnail requests are paused during export.
+
+Inside the ZIP, files are under `camera/`. `export-manifest.json` records paths, byte counts, SHA-256, HTTP metadata, errors and scope. Directory listings are discovered first; each file is downloaded to a private temporary file and checked against Content-Length before being placed in the ZIP. Unreadable files are listed as errors and the result is named `-partial.zip`; after three consecutive file failures the export stops and records this in the manifest. A root listing failure, cancellation or storage/output error removes the unfinished archive. The previous successful archive remains available. An interrupted pending item is cleaned up on the next export-service start.
+
+Resource limits are 10,000 files, 512 directories, 16 path levels, 64 MiB per file and 256 MiB received in total, with at most 2 MiB per directory listing. A limit produces a partial export with a manifest entry. Only files exposed by the HTTP directory listings can be copied. This is a snapshot of a live web tree, not an atomic image of flash and not an installable firmware package. It does not establish that kernel, bootloader or every device configuration is included.
+
+The archive may contain camera configuration and device-specific files. Sharing is an explicit user action; camera files and exported archives must not be committed to the public source repository.
+
+See [upgrade mechanism findings](../docs/firmware-v1.0.0.4/upgrade-path.md) for the separate static analysis of the actual camera program.

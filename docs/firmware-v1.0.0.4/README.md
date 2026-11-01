@@ -90,3 +90,8 @@ python3 -m venv .venv-inspect
 ```
 
 Nástroj přečte ELF hlavičku, loader, závislosti, přítomnost ladicích sekcí a obě jmenované CGI tabulky. Odmítne nečekaný formát místo odhadování. Pokud binárka tabulku symbolů nemá, vypíše prázdný seznam tabulek; to neznamená nepřítomnost CGI funkcí. Na obou výše uvedených binárkách byl spuštěn a výstupy jsou v tomto adresáři. U X10.1 byla zkontrolována shoda adres tabulek a obsluh s `readelf`/`nm` a disassemblovanými funkcemi. Síťové testy nejsou součástí tohoto nástroje.
+
+
+## Aktualizace a nový HTTP export
+
+[Samostatný rozbor aktualizačního mechanismu](upgrade-path.md) doplňuje symboly a struktury balíčku přímo z této kamery. Android klient od 0.2.1 nabízí export webových souborů bez SD karty; jde o kopii dostupného webového stromu se SHA-256, nikoli o obraz flash nebo ověřený instalační balíček.

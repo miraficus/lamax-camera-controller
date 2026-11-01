@@ -50,6 +50,7 @@ public final class DownloadService extends LocalizedService {
         if(intent==null){stopSelf();return START_NOT_STICKY;}
         if(CANCEL.equals(intent.getAction())) { cancelled.set(true); if(!running)stopSelf(); return START_NOT_STICKY; }
         if(running)return START_NOT_STICKY;
+        if(WebExportService.running){update(getString(R.string.export_busy),-1,true);stopSelf();return START_NOT_STICKY;}
         running=true;cancelled.set(false);
         startForeground(ID,notification(getString(R.string.ui_preparing_download),-1));
         String base=intent.getStringExtra("base"), json=intent.getStringExtra("files");

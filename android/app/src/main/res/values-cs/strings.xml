@@ -143,4 +143,17 @@
     <string name="ui_available_streams" formatted="false">"Dostupné streamy: "</string>
     <string name="ui_details_are_in_diagnostics_enter_a_stream_number" formatted="false">"Podrobnosti jsou v Diagnostice. Číslo lze přehrát ručně."</string>
     <string name="ui_error_prefix">"Chyba: "</string>
+    <string name="export_title">"Webové soubory kamery (ZIP)"</string>
+    <string name="export_description">"Stáhne soubory z webového serveru mimo SD kartu a symbolické odkazy. Uloží ZIP se seznamem a SHA-256 do Downloads/X10Connect. Nejde o úplnou zálohu firmwaru."</string>
+    <string name="export_start">"Exportovat webové soubory do ZIP (bez SD)"</string>
+    <string name="export_cancel">"Zrušit export ZIP"</string>
+    <string name="export_share">"Sdílet poslední ZIP"</string>
+    <string name="export_busy">"Počkej na dokončení stahování nebo exportu ZIP."</string>
+    <string name="export_preparing">"Připravuji export webových souborů…"</string>
+    <string name="export_listing">"Načítám adresář "</string>
+    <string name="export_progress">"%1$d/%2$d · %3$s"</string>
+    <string name="export_complete">"ZIP uložen: %1$d souborů, %2$d chyb."</string>
+    <string name="export_partial">"Uložen neúplný ZIP: %1$d souborů, %2$d chyb. Podrobnosti jsou v seznamu uvnitř ZIPu."</string>
+    <string name="export_cancelled">"Export ZIP zrušen."</string>
+    <string name="export_failed">"Export ZIP selhal: "</string>
 </resources>

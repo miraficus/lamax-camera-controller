@@ -143,4 +143,17 @@
     <string name="ui_available_streams" formatted="false">"Available streams: "</string>
     <string name="ui_details_are_in_diagnostics_enter_a_stream_number" formatted="false">"Details are in Diagnostics. Enter a stream number to play it."</string>
     <string name="ui_error_prefix">"Error: "</string>
+    <string name="export_title">"Camera web files (ZIP)"</string>
+    <string name="export_description">"Download files listed by the camera web server, excluding the SD card and symbolic links. Saved to Downloads/X10Connect with a SHA-256 manifest. This is not a full firmware backup."</string>
+    <string name="export_start">"Export web files to ZIP (without SD)"</string>
+    <string name="export_cancel">"Cancel ZIP export"</string>
+    <string name="export_share">"Share latest ZIP"</string>
+    <string name="export_busy">"Wait for the current download or ZIP export to finish."</string>
+    <string name="export_preparing">"Preparing web-file export…"</string>
+    <string name="export_listing">"Listing "</string>
+    <string name="export_progress">"%1$d/%2$d · %3$s"</string>
+    <string name="export_complete">"ZIP saved: %1$d files, %2$d errors."</string>
+    <string name="export_partial">"Partial ZIP saved: %1$d files, %2$d errors. See its manifest."</string>
+    <string name="export_cancelled">"ZIP export cancelled."</string>
+    <string name="export_failed">"ZIP export failed: "</string>
 </resources>

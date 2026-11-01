@@ -1,11 +1,15 @@
-Unofficial LAMAX X10.1 client for Android 10+. Download **X10Connect-0.2.0.apk** below and install it on your phone. This preview uses the same debug signing certificate as 0.1.1–0.1.3, so those builds can be updated directly.
+Unofficial LAMAX X10.1 client for Android 10+. Download **X10Connect-0.2.1.apk** below. This preview keeps the signing identity used by 0.1.1 and later previews, so it can update those builds directly.
 
-- English and Czech interface; follows the phone language (Czech/Slovak → Czech, other languages → English). A manual selector is available in Settings → Language / Jazyk.
-- RTSP diagnostics scan `/livestream/10` through `/livestream/19`, sequentially using DESCRIBE only. Found video descriptions are listed; any numeric stream ID from 0 to 999 can be entered for playback. Scanning does not record or change camera settings.
-- Experimental Media3 TCP and UDP/automatic playback with a smaller buffer. Choose a player and press Play number. The original tested player remains the default. Smoother playback is not yet confirmed on the camera; stream 12 advertises only 15 fps.
-- Connection, file listing, photo capture and the original small RTSP preview were tested by the owner on Samsung SM-S928B / Android 16 with camera firmware V1.0.0.4. A 121-file, two-page listing was confirmed. Other camera/phone combinations and the new playback options still need testing.
-- Stream 12 is H.264 1024×576 at 15 fps. The camera returned 400 Bad Request for stream 11 in the owner's tests; scanning may reveal alternatives but does not guarantee another stream exists.
+### New: export camera web files to ZIP
 
-**Testing:** connect to the camera Wi-Fi, open the app, then Connect. To report a problem, clear the diagnostic log, reproduce the issue, and use Share log. Camera setting names come directly from the firmware and may be English in either interface language. No account or cloud is required.
+- Settings → Camera web files (ZIP) → Export web files to ZIP (without SD).
+- Reads the web server directory listings and copies available static files recursively, including `res/pic`, while excluding SD/storage, symbolic links, CGI, query links and external addresses.
+- Saves to **Downloads/X10Connect**, with **Share latest ZIP** in the app.
+- Includes paths, sizes, SHA-256 and any failures in `export-manifest.json`. Incomplete exports are labelled `-partial.zip`; cancellation removes the unfinished archive.
+- Runs in the background with progress and cancellation. Does not upload files or invoke any firmware update action.
 
-**Čeština:** neoficiální testovací aplikace pro Android 10+. Nově obsahuje češtinu i angličtinu, hledání streamů 10–19 a experimentální přehrávání přes TCP/UDP. Původní ověřený přehrávač zůstává výchozí. Hladší přehrávání zatím není ověřené na kameře. Aktualizaci lze instalovat přes verze 0.1.1–0.1.3 bez odinstalování.
+**This is a copy of exposed web files, not a full flash image, recovery backup or installable firmware update.** The new export needs testing with the physical camera. Archives stay on the phone until the user shares them.
+
+The existing English/Czech UI, photo/media controls, native preview and experimental Media3 TCP/UDP playback remain available. See `android/README.md` for limits and the device-test report.
+
+**Čeština:** nově je v Nastavení export webových souborů kamery do ZIP bez SD karty. ZIP se uloží do Downloads/X10Connect a lze ho sdílet z aplikace. Obsahuje i kontrolní součty a seznam chyb. Nejde o úplnou zálohu flash nebo instalační balíček firmwaru. Export je potřeba ověřit na skutečné kameře.

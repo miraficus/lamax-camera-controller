@@ -45,7 +45,7 @@ public final class MainActivity extends LocalizedActivity {
     private final BroadcastReceiver progressReceiver=new BroadcastReceiver(){
         @Override public void onReceive(Context context,Intent intent){
             transfer.setText(intent.getStringExtra("text"));
-            if(intent.getBooleanExtra("finished",false))toast(intent.getStringExtra("text"));
+            if(intent.getBooleanExtra("finished",false)){toast(intent.getStringExtra("text"));if(intent.getBooleanExtra("webexport",false) && tab.equals("Nastavení"))showTab();}
         }
     };
     @Override public void onCreate(Bundle state){
@@ -165,10 +165,10 @@ public final class MainActivity extends LocalizedActivity {
             TextView info=text((item.video()?"VIDEO · ":getString(R.string.ui_photo))+item.sizeText(),11,MUTED);card.addView(info);image.setOnClickListener(v->mediaActions(item));card.setOnLongClickListener(v->{choose.setChecked(!choose.isChecked());return true;});
             String key=base+"|"+item.path;image.setTag(key);Bitmap cached=cache.get(key);
             if(cached!=null)image.setImageBitmap(cached);
-            else if(!thumbnailsPaused && !DownloadService.running && fetching.add(key)){
+            else if(!thumbnailsPaused && !DownloadService.running && !WebExportService.running && fetching.add(key)){
                 CameraClient camera=client();
                 thumbnails.execute(()->{Bitmap bitmap=null;try{
-                    if(thumbnailsPaused || DownloadService.running)return;
+                    if(thumbnailsPaused || DownloadService.running || WebExportService.running)return;
                     byte[] data;try{data=camera.image(item.thumbnail());}catch(Exception e){if(item.video())throw e;data=camera.image(item.path);}
                     BitmapFactory.Options bounds=new BitmapFactory.Options();bounds.inJustDecodeBounds=true;BitmapFactory.decodeByteArray(data,0,data.length,bounds);
                     BitmapFactory.Options opts=new BitmapFactory.Options();opts.inSampleSize=1;
@@ -189,6 +189,7 @@ public final class MainActivity extends LocalizedActivity {
     }
     private void downloadSelected(){List<Protocol.Media> items=new ArrayList<>();for(Protocol.Media m:media)if(selected.contains(m.path))items.add(m);if(items.isEmpty()){toast(getString(R.string.ui_select_files_using_the_checkboxes));return;}startDownload(items);}
     private void startDownload(List<Protocol.Media> items){
+        if(WebExportService.running){toast(getString(R.string.export_busy));return;}
         if(DownloadService.running){toast(getString(R.string.ui_a_download_is_already_running_see_the_notificati));return;}
         try{
             Network network=CameraClient.wifi(this);if(network==null)throw new IllegalStateException(getString(R.string.ui_connect_to_the_camera_wi_fi_22));
@@ -256,7 +257,7 @@ public final class MainActivity extends LocalizedActivity {
         Spinner variants=new Spinner(this);String[] types={"common","loop","timelapse","slow","recsnap"};variants.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,types));body.addView(variants);
         LinearLayout extra=row();extra.addView(button("Start record2",()->command("record2 start","record2.cgi?&-type="+variants.getSelectedItem()+"&-cmd=start",false)),new LinearLayout.LayoutParams(0,-2,1));extra.addView(button("Stop record2",()->command("record2 stop","record2.cgi?&-type="+variants.getSelectedItem()+"&-cmd=stop",false)),new LinearLayout.LayoutParams(0,-2,1));body.addView(extra);
     }
-    private void preview(boolean high){if(CameraClient.wifi(this)==null){toast(getString(R.string.ui_connect_to_the_camera_wi_fi_22));return;}startActivity(new Intent(this,PreviewActivity.class).putExtra("base",base).putExtra("high",high));}
+    private void preview(boolean high){if(WebExportService.running){toast(getString(R.string.export_busy));return;}if(CameraClient.wifi(this)==null){toast(getString(R.string.ui_connect_to_the_camera_wi_fi_22));return;}startActivity(new Intent(this,PreviewActivity.class).putExtra("base",base).putExtra("high",high));}
     private void menu(boolean system){
         String context=system?"System":mode;
         if(legacy){legacyResolution();return;}
@@ -305,7 +306,29 @@ public final class MainActivity extends LocalizedActivity {
         }));
         body.addView(text(getString(R.string.ui_storage),20,TEXT));body.addView(text(getString(R.string.ui_photos_pictures_x10connect_videos_movies_x10conn_80),14,MUTED));
         body.addView(button(getString(R.string.ui_cancel_current_download),()->{if(DownloadService.running)startService(new Intent(this,DownloadService.class).setAction(DownloadService.CANCEL));else toast(getString(R.string.ui_no_download_is_running));}));
+        body.addView(text(getString(R.string.export_title),20,TEXT));
+        body.addView(text(getString(R.string.export_description),14,MUTED));
+        body.addView(button(getString(R.string.export_start),this::startWebExport));
+        body.addView(button(getString(R.string.export_cancel),()->{if(WebExportService.running)startService(new Intent(this,WebExportService.class).setAction(WebExportService.CANCEL));else toast(getString(R.string.ui_no_download_is_running));}));
+        String latest=getSharedPreferences("webexport",MODE_PRIVATE).getString("latest_name",null);
+        String exportStatus=getSharedPreferences("webexport",MODE_PRIVATE).getString("status","");
+        if(!exportStatus.isEmpty())body.addView(text(exportStatus,13,MUTED));
+        if(latest!=null){body.addView(text(latest+"\nDownloads/X10Connect",13,MUTED));body.addView(button(getString(R.string.export_share),this::shareWebExport));}
         body.addView(text("X10 Connect "+BuildConfig.VERSION_NAME,18,TEXT));body.addView(text(getString(R.string.ui_unofficial_lamax_x10_1_client_android_10_no_acco),13,MUTED));
+    }
+    private void startWebExport(){
+        if(DownloadService.running || WebExportService.running){toast(getString(R.string.export_busy));return;}
+        Network network=CameraClient.wifi(this);if(network==null){toast(getString(R.string.ui_connect_to_the_camera_wi_fi_22));return;}
+        try{startForegroundService(new Intent(this,WebExportService.class).putExtra("base",base).putExtra("network",network));transfer.setText(getString(R.string.export_preparing));}
+        catch(Exception e){error(e);}
+    }
+    private void shareWebExport(){
+        String value=getSharedPreferences("webexport",MODE_PRIVATE).getString("latest_uri",null);if(value==null)return;
+        Uri uri=Uri.parse(value);
+        try{
+            Intent share=new Intent(Intent.ACTION_SEND).setType("application/zip").putExtra(Intent.EXTRA_STREAM,uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            share.setClipData(ClipData.newRawUri("ZIP",uri));startActivity(Intent.createChooser(share,getString(R.string.export_share)));
+        }catch(Exception e){error(e);}
     }
     private void showLog(){
         LinearLayout body=scrollContent();body.addView(text("Diagnostika",25,TEXT));
