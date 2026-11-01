@@ -1,14 +1,14 @@
-Unofficial LAMAX X10.1 client for **Android 10+**. Download **X10Connect-0.3.0.apk** below. Updates previews 0.1.1 and later with the same signing identity.
+Unofficial LAMAX X10.1 client for **Android 10+**. Download **X10Connect-0.3.1.apk** below. Keeps the signing identity used by previews 0.1.1 and later.
 
-### One app, simple or debug
+### A clearer simple interface
 
-- Starts in a simpler interface: **Gallery / Camera / Settings**.
-- Camera embeds the tested small RTSP stream using **Media3 TCP**, followed by an automatic mode selector and **Photo / Start / Stop** controls. Restart preview is available if needed.
-- Settings → **Debug mode** restores diagnostics, stream experiments, legacy API, camera address and web ZIP export. The choice is remembered across restarts. English and Czech work in both modes.
-- Basic settings retain Wi-Fi, language, current camera parameters, time synchronization and download cancellation.
-- Preview releases its player when leaving Camera or putting the app in the background. Existing background downloads continue independently.
-- VideoLapse Start uses the shutter command confirmed by the owner; Stop finalizes the recording.
+- Rounded connection card, more spacing, consistent line icons and bottom navigation.
+- Camera: rounded 16:9 Media3 TCP preview, refresh and fullscreen controls, readable translated mode names and three large Photo / Start / Stop buttons.
+- Gallery: distinct segmented All / Photos / Videos filters, separate Select all / Clear selection actions, selection circles over thumbnails and a prominent Download selected button with a count.
+- Selection is retained across filters. Select all affects the visible filter; Clear selection clears the whole selection. Downloads include all selected files, including those hidden by a filter.
+- English/Czech labels and plural counts. Local logs and the Debug mode switch remain available. Debug controls keep their existing layout.
+- Existing background downloads, duplicate detection, camera command endpoints and preview transport are unchanged.
 
-Existing device tests confirm photo modes, normal/loop/slow video capture, downloads, time synchronization and ZIP export on LAMAX X10.1 V1.0.0.4 / Samsung Android 16. All 389 files in the supplied web ZIP passed size and SHA-256 verification. The new simple interface still needs physical-device testing. This remains a prerelease.
+This is a UI prerelease. Automated checks cover the build, lint and existing protocol/export tests; the new screens and fullscreen preview still need physical-device testing, including large font settings and landscape orientation.
 
-**Čeština:** Jedna aplikace, dva režimy. Výchozí jednoduché rozhraní má Galerii, Kameru s vloženým malým náhledem a tlačítky Foto / Start / Stop a Nastavení. V Nastavení lze kdykoli zapnout **Ladicí režim**, který vrátí všechny pokročilé funkce včetně diagnostiky a exportu ZIP. Nové rozložení je potřeba vyzkoušet na telefonu.
+**Čeština:** Upravený jednoduchý režim podle schváleného návrhu: zaoblené prvky, větší rozestupy, vložený náhled s obnovou a celou obrazovkou, srozumitelné názvy režimů a výrazná tlačítka. Galerie má samostatné filtry, akce **Označit vše / Zrušit označení**, kolečka v rozích náhledů a hlavní tlačítko **Stáhnout označené**. Ladicí režim zůstává dostupný v Nastavení. Nové rozložení prosím vyzkoušet na telefonu.

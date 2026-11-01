@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".FullPreviewActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".PreviewActivity" android:exported="false" />
         <service android:name=".WebExportService" android:exported="false"
             android:foregroundServiceType="dataSync" />

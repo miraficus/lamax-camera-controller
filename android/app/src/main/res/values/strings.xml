@@ -162,4 +162,36 @@
     <string name="preview_loading">Connecting live preview…</string>
     <string name="preview_error">Preview unavailable. Try Restart preview or enable Debug mode for details.</string>
     <string name="mode_changing">Wait until the camera mode has changed.</string>
+    <string name="simple_connected">Connected</string>
+    <string name="simple_not_connected">Connect to camera</string>
+    <string name="simple_media_filter">Filter media by type</string>
+    <string name="simple_select_all">Select all</string>
+    <string name="simple_clear_selection">Clear selection</string>
+    <string name="simple_download_selected">Download selected (%1$d)</string>
+    <string name="simple_no_matches">No files in this filter. Try another filter or refresh.</string>
+    <string name="simple_select_file">Select %1$s</string>
+    <string name="simple_deselect_file">Deselect %1$s</string>
+    <string name="simple_camera_mode">Camera mode</string>
+    <string name="simple_photo">Take photo</string>
+    <string name="simple_start">Start</string>
+    <string name="simple_controls_hint">Choose a mode, then take a photo or start recording.</string>
+    <string name="simple_request_sent">Camera accepted the command.</string>
+    <string name="simple_live">LIVE</string>
+    <string name="simple_expand">Fullscreen preview</string>
+    <string name="mode_normal_photo">Single photo</string>
+    <string name="mode_normal_video">Normal video</string>
+    <string name="mode_timer_photo">Self-timer</string>
+    <string name="mode_burst">Burst photos</string>
+    <string name="mode_photo_lapse">Photo time-lapse</string>
+    <string name="mode_video_lapse">Time-lapse video</string>
+    <string name="mode_car">Loop recording</string>
+    <string name="mode_slow">Slow motion</string>
+    <plurals name="simple_selected">
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
+    </plurals>
+    <plurals name="simple_files">
+        <item quantity="one">%d file</item>
+        <item quantity="other">%d files</item>
+    </plurals>
 </resources>

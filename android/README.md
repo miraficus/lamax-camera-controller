@@ -18,6 +18,17 @@ Kamera v jednoduchém režimu obsahuje vložený `/livestream/12` přes Media3 T
 
 Nastavení v jednoduchém režimu zachovává jazyk, Wi-Fi, připojení, parametry aktuálního režimu, synchronizaci času a zrušení stahování. Ladicí režim zachovává dosavadní samostatný přehrávač a všechny diagnostické nástroje. Nové rozložení vyžaduje ověření na telefonu; předchozí výsledky jsou v `docs/device-tests-v1.0.0.4.md`.
 
+## Vzhled jednoduchého režimu (0.3.1)
+
+Jednoduchý režim nově používá schválený tmavý návrh s tyrkysovou hlavní akcí, společnou kartou připojení a ikonovou spodní navigací. Tlačítka a náhledy mají větší zaoblení a samostatné mezery.
+
+- Kamera: zaoblený náhled 16:9, ikony pro obnovení a celou obrazovku, přeložený výběr režimu a tlačítka Vyfotit / Start / Stop. Indikátor ŽIVĚ se zobrazuje při přehrávání; nejde o indikátor záznamu na kartu. Příkazové API a nastavení Media3 TCP zůstávají stejné.
+- Galerie: filtry jsou společný přepínač Vše / Fotky / Videa; na zvláštním řádku jsou Označit vše a Zrušit označení. Označit vše se vztahuje na právě filtrované soubory, Zrušit označení na celý výběr. Počet i hlavní tlačítko Stáhnout označené zahrnují také vybrané soubory skryté jiným filtrem.
+- Výběrová kolečka jsou v rozích náhledů; klepnutí na fotografii zachovává nabídku stažení a otevření místní kopie. Mřížka se posouvá samostatně, hlavní stažení zůstává pod ní.
+- Česká i anglická lokalizace mají čitelné názvy režimů; neznámý režim se zobrazí beze změny. Ladicí režim zachovává své dosavadní ovládání.
+
+Nové obrazovky je nutné ověřit na telefonu, zejména při větším písmu, na šířku a při návratu z celoobrazovkového náhledu. Původní vizuální návrh je koncept, testovací sestavení používá nativní Android Views a vektorové ikony.
+
 ## Co je připraveno
 
 | Obrazovka | Funkce |

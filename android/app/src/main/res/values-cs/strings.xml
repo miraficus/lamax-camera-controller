@@ -162,4 +162,38 @@
     <string name="preview_loading">Připojuji živý náhled…</string>
     <string name="preview_error">Náhled není dostupný. Zkus obnovit náhled nebo zapni ladicí režim pro podrobnosti.</string>
     <string name="mode_changing">Počkej na dokončení změny režimu kamery.</string>
+    <string name="simple_connected">Připojeno</string>
+    <string name="simple_not_connected">Připojit ke kameře</string>
+    <string name="simple_media_filter">Filtrování podle typu souboru</string>
+    <string name="simple_select_all">Označit vše</string>
+    <string name="simple_clear_selection">Zrušit označení</string>
+    <string name="simple_download_selected">Stáhnout označené (%1$d)</string>
+    <string name="simple_no_matches">Žádné soubory v tomto filtru. Zkus jiný filtr nebo obnov seznam.</string>
+    <string name="simple_select_file">Označit %1$s</string>
+    <string name="simple_deselect_file">Zrušit označení %1$s</string>
+    <string name="simple_camera_mode">Režim kamery</string>
+    <string name="simple_photo">Vyfotit</string>
+    <string name="simple_start">Start</string>
+    <string name="simple_controls_hint">Vyber režim a potom vyfoť snímek nebo spusť záznam.</string>
+    <string name="simple_request_sent">Kamera přijala příkaz.</string>
+    <string name="simple_live">ŽIVĚ</string>
+    <string name="simple_expand">Náhled na celou obrazovku</string>
+    <string name="mode_normal_photo">Běžná fotografie</string>
+    <string name="mode_normal_video">Běžné video</string>
+    <string name="mode_timer_photo">Samospoušť</string>
+    <string name="mode_burst">Sériové snímání</string>
+    <string name="mode_photo_lapse">Časosběrné fotografie</string>
+    <string name="mode_video_lapse">Časosběrné video</string>
+    <string name="mode_car">Záznam ve smyčce</string>
+    <string name="mode_slow">Zpomalené video</string>
+    <plurals name="simple_selected">
+        <item quantity="one">%d označený soubor</item>
+        <item quantity="few">%d označené soubory</item>
+        <item quantity="other">%d označených souborů</item>
+    </plurals>
+    <plurals name="simple_files">
+        <item quantity="one">%d soubor</item>
+        <item quantity="few">%d soubory</item>
+        <item quantity="other">%d souborů</item>
+    </plurals>
 </resources>
