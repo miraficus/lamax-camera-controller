@@ -119,6 +119,20 @@ Drobnost v hlášení: ruční zrušení je v současné implementaci započteno
 - Normální foto, konkrétní desetisnímková série, krátký PhotoLapse a samospoušť. Základní nahrávání videa potvrzeno majitelem.
 - Čtení menu a možností, zápis a zpětné čtení Lens angle, viditelný účinek úhlu záběru, čeština/angličtina aplikace.
 
+## Další ověření 1. 11. 2026, 23:21–23:22
+
+Majitel výslovně potvrdil synchronizaci času podle následné kontroly v menu kamery a úspěšný HTTP export do ZIP, jehož soubory prohlížel v ZArchiveru. Samotný ZIP ani jeho manifest v tomto kroku neposkytl; stav complete/partial, úplnost a kontrolní součty jsme proto nezávisle neověřovali.
+
+| Funkce | Výsledek a hranice důkazu |
+| --- | --- |
+| Synchronizace času | Podle majitele je po synchronizaci v nastavení kamery přesný čas. Konkrétní CGI odpověď není v přiloženém úseku logu; výsledek byl zkontrolován přímo na zařízení. |
+| Webový export ZIP | Majitel potvrdil vytvoření archivu a prohlížení jeho obsahu v ZArchiveru. Manifest a porovnání proti předchozímu ručnímu exportu zatím nejsou dodané. Potvrzeno je praktické vytvoření a otevření archivu, ne kompletní záloha flash. |
+| CarMode | Přepnutí 23:21:26, start 23:21:32, stop 23:21:38: všechny odpovědi Success. V seznamu přibyl `LOOP0093.MP4`, 20392913 B, udávaná délka 5 s. Krátký test potvrzuje vznik záznamu v tomto režimu; automatické dělení a přepis nejstarších souborů nebyly testovány. |
+| SlowRec | Přepnutí 23:21:46, start 23:21:49, stop 23:21:56: Success. Přibyl `SLOW0094.MP4`, 36888076 B, metadatová délka 51 s. Samostatné ověření skutečné rychlosti přehrávání a FPS souboru není dodané; z poměru časů samotného neurčujeme přesný faktor zpomalení. |
+| Stažení SlowRec | `SLOW0094.MP4` byl následně stažen, uloženo 1 / přeskočeno 0 / chyby 0. |
+
+Počet hlavních médií vzrostl 92 → 94 a oba nové soubory odpovídají právě vykonaným režimovým příkazům. Z běžných video režimů v dodaných testech stále chybí konkrétní start/stop VideoLapse s výsledným souborem.
+
 ## Zatím neověřeno
 
-Export webových souborů do ZIP z 0.2.1 na skutečné kameře; synchronizace času přes konkrétní CGI; další parametry a jejich účinek; CarMode, VideoLapse, SlowRec a alternativní `record2` start/stop; kontrola odstranění rozpracovaného média po zrušení; chování velmi velkých souborů; jiné telefony/verze firmwaru; příčina odmítání dalších RTSP adres a aktualizace/recovery firmwaru. Obnova přenosu od posledního bajtu zatím není implementovaná, proto nejde jen o neověřenou funkci. Výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.
+Obsah manifestu ZIP a nezávislé porovnání exportovaných souborů; další parametry a jejich účinek; VideoLapse a alternativní `record2` start/stop; automatické dělení/přepis CarMode; FPS a skutečný faktor zpomalení SlowRec; kontrola odstranění rozpracovaného média po zrušení; chování velmi velkých souborů; jiné telefony/verze firmwaru; příčina odmítání dalších RTSP adres a aktualizace/recovery firmwaru. Obnova přenosu od posledního bajtu zatím není implementovaná, proto nejde jen o neověřenou funkci. Výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.
