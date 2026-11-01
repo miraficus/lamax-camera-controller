@@ -10,6 +10,14 @@ Neoficiální, samostatně napsaný klient pro LAMAX X10.1. Používá otevřen�
 - Android 10 je zvolené minimum kvůli systémovému panelu Wi-Fi a ukládání přes MediaStore bez přístupu k celé galerii. Podpora Androidu 8/9 se podle rozhodnutí majitele neplánuje.
 - České a anglické rozhraní, nativní Android Views, Java 17. Bez frameworku pro webový obsah a bez knihoven pro střih videa.
 
+## Jednoduchý a ladicí režim (0.3.0)
+
+Jedna APK obsahuje oba režimy. Výchozí je jednoduchý: **Galerie / Kamera / Nastavení**. V Nastavení zapnout **Ladicí režim** pro diagnostiku, export webu, adresu kamery, starší API a experimentální nástroje. Volba se ukládá a přežije restart; jazyk funguje v obou režimech. Místní omezený log se vede i v jednoduchém režimu a lze jej později zobrazit nebo smazat v diagnostice.
+
+Kamera v jednoduchém režimu obsahuje vložený `/livestream/12` přes Media3 TCP, výběr režimu (změna se odešle automaticky), Foto / Start / Stop a obnovení náhledu. Dokud kamera změnu režimu nepotvrdí, spoušť a záznam další požadavek neodešlou. Start v režimu VideoLapse používá majitelem ověřené `photo.cgi`; Stop používá `record.cgi`. Náhled se uvolní při změně záložky nebo opuštění aplikace a obnoví při návratu. Nepřipojuje celý proces k Wi-Fi; používá sockety vybrané Wi-Fi sítě.
+
+Nastavení v jednoduchém režimu zachovává jazyk, Wi-Fi, připojení, parametry aktuálního režimu, synchronizaci času a zrušení stahování. Ladicí režim zachovává dosavadní samostatný přehrávač a všechny diagnostické nástroje. Nové rozložení vyžaduje ověření na telefonu; předchozí výsledky jsou v `docs/device-tests-v1.0.0.4.md`.
+
 ## Co je připraveno
 
 | Obrazovka | Funkce |

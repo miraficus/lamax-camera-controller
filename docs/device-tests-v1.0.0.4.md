@@ -136,3 +136,10 @@ Počet hlavních médií vzrostl 92 → 94 a oba nové soubory odpovídají prá
 ## Zatím neověřeno
 
 Obsah manifestu ZIP a nezávislé porovnání exportovaných souborů; další parametry a jejich účinek; VideoLapse a alternativní `record2` start/stop; automatické dělení/přepis CarMode; FPS a skutečný faktor zpomalení SlowRec; kontrola odstranění rozpracovaného média po zrušení; chování velmi velkých souborů; jiné telefony/verze firmwaru; příčina odmítání dalších RTSP adres a aktualizace/recovery firmwaru. Obnova přenosu od posledního bajtu zatím není implementovaná, proto nejde jen o neověřenou funkci. Výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.
+
+
+## 2026-11-01 23:40–23:41 — VideoLapse, app 0.2.1
+
+Owner log on Android 16 / V1.0.0.4: `setcurworkmode.cgi?-workmode=VideoLapse` succeeded, followed by `photo.cgi?&-type=photo` at 23:41:03 and `record.cgi?&-cmd=stop` at 23:41:14. The count remained 94 while active and became 95 after Stop. The listing contained `LPSE0095.MP4`, 1,466,153 bytes. This confirms file creation with this exact sequence; `record.cgi start` was not used in this test. Playback, encoded frame rate and time-compression ratio have not been independently verified. Metadata `time="0"` alone does not establish an invalid file.
+
+The supplied web ZIP was independently checked: see `firmware-v1.0.0.4/web-export-verification.md`. Version 0.3.0 introduces a simple interface; its new layout and lifecycle behavior await owner testing.

@@ -156,4 +156,10 @@
     <string name="export_partial">"Uložen neúplný ZIP: %1$d souborů, %2$d chyb. Podrobnosti jsou v seznamu uvnitř ZIPu."</string>
     <string name="export_cancelled">"Export ZIP zrušen."</string>
     <string name="export_failed">"Export ZIP selhal: "</string>
+    <string name="debug_mode">Ladicí režim</string>
+    <string name="debug_mode_help">Vypnuto: galerie, živý náhled a základní nastavení. Zapnuto: diagnostika a pokročilé nástroje. Místní historie logu zůstane dostupná po opětovném zapnutí ladění.</string>
+    <string name="preview_retry">Obnovit náhled</string>
+    <string name="preview_loading">Připojuji živý náhled…</string>
+    <string name="preview_error">Náhled není dostupný. Zkus obnovit náhled nebo zapni ladicí režim pro podrobnosti.</string>
+    <string name="mode_changing">Počkej na dokončení změny režimu kamery.</string>
 </resources>

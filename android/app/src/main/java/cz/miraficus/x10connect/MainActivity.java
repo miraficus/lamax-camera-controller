@@ -30,6 +30,9 @@ public final class MainActivity extends LocalizedActivity {
     private volatile Network wifi;
     private volatile boolean thumbnailsPaused;
     private int photoWatch;
+    private boolean debugMode,modeChanging;
+    private SimplePreview simplePreview;
+    private Spinner simpleModes;
     private ConnectivityManager connectivity;
     private boolean connected,legacy,destroyed,receiverRegistered;
     private String base="http://192.168.0.1",device="",mode="NormalPhoto",tab="Galerie",filter="Vše";
@@ -40,7 +43,7 @@ public final class MainActivity extends LocalizedActivity {
     private GalleryAdapter adapter;
     private final ConnectivityManager.NetworkCallback networkCallback=new ConnectivityManager.NetworkCallback(){
         @Override public void onAvailable(Network network){ui.post(()->{wifi=CameraClient.wifi(MainActivity.this);updateStatus();});}
-        @Override public void onLost(Network network){ui.post(()->{if(network.equals(wifi)){wifi=null;connected=false;}updateStatus();});}
+        @Override public void onLost(Network network){ui.post(()->{if(network.equals(wifi)){wifi=null;connected=false;stopSimplePreview();}updateStatus();});}
     };
     private final BroadcastReceiver progressReceiver=new BroadcastReceiver(){
         @Override public void onReceive(Context context,Intent intent){
@@ -51,7 +54,8 @@ public final class MainActivity extends LocalizedActivity {
     @Override public void onCreate(Bundle state){
         super.onCreate(state);
         base=getPreferences(MODE_PRIVATE).getString("base",base);
-        legacy=getPreferences(MODE_PRIVATE).getBoolean("legacy",false);
+        debugMode=getPreferences(MODE_PRIVATE).getBoolean("debug_mode",false);
+        legacy=debugMode && getPreferences(MODE_PRIVATE).getBoolean("legacy",false);
         connectivity=getSystemService(ConnectivityManager.class);
         modes.addAll(Arrays.asList("NormalPhoto","NormalVideo","TimerPhoto","Burst","PhotoLapse","VideoLapse","CarMode","SlowRec"));
         build();
@@ -67,6 +71,7 @@ public final class MainActivity extends LocalizedActivity {
         if(Build.VERSION.SDK_INT>=33)registerReceiver(progressReceiver,f,Context.RECEIVER_NOT_EXPORTED);else registerLegacyProgressReceiver(f);
         receiverRegistered=true;
         if(adapter!=null)adapter.notifyDataSetChanged();
+        if(simplePreview!=null)startSimplePreview();
         transfer.setText(getSharedPreferences("transfer",MODE_PRIVATE).getString("status",getString(R.string.ui_photos_pictures_x10connect_videos_movies_x10conn)));
     }
     // API 29–32 only: the signature permission restricts senders to this app.
@@ -76,7 +81,7 @@ public final class MainActivity extends LocalizedActivity {
         registerReceiver(progressReceiver,filter,getPackageName()+".permission.DOWNLOAD",null);
     }
     @Override public void onStop(){
-        super.onStop();thumbnailsPaused=true;connectivity.unregisterNetworkCallback(networkCallback);
+        stopSimplePreview();super.onStop();thumbnailsPaused=true;connectivity.unregisterNetworkCallback(networkCallback);
         if(receiverRegistered){unregisterReceiver(progressReceiver);receiverRegistered=false;}
     }
     @Override public void onDestroy(){destroyed=true;ui.removeCallbacksAndMessages(null);commands.shutdownNow();thumbnails.shutdownNow();super.onDestroy();}
@@ -116,8 +121,9 @@ public final class MainActivity extends LocalizedActivity {
     private void openWifi(){try{startActivity(new Intent(Settings.Panel.ACTION_WIFI));}catch(Exception e){startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));}}
     private void showTab(){
         if(content==null)return;
+        stopSimplePreview();simplePreview=null;simpleModes=null;
         content.removeAllViews();navigation.removeAllViews();
-        for(String name:new String[]{"Galerie","Kamera","Nastavení","Diagnostika"}){
+        for(String name:(debugMode?new String[]{"Galerie","Kamera","Nastavení","Diagnostika"}:new String[]{"Galerie","Kamera","Nastavení"})){
             Button b=button(name,()->{tab=name;showTab();});if(name.equals(tab))b.setTextColor(ACCENT);
             b.setTextSize(11);b.setPadding(0,0,0,0);navigation.addView(b,new LinearLayout.LayoutParams(0,dp(56),1));
         }
@@ -200,6 +206,7 @@ public final class MainActivity extends LocalizedActivity {
         }catch(Exception e){error(e);}
     }
     private void command(String label,String endpoint,boolean photo){
+        if(!debugMode && modeChanging){toast(getString(R.string.mode_changing));return;}
         async(()->{
             CameraClient c=client(); int before=-1;
             if(photo)try{before=Integer.parseInt(Protocol.vars(c.get("getfilecount.cgi?")).get("count"));}catch(Exception e){AppLog.add(this,getString(R.string.ui_initial_file_count_unavailable)+e);}
@@ -233,9 +240,10 @@ public final class MainActivity extends LocalizedActivity {
             List<String> values=new ArrayList<>();for(String key:new String[]{"photo","video","multi"})for(String value:options.getOrDefault(key,"").split(","))if(!value.trim().isEmpty())values.add(value.trim());
             String current=Protocol.vars(c.get("getcurworkmode.cgi")).getOrDefault("workmode",mode);
             return new Object[]{values,current};
-        },result->{@SuppressWarnings("unchecked") List<String> values=(List<String>)result[0];if(!values.isEmpty()){modes.clear();modes.addAll(new LinkedHashSet<>(values));}mode=(String)result[1];if(tab.equals("Kamera"))showTab();});
+        },result->{@SuppressWarnings("unchecked") List<String> values=(List<String>)result[0];if(!values.isEmpty()){modes.clear();modes.addAll(new LinkedHashSet<>(values));}mode=(String)result[1];if(tab.equals("Kamera")){if(debugMode)showTab();else updateSimpleModes();}});
     }
     private void showCamera(){
+        if(!debugMode){showSimpleCamera();return;}
         LinearLayout body=scrollContent();body.addView(text(getString(R.string.ui_camera_controls),25,TEXT));body.addView(text(getString(R.string.ui_photo_capture_and_the_small_preview_were_tested_),14,MUTED));
         body.addView(button(getString(R.string.ui_load_modes_and_current_status),this::loadModes));
         Spinner choose=new Spinner(this);List<String> options=legacy?Arrays.asList(getString(R.string.ui_photo_0),getString(R.string.ui_timer_1),getString(R.string.ui_burst_10),getString(R.string.ui_photo_lapse_11),"Video · 20",getString(R.string.ui_loop_21),getString(R.string.ui_video_lapse_22),getString(R.string.ui_slow_motion_24)):modes;
@@ -257,6 +265,54 @@ public final class MainActivity extends LocalizedActivity {
         Spinner variants=new Spinner(this);String[] types={"common","loop","timelapse","slow","recsnap"};variants.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,types));body.addView(variants);
         LinearLayout extra=row();extra.addView(button("Start record2",()->command("record2 start","record2.cgi?&-type="+variants.getSelectedItem()+"&-cmd=start",false)),new LinearLayout.LayoutParams(0,-2,1));extra.addView(button("Stop record2",()->command("record2 stop","record2.cgi?&-type="+variants.getSelectedItem()+"&-cmd=stop",false)),new LinearLayout.LayoutParams(0,-2,1));body.addView(extra);
     }
+    private void showSimpleCamera(){
+        LinearLayout body=scrollContent();
+        body.addView(button(connected?getString(R.string.ui_refresh):getString(R.string.ui_connect),this::connect));
+        simplePreview=new SimplePreview(this);
+        int width=getResources().getDisplayMetrics().widthPixels-dp(32);
+        body.addView(simplePreview.view(),new LinearLayout.LayoutParams(-1,Math.max(dp(160),Math.min(dp(260),width*9/16))));
+        body.addView(button(getString(R.string.preview_retry),this::startSimplePreview));
+        simpleModes=new Spinner(this);updateSimpleModes();
+        body.addView(simpleModes,new LinearLayout.LayoutParams(-1,dp(56)));
+        simpleModes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override public void onNothingSelected(AdapterView<?> parent){}
+            @Override public void onItemSelected(AdapterView<?> parent,View view,int position,long id){
+                String value=(String)parent.getItemAtPosition(position);if(value.equals(mode) || modeChanging)return;
+                modeChanging=true;simpleModes.setEnabled(false);
+                commands.execute(()->{
+                    try{String raw=client().get("setcurworkmode.cgi?-workmode="+Protocol.encode(value));
+                        if(!raw.contains("Success"))throw new IllegalStateException(raw);
+                        ui.post(()->{mode=value;finishSimpleModeChange();});
+                    }catch(Exception e){ui.post(()->{finishSimpleModeChange();error(e);});}
+                });
+            }
+        });
+        LinearLayout actions=row();
+        actions.addView(button(getString(R.string.ui_take_photo),()->command(getString(R.string.ui_photo_47),"photo.cgi?&-type=photo",true)),new LinearLayout.LayoutParams(0,-2,1));
+        actions.addView(button(getString(R.string.ui_record),()->{
+            boolean lapse=mode.equals("VideoLapse");
+            command(getString(R.string.ui_start_recording),lapse?"photo.cgi?&-type=photo":"record.cgi?&-cmd=start",lapse);
+        }),new LinearLayout.LayoutParams(0,-2,1));
+        actions.addView(button(getString(R.string.ui_stop),()->command(getString(R.string.ui_stop_recording),"record.cgi?&-cmd=stop",false)),new LinearLayout.LayoutParams(0,-2,1));body.addView(actions);
+        startSimplePreview();
+    }
+    private void finishSimpleModeChange(){
+        modeChanging=false;if(destroyed)return;
+        updateSimpleModes();if(simpleModes!=null)simpleModes.setEnabled(true);
+    }
+    private void updateSimpleModes(){
+        if(simpleModes==null)return;
+        simpleModes.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,new ArrayList<>(modes)));
+        if(modes.contains(mode))simpleModes.setSelection(modes.indexOf(mode));
+    }
+    private void startSimplePreview(){
+        if(simplePreview==null)return;
+        if(WebExportService.running){toast(getString(R.string.export_busy));return;}
+        Network network=CameraClient.wifi(this);
+        if(network==null){simplePreview.message(getString(R.string.ui_connect_to_the_camera_wi_fi));return;}
+        simplePreview.start(base,network);
+    }
+    private void stopSimplePreview(){if(simplePreview!=null)simplePreview.stop();}
     private void preview(boolean high){if(WebExportService.running){toast(getString(R.string.export_busy));return;}if(CameraClient.wifi(this)==null){toast(getString(R.string.ui_connect_to_the_camera_wi_fi_22));return;}startActivity(new Intent(this,PreviewActivity.class).putExtra("base",base).putExtra("high",high));}
     private void menu(boolean system){
         String context=system?"System":mode;
@@ -290,20 +346,18 @@ public final class MainActivity extends LocalizedActivity {
         }).setNegativeButton(getString(R.string.ui_cancel),null).show();
     }
     private void showSettings(){
-        LinearLayout body=scrollContent();body.addView(text(getString(R.string.ui_connection),25,TEXT));body.addView(text(getString(R.string.ui_camera_address),14,MUTED));
+        LinearLayout body=scrollContent();
+        Switch debug=new Switch(this);debug.setText(getString(R.string.debug_mode));debug.setTextColor(TEXT);debug.setChecked(debugMode);
+        debug.setOnCheckedChangeListener((v,on)->{debugMode=on;legacy=on && getPreferences(MODE_PRIVATE).getBoolean("legacy",false);getPreferences(MODE_PRIVATE).edit().putBoolean("debug_mode",on).apply();showTab();});body.addView(debug);
+        body.addView(text(getString(R.string.debug_mode_help),13,MUTED));
+        if(!debugMode){showSimpleSettings(body);return;}
+        body.addView(text(getString(R.string.ui_connection),25,TEXT));body.addView(text(getString(R.string.ui_camera_address),14,MUTED));
         EditText ip=new EditText(this);ip.setText(base);ip.setSingleLine(true);ip.setTextColor(TEXT);ip.setInputType(android.text.InputType.TYPE_CLASS_TEXT|android.text.InputType.TYPE_TEXT_VARIATION_URI);body.addView(ip);
         body.addView(button(getString(R.string.ui_save_address),()->{try{base=Protocol.base(ip.getText().toString());getPreferences(MODE_PRIVATE).edit().putString("base",base).apply();connected=false;media.clear();selected.clear();cache.evictAll();updateStatus();toast(getString(R.string.ui_address_saved));}catch(Exception e){error(e);}}));
         body.addView(button(getString(R.string.ui_choose_wi_fi_network),this::openWifi));body.addView(button(getString(R.string.ui_connect_and_load_card),this::connect));
         Switch protocol=new Switch(this);protocol.setText(getString(R.string.ui_use_legacy_numeric_api_instead_of_newapp));protocol.setTextColor(TEXT);protocol.setChecked(legacy);protocol.setPadding(dp(4),dp(16),dp(4),dp(16));protocol.setOnCheckedChangeListener((v,on)->{legacy=on;getPreferences(MODE_PRIVATE).edit().putBoolean("legacy",on).apply();});body.addView(protocol);
         body.addView(text(getString(R.string.ui_leave_this_off_for_v1_0_0_4_newapp_loads_mode_an),13,MUTED));
-        body.addView(button("Jazyk / Language",()->{
-            String[] codes={"system","cs","en"};
-            String current=getSharedPreferences("language",MODE_PRIVATE).getString("code","system");
-            int selectedLanguage=Arrays.asList(codes).indexOf(current);
-            new AlertDialog.Builder(this).setTitle("Jazyk / Language").setSingleChoiceItems(new String[]{getString(R.string.system_language),"Čeština","English"},selectedLanguage,(dialog,index)->{
-                getSharedPreferences("language",MODE_PRIVATE).edit().putString("code",codes[index]).apply();dialog.dismiss();recreate();
-            }).setNegativeButton(android.R.string.cancel,null).show();
-        }));
+        addLanguageSetting(body);
         body.addView(text(getString(R.string.ui_storage),20,TEXT));body.addView(text(getString(R.string.ui_photos_pictures_x10connect_videos_movies_x10conn_80),14,MUTED));
         body.addView(button(getString(R.string.ui_cancel_current_download),()->{if(DownloadService.running)startService(new Intent(this,DownloadService.class).setAction(DownloadService.CANCEL));else toast(getString(R.string.ui_no_download_is_running));}));
         body.addView(text(getString(R.string.export_title),20,TEXT));
@@ -315,6 +369,26 @@ public final class MainActivity extends LocalizedActivity {
         if(!exportStatus.isEmpty())body.addView(text(exportStatus,13,MUTED));
         if(latest!=null){body.addView(text(latest+"\nDownloads/X10Connect",13,MUTED));body.addView(button(getString(R.string.export_share),this::shareWebExport));}
         body.addView(text("X10 Connect "+BuildConfig.VERSION_NAME,18,TEXT));body.addView(text(getString(R.string.ui_unofficial_lamax_x10_1_client_android_10_no_acco),13,MUTED));
+    }
+    private void showSimpleSettings(LinearLayout body){
+        body.addView(button(getString(R.string.ui_choose_wi_fi_network),this::openWifi));
+        body.addView(button(getString(R.string.ui_connect_and_load_card),this::connect));
+        addLanguageSetting(body);
+        body.addView(button(getString(R.string.ui_current_mode_settings),()->menu(false)));
+        body.addView(button(getString(R.string.ui_sync_date_and_time_with_phone),()->command(getString(R.string.ui_time),"setsystime.cgi?-time="+new java.text.SimpleDateFormat("yyyyMMddHHmmss",Locale.ROOT).format(new Date()),false)));
+        body.addView(text(getString(R.string.ui_photos_pictures_x10connect_videos_movies_x10conn_80),14,MUTED));
+        body.addView(button(getString(R.string.ui_cancel_current_download),()->{if(DownloadService.running)startService(new Intent(this,DownloadService.class).setAction(DownloadService.CANCEL));}));
+        body.addView(text("X10 Connect "+BuildConfig.VERSION_NAME,18,TEXT));
+    }
+    private void addLanguageSetting(LinearLayout body){
+        body.addView(button("Jazyk / Language",()->{
+            String[] codes={"system","cs","en"};
+            String current=getSharedPreferences("language",MODE_PRIVATE).getString("code","system");
+            int selectedLanguage=Arrays.asList(codes).indexOf(current);
+            new AlertDialog.Builder(this).setTitle("Jazyk / Language").setSingleChoiceItems(new String[]{getString(R.string.system_language),"Čeština","English"},selectedLanguage,(dialog,index)->{
+                getSharedPreferences("language",MODE_PRIVATE).edit().putString("code",codes[index]).apply();dialog.dismiss();recreate();
+            }).setNegativeButton(android.R.string.cancel,null).show();
+        }));
     }
     private void startWebExport(){
         if(DownloadService.running || WebExportService.running){toast(getString(R.string.export_busy));return;}
