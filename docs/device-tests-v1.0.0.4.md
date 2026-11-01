@@ -88,6 +88,37 @@ Majitel dodal log 31. 10. 2026, 21:01–21:02, Android 16 / SM-S928B / V1.0.0.4.
 - Malý stream opět vykreslil 1024 × 576 po přibližně 10,5 s a vykazoval buffering. DESCRIBE 12 vrací stejné H.264 / 15 fps SDP, DESCRIBE 11 opět 400. Automaticky zkoušet jiné adresy zatím kamera netestovala; 0.2.0 doplňuje tlačítko pro čtení popisů 10–19 a volitelné přehrávání přes Media3 TCP/UDP.
 - `getprimarymenuitem` pro `NormalPhoto` uspělo: položky `Resolution,Lens angle,Exposure,ISO,White balance,DNG,Time stamp,Scene mode` a aktuální hodnoty `12M,Medium,AUTO,AUTO,AUTO,JPEG,Off,Auto`. Načtení primárního menu je potvrzené; načtení dalších voleb a zápis jednotlivých parametrů tím potvrzené nejsou.
 
+## Android test 1. 11. 2026, 23:08–23:15
+
+Majitel dodal log bez verze aplikace v hlavičce a výslovně potvrdil stahování mimo aplikaci / při zhasnuté obrazovce, přeskakování uložené fotografie, zrušení přenosu, základní start/stop videa, viditelnou změnu úhlu záběru a fungující češtinu/angličtinu. Výsledky se vztahují k dosud testované kameře; nejde o zkoušku dalších telefonů nebo firmwarů.
+
+| Funkce | Důkaz a rozsah |
+| --- | --- |
+| Jednotlivé stažení | `SING0077.JPG`, 2739204 B, uloženo 1 / chyby 0. |
+| Přeskočení kopie | Následující požadavek skončil uloženo 0 / přeskočeno 1 / chyby 0; majitel potvrdil přeskočení opakovaného stažení. |
+| Dávkové stahování | Do ručního zrušení uloženo 31 souborů a přeskočeny 3. Mezi dokončenými soubory jsou JPG a `NORM0072.MP4` 4973455 B a `NORM0071.MP4` 21420891 B. Nejde o dokončený přenos celého seznamu 78 médií. |
+| Běh na pozadí | Majitel výslovně potvrdil pokračování po opuštění aplikace i zhasnutí obrazovky. |
+| Zrušení přenosu | Uživatel přenos zrušil během `SING0044.JPG`. Služba ukončila frontu se stavem Zrušeno. Kontrola, že v systémové galerii nezůstal neúplný soubor, nebyla samostatně uvedena. |
+| Základní start/stop videa | Majitel výslovně potvrdil funkčnost. Dodaný výpis neobsahuje samostatnou video start/stop dvojici ani identifikaci příslušného nového MP4; zvláštní video režimy a `record2` tím ověřené nejsou. |
+| Burst | Po přepnutí na `Burst` a jednom `photo.cgi` se počet zvýšil 78 → 88. Vzniklo deset souborů `B0010079.JPG` až `B0010088.JPG`. Následující počty zůstaly 88. Tím je nyní doložený vznik celé série z konkrétní spouště. |
+| PhotoLapse | Po přepnutí a spoušti vzrostl počet 88 → 89, následně 91. Vznikly `L0020089.JPG` až `L0020091.JPG`. Po `record.cgi?&-cmd=stop` zůstal počet při dalších kontrolách 91. Doložený je krátký běh a ustání přírůstků; délku/konfiguraci všech intervalů to neověřuje. |
+| TimerPhoto | Po spoušti byl počet nejprve 91 a později 92; vznikl `DLAY0092.JPG` s časem několik sekund po požadavku. Opožděné načtení nového souboru fungovalo. |
+| Volby parametru | `getsecondmenuitem` pro `Time stamp` vrátilo On/Off; pro `Lens angle` Wide/Medium/Narrow a aktuální hodnotu. Změna Time stamp v dodaném výpisu není. |
+| Zápis Lens angle | Postup Medium → Wide → Narrow → Medium: každé nastavení vrátilo Success a další primární/sekundární čtení potvrdilo aktuální hodnotu. Majitel potvrdil i skutečnou změnu záběru. Obecná cesta načtení možností / zápisu / zpětného čtení je potvrzená na tomto parametru, nikoli na všech položkách. |
+| Systémové menu | `getprimarymenuitem` pro System vrací seznam a aktuální hodnoty. Zápisy systémových parametrů tím ještě potvrzené nejsou. |
+| Jazyky aplikace | Majitel výslovně potvrdil funkční české i anglické rozhraní. |
+
+Drobnost v hlášení: ruční zrušení je v současné implementaci započteno také jako jedna chyba (`Stahování zrušeno`, uloženo 31 / přeskočeno 3 / chyby 1). Tato položka odpovídá zrušenému souboru a sama neprokazuje selhání dokončených přenosů. Zatím jde o evidovaný nedostatek rozlišení výsledku, ne o opravu provedenou tímto zápisem dokumentace.
+
+## Souhrn dosud potvrzeného
+
+- Spojení, stav kamery, jedno- i dvoustránkové seznamy a náhled streamu 12.
+- Media3 TCP a UDP/automatická volba podle majitelova potvrzení startují rychleji a méně vypadávají. Z logu 0.2.0: první snímek TCP 612 ms, UDP/auto 642 ms a při dalším spuštění 502 ms, proti přibližně 10,6 s u nativního přehrávače. Jde o dobu spuštění, ne nezávislé měření zpoždění vůči skutečné scéně. Skutečný RTP transport u automatické volby není samotným `tcp=false` jednoznačně prokázán.
+- Scan DESCRIBE 10–19 potvrdil video pouze na 12; další testy přehrání 1–9 byly odmítnuté v OPTIONS. Výsledek není důkazem neexistence jiných URI mimo zkoušený rozsah a tvar cesty.
+- Jednotlivé a dávkové stahování JPG/MP4, přeskakování kopie, běh na pozadí a při vypnuté obrazovce, zrušení fronty.
+- Normální foto, konkrétní desetisnímková série, krátký PhotoLapse a samospoušť. Základní nahrávání videa potvrzeno majitelem.
+- Čtení menu a možností, zápis a zpětné čtení Lens angle, viditelný účinek úhlu záběru, čeština/angličtina aplikace.
+
 ## Zatím neověřeno
 
-Start/stop videa, ostatní režimy a parametry, příčina selhání většího RTSP streamu, stažení a uložení přes Android MediaStore, hromadné stahování, obnova přerušeného přenosu, chování velmi velkých souborů, jiné telefony/verze firmwaru, synchronizace času a aktualizace firmwaru. Tyto výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.
+Export webových souborů do ZIP z 0.2.1 na skutečné kameře; synchronizace času přes konkrétní CGI; další parametry a jejich účinek; CarMode, VideoLapse, SlowRec a alternativní `record2` start/stop; kontrola odstranění rozpracovaného média po zrušení; chování velmi velkých souborů; jiné telefony/verze firmwaru; příčina odmítání dalších RTSP adres a aktualizace/recovery firmwaru. Obnova přenosu od posledního bajtu zatím není implementovaná, proto nejde jen o neověřenou funkci. Výsledky neprokazují funkčnost všech CGI příkazů nalezených v APK nebo ELF.
