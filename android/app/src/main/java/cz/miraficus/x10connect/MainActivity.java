@@ -37,7 +37,7 @@ public final class MainActivity extends LocalizedActivity {
     private boolean connected,legacy,destroyed,receiverRegistered;
     private String base="http://192.168.0.1",device="",mode="NormalPhoto",tab="Galerie",filter="Vše";
     private TextView status,transfer,selectionText,batteryText,cameraNameText;
-    private String cameraName="LAMAX X10.1",batteryLevel="—";
+    private String cameraName="",batteryLevel="—";
     private Button downloadButton,clearSelectionButton;
     private FrameLayout content;
     private LinearLayout navigation;
@@ -120,8 +120,7 @@ public final class MainActivity extends LocalizedActivity {
             TextView brand=text("X10 Connect",17,MUTED);brand.setTypeface(null,Typeface.BOLD);
             if(wideLayout()){LinearLayout compact=row();compact.addView(brand,new LinearLayout.LayoutParams(0,-2,1));compact.addView(UiStyle.iconButton(this,getString(R.string.ui_choose_wi_fi_network),"wifi",this::openWifi),new LinearLayout.LayoutParams(dp(48),dp(48)));root.addView(compact);}else root.addView(brand);
             LinearLayout connection=row();connection.setPadding(dp(14),dp(10),dp(10),dp(10));connection.setBackground(UiStyle.shape(this,CARD,22,true));
-            ImageView cameraIcon=new ImageView(this);cameraIcon.setImageDrawable(UiStyle.icon(this,"camera",ACCENT,30));connection.addView(cameraIcon,new LinearLayout.LayoutParams(dp(36),dp(48)));
-            LinearLayout identity=column();identity.setPadding(dp(10),0,dp(4),0);cameraNameText=text(cameraName,15,TEXT);cameraNameText.setSingleLine(true);cameraNameText.setEllipsize(android.text.TextUtils.TruncateAt.END);identity.addView(cameraNameText);
+            LinearLayout identity=column();identity.setPadding(0,0,dp(4),0);cameraNameText=text(getString(R.string.simple_camera_model),15,TEXT);cameraNameText.setSingleLine(true);cameraNameText.setEllipsize(android.text.TextUtils.TruncateAt.END);identity.addView(cameraNameText);
             status=text("",12,MUTED);status.setMaxLines(2);status.setEllipsize(android.text.TextUtils.TruncateAt.END);identity.addView(status);connection.addView(identity,new LinearLayout.LayoutParams(0,-2,1));
             batteryText=text(batteryLevel,12,MUTED);batteryText.setCompoundDrawablesRelative(UiStyle.icon(this,"battery",MUTED,20),null,null,null);batteryText.setCompoundDrawablePadding(dp(4));connection.addView(batteryText);
             Button wifiButton=UiStyle.iconButton(this,getString(R.string.ui_choose_wi_fi_network),"wifi",this::openWifi);
@@ -137,7 +136,7 @@ public final class MainActivity extends LocalizedActivity {
         status.setText(debugMode?(connected?device:"Wi-Fi "+(wifi==null?getString(R.string.ui_disconnected):getString(R.string.ui_connected))+" · "+base)
             :(connected?getString(R.string.simple_connected):getString(R.string.simple_not_connected)));
         if(batteryText!=null)batteryText.setText(connected?batteryLevel:"—");
-        if(cameraNameText!=null)cameraNameText.setText(cameraName);
+        if(cameraNameText!=null)cameraNameText.setText(connected && !cameraName.trim().isEmpty()?cameraName:getString(R.string.simple_camera_model));
         status.setTextColor(connected?ACCENT:MUTED);
     }
     private void openWifi(){try{startActivity(new Intent(Settings.Panel.ACTION_WIFI));}catch(Exception e){startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));}}
@@ -165,7 +164,7 @@ public final class MainActivity extends LocalizedActivity {
             CameraClient c=client();Map<String,String> attr=Protocol.vars(c.get("getdeviceattr.cgi"));
             if(attr.isEmpty())throw new IllegalStateException(getString(R.string.ui_the_camera_did_not_return_its_identity));
             Map<String,String> battery=Protocol.vars(c.get("getbatterycapacity.cgi?"));
-            return new String[]{attr.getOrDefault("name",getString(R.string.camera)),attr.getOrDefault("softversion",""),battery.getOrDefault("capacity","?")};
+            return new String[]{attr.getOrDefault("name",getString(R.string.simple_camera_model)),attr.getOrDefault("softversion",""),battery.getOrDefault("capacity","?")};
         },result->{connected=true;cameraName=result[0];batteryLevel=result[2]+" %";device=result[0]+" · "+result[1]+" · "+result[2]+" %";updateStatus();refresh();loadModes();});
     }
     private void refresh(){
@@ -192,8 +191,8 @@ public final class MainActivity extends LocalizedActivity {
     private LinearLayout simplePageHeading(LinearLayout body,String title,String subtitle){
         LinearLayout heading=row();LinearLayout captions=column();TextView name=text(title,28,TEXT);name.setTypeface(null,Typeface.BOLD);captions.addView(name);
         if(subtitle!=null)captions.addView(text(subtitle,12,MUTED));heading.addView(captions,new LinearLayout.LayoutParams(0,-2,1));
-        Button refresh=UiStyle.iconButton(this,connected?getString(R.string.ui_refresh):getString(R.string.ui_connect),connected?"refresh":"wifi",connected?this::refresh:this::connect);
-        heading.addView(refresh,new LinearLayout.LayoutParams(dp(48),dp(48)));
+        Button refresh=UiStyle.button(this,connected?getString(R.string.ui_refresh):getString(R.string.ui_connect),connected?"refresh":"connect",false,false,connected?this::refresh:this::connect);
+        heading.addView(refresh,new LinearLayout.LayoutParams(-2,-2));
         LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(-1,-2);hp.bottomMargin=dp(14);body.addView(heading,hp);return heading;
     }
     private void showSimpleGallery(){

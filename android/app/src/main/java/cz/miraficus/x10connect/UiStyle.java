@@ -49,6 +49,7 @@ final class UiStyle {
                 case "video":line(canvas,5,3,21,12,5,21,5,3);break;
                 case "record":canvas.drawCircle(12,12,9,p);p.setStyle(Paint.Style.FILL);canvas.drawCircle(12,12,5,p);break;
                 case "stop":canvas.drawCircle(12,12,9,p);p.setStyle(Paint.Style.FILL);canvas.drawRoundRect(8,8,16,16,1,1,p);break;
+                case "connect":line(canvas,8,2,8,7);line(canvas,16,2,16,7);canvas.drawRoundRect(5,7,19,16,3,3,p);line(canvas,12,16,12,22);break;
                 case "wifi":canvas.drawArc(1,3,23,25,225,90,false,p);canvas.drawArc(5,8,19,22,225,90,false,p);canvas.drawArc(9,13,15,19,225,90,false,p);p.setStyle(Paint.Style.FILL);canvas.drawCircle(12,20,1,p);break;
                 case "refresh":canvas.drawArc(4,4,20,20,40,285,false,p);line(canvas,15,2,20,5,16,9);break;
                 case "download":line(canvas,12,3,12,16,7,11);line(canvas,12,16,17,11);line(canvas,4,17,4,21,20,21,20,17);break;

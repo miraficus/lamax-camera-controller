@@ -56,7 +56,7 @@
     <string name="ui_select_a_photo_mode_before_shooting_let_the_time" formatted="false">"Select a photo mode before shooting. Let the timer finish before changing mode. New files are checked for up to 30 seconds."</string>
     <string name="ui_photo_47" formatted="false">"Photo"</string>
     <string name="ui_record" formatted="false">"● Record"</string>
-    <string name="ui_stop" formatted="false">"■ Stop"</string>
+    <string name="ui_stop" formatted="false">"Stop"</string>
     <string name="ui_start_recording" formatted="false">"Start recording"</string>
     <string name="ui_stop_recording" formatted="false">"Stop recording"</string>
     <string name="ui_live_preview_small_tested" formatted="false">"Live preview · small (tested)"</string>
@@ -194,4 +194,5 @@
         <item quantity="one">%d file</item>
         <item quantity="other">%d files</item>
     </plurals>
+    <string name="simple_camera_model">Camera model</string>
 </resources>

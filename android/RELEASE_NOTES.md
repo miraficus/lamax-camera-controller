@@ -1,14 +1,13 @@
-Unofficial LAMAX X10.1 client for **Android 10+**. Download **X10Connect-0.3.1.apk** below. Keeps the signing identity used by previews 0.1.1 and later.
+Unofficial LAMAX camera client for **Android 10+**. Download **X10Connect-0.3.2.apk** below. Keeps the signing identity used by previews 0.1.1 and later.
 
-### A clearer simple interface
+### Connection card refinements
 
-- Rounded connection card, more spacing, consistent line icons and bottom navigation.
-- Camera: rounded 16:9 Media3 TCP preview, refresh and fullscreen controls, readable translated mode names and three large Photo / Start / Stop buttons.
-- Gallery: distinct segmented All / Photos / Videos filters, separate Select all / Clear selection actions, selection circles over thumbnails and a prominent Download selected button with a count.
-- Selection is retained across filters. Select all affects the visible filter; Clear selection clears the whole selection. Downloads include all selected files, including those hidden by a filter.
-- English/Czech labels and plural counts. Local logs and the Debug mode switch remain available. Debug controls keep their existing layout.
-- Existing background downloads, duplicate detection, camera command endpoints and preview transport are unchanged.
+- Removed the large camera illustration from the top connection card.
+- Before connection, the heading reads **Camera model**. After a successful identity query it shows the camera-reported name; it no longer assumes LAMAX X10.1 while disconnected.
+- Wi-Fi selection keeps the Wi-Fi icon. The separate **Connect** action now has a plug icon and a visible label; after connection it becomes **Refresh** with a refresh icon and label.
+- Removed the extra square character from the Stop label, leaving the dedicated icon above it.
+- English/Czech strings updated. Preview transport and camera commands are unchanged.
 
-This is a UI prerelease. Automated checks cover the build, lint and existing protocol/export tests; the new screens and fullscreen preview still need physical-device testing, including large font settings and landscape orientation.
+Device operation has been tested with LAMAX X10.1 V1.0.0.4 on Android 16. **LAMAX X9.1 compatibility is not verified**; displaying a camera-reported name does not establish protocol compatibility.
 
-**Čeština:** Upravený jednoduchý režim podle schváleného návrhu: zaoblené prvky, větší rozestupy, vložený náhled s obnovou a celou obrazovkou, srozumitelné názvy režimů a výrazná tlačítka. Galerie má samostatné filtry, akce **Označit vše / Zrušit označení**, kolečka v rozích náhledů a hlavní tlačítko **Stáhnout označené**. Ladicí režim zůstává dostupný v Nastavení. Nové rozložení prosím vyzkoušet na telefonu.
+**Čeština:** Z horní karty zmizel velký obrázek fotoaparátu. Před připojením se zobrazuje **Model kamery**, po připojení název vrácený kamerou. Wi-Fi a Připojit mají rozdílné ikony; Připojit / Obnovit má i viditelný popisek. Z tlačítka Zastavit byl odstraněn přebytečný čtvereček. Funkčnost s X9.1 zatím není ověřená.

@@ -134,3 +134,8 @@ Resource limits are 10,000 files, 512 directories, 16 path levels, 64 MiB per fi
 The archive may contain camera configuration and device-specific files. Sharing is an explicit user action; camera files and exported archives must not be committed to the public source repository.
 
 See [upgrade mechanism findings](../docs/firmware-v1.0.0.4/upgrade-path.md) for the separate static analysis of the actual camera program.
+
+
+### Horní panel a model kamery (0.3.2)
+
+Horní karta nemá dekorativní obrázek. Bez připojení ukazuje „Model kamery“, po úspěšném `getdeviceattr.cgi` zobrazí pole `name` vrácené kamerou. Číselné pole `model` z tohoto endpointu se jako název nepoužívá: testovaná X10.1 v něm vrací `3189112`. Při odpojení se panel vrátí k neutrálnímu popisku. Výběr Wi-Fi má ikonu Wi-Fi, připojení ikonu zástrčky a viditelný text; po připojení se změní na Obnovit. Kompatibilita příkazů s X9.1 zatím nebyla fyzicky otestována.

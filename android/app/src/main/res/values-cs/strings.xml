@@ -56,7 +56,7 @@
     <string name="ui_select_a_photo_mode_before_shooting_let_the_time" formatted="false">"Před focením nastav fotografický režim. U samospouště počkej na dokončení před změnou režimu. Nové soubory kontrolujeme až 30 s."</string>
     <string name="ui_photo_47" formatted="false">"Fotografie"</string>
     <string name="ui_record" formatted="false">"● Nahrávat"</string>
-    <string name="ui_stop" formatted="false">"■ Zastavit"</string>
+    <string name="ui_stop" formatted="false">"Zastavit"</string>
     <string name="ui_start_recording" formatted="false">"Start videa"</string>
     <string name="ui_stop_recording" formatted="false">"Stop videa"</string>
     <string name="ui_live_preview_small_tested" formatted="false">"Živý náhled · menší (ověřený)"</string>
@@ -198,4 +198,5 @@
         <item quantity="many">%d souboru</item>
         <item quantity="other">%d souborů</item>
     </plurals>
+    <string name="simple_camera_model">Model kamery</string>
 </resources>
