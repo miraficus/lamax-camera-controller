@@ -24,7 +24,7 @@ Jednoduchý režim nově používá schválený tmavý návrh s tyrkysovou hlavn
 
 - Kamera: zaoblený náhled 16:9, ikony pro obnovení a celou obrazovku, přeložený výběr režimu a tlačítka Vyfotit / Start / Stop. Indikátor ŽIVĚ se zobrazuje při přehrávání; nejde o indikátor záznamu na kartu. Příkazové API a nastavení Media3 TCP zůstávají stejné.
 - Galerie: filtry jsou společný přepínač Vše / Fotky / Videa; na zvláštním řádku jsou Označit vše a Zrušit označení. Označit vše se vztahuje na právě filtrované soubory, Zrušit označení na celý výběr. Počet i hlavní tlačítko Stáhnout označené zahrnují také vybrané soubory skryté jiným filtrem.
-- Výběrová kolečka jsou v rozích náhledů; klepnutí na fotografii zachovává nabídku stažení a otevření místní kopie. Mřížka se posouvá samostatně, hlavní stažení zůstává pod ní.
+- Výběrová kolečka jsou v rozích náhledů; klepnutí na fotografii zachovává nabídku stažení a otevření místní kopie. Mřížka se posouvá samostatně, hlavní stažení zůstává pod ní. Na šířku se filtry a označování přesunou do samostatně posuvného levého sloupce, aby mřížka měla místo.
 - Česká i anglická lokalizace mají čitelné názvy režimů; neznámý režim se zobrazí beze změny. Ladicí režim zachovává své dosavadní ovládání.
 
 Nové obrazovky je nutné ověřit na telefonu, zejména při větším písmu, na šířku a při návratu z celoobrazovkového náhledu. Původní vizuální návrh je koncept, testovací sestavení používá nativní Android Views a vektorové ikony.

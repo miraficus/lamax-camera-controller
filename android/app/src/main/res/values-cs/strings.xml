@@ -189,11 +189,13 @@
     <plurals name="simple_selected">
         <item quantity="one">%d označený soubor</item>
         <item quantity="few">%d označené soubory</item>
+        <item quantity="many">%d označeného souboru</item>
         <item quantity="other">%d označených souborů</item>
     </plurals>
     <plurals name="simple_files">
         <item quantity="one">%d soubor</item>
         <item quantity="few">%d soubory</item>
+        <item quantity="many">%d souboru</item>
         <item quantity="other">%d souborů</item>
     </plurals>
 </resources>

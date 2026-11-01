@@ -89,7 +89,8 @@ public final class MainActivity extends LocalizedActivity {
         if(receiverRegistered){unregisterReceiver(progressReceiver);receiverRegistered=false;}
     }
     @Override public void onDestroy(){destroyed=true;ui.removeCallbacksAndMessages(null);commands.shutdownNow();thumbnails.shutdownNow();super.onDestroy();}
-    @Override public void onConfigurationChanged(android.content.res.Configuration c){super.onConfigurationChanged(c);showTab();}
+    @Override public void onConfigurationChanged(android.content.res.Configuration c){super.onConfigurationChanged(c);if(debugMode)showTab();else build();}
+    private boolean wideLayout(){return getResources().getConfiguration().orientation==android.content.res.Configuration.ORIENTATION_LANDSCAPE;}
     private int dp(int value){return Math.round(value*getResources().getDisplayMetrics().density);}
     private GradientDrawable shape(int color,int radius){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(radius));return d;}
     private TextView text(String value,int size,int color){TextView v=new TextView(this);v.setText(LocaleHelper.label(this,value));v.setTextSize(size);v.setTextColor(color);v.setPadding(dp(4),dp(5),dp(4),dp(5));return v;}
@@ -116,7 +117,8 @@ public final class MainActivity extends LocalizedActivity {
         header.addView(title,new LinearLayout.LayoutParams(0,dp(64),1));header.addView(button("Wi-Fi",this::openWifi));root.addView(header);
         status=text(getString(R.string.ui_connect_to_the_camera_wi_fi),13,MUTED);root.addView(status);
         }else{
-            TextView brand=text("X10 Connect",17,MUTED);brand.setTypeface(null,Typeface.BOLD);root.addView(brand);
+            TextView brand=text("X10 Connect",17,MUTED);brand.setTypeface(null,Typeface.BOLD);
+            if(wideLayout()){LinearLayout compact=row();compact.addView(brand,new LinearLayout.LayoutParams(0,-2,1));compact.addView(UiStyle.iconButton(this,getString(R.string.ui_choose_wi_fi_network),"wifi",this::openWifi),new LinearLayout.LayoutParams(dp(48),dp(48)));root.addView(compact);}else root.addView(brand);
             LinearLayout connection=row();connection.setPadding(dp(14),dp(10),dp(10),dp(10));connection.setBackground(UiStyle.shape(this,CARD,22,true));
             ImageView cameraIcon=new ImageView(this);cameraIcon.setImageDrawable(UiStyle.icon(this,"camera",ACCENT,30));connection.addView(cameraIcon,new LinearLayout.LayoutParams(dp(36),dp(48)));
             LinearLayout identity=column();identity.setPadding(dp(10),0,dp(4),0);cameraNameText=text(cameraName,15,TEXT);cameraNameText.setSingleLine(true);cameraNameText.setEllipsize(android.text.TextUtils.TruncateAt.END);identity.addView(cameraNameText);
@@ -124,7 +126,7 @@ public final class MainActivity extends LocalizedActivity {
             batteryText=text(batteryLevel,12,MUTED);batteryText.setCompoundDrawablesRelative(UiStyle.icon(this,"battery",MUTED,20),null,null,null);batteryText.setCompoundDrawablePadding(dp(4));connection.addView(batteryText);
             Button wifiButton=UiStyle.iconButton(this,getString(R.string.ui_choose_wi_fi_network),"wifi",this::openWifi);
             LinearLayout.LayoutParams wp=new LinearLayout.LayoutParams(dp(48),dp(48));wp.setMarginStart(dp(10));connection.addView(wifiButton,wp);
-            LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(-1,-2);cp.topMargin=dp(4);cp.bottomMargin=dp(8);root.addView(connection,cp);
+            LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(-1,-2);cp.topMargin=dp(4);cp.bottomMargin=dp(8);root.addView(connection,cp);if(wideLayout())connection.setVisibility(View.GONE);
         }
         transfer=text("",12,ACCENT);transfer.setMaxLines(2);if(!debugMode)transfer.setVisibility(View.GONE);root.addView(transfer);
         content=new FrameLayout(this);root.addView(content,new LinearLayout.LayoutParams(-1,0,1));
@@ -195,7 +197,14 @@ public final class MainActivity extends LocalizedActivity {
         LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(-1,-2);hp.bottomMargin=dp(14);body.addView(heading,hp);return heading;
     }
     private void showSimpleGallery(){
-        LinearLayout body=column();content.addView(body);
+        LinearLayout body=column(),results=body;
+        if(wideLayout()){
+            LinearLayout split=row();split.setGravity(Gravity.TOP);content.addView(split);
+            ScrollView toolbar=new ScrollView(this);toolbar.setFillViewport(false);toolbar.addView(body);
+            int width=Math.min(dp(270),getResources().getDisplayMetrics().widthPixels*2/5);
+            LinearLayout.LayoutParams tp=new LinearLayout.LayoutParams(width,-1);tp.setMarginEnd(dp(16));split.addView(toolbar,tp);
+            results=column();split.addView(results,new LinearLayout.LayoutParams(0,-1,1));
+        }else content.addView(body);
         visible.clear();for(Protocol.Media m:media)if(filter.equals("Vše") || filter.equals("Videa")==m.video())visible.add(m);
         simplePageHeading(body,LocaleHelper.label(this,"Galerie"),getResources().getQuantityString(R.plurals.simple_files,visible.size(),visible.size()));
         LinearLayout filters=row();filters.setPadding(dp(4),dp(4),dp(4),dp(4));filters.setBackground(UiStyle.shape(this,CARD,28,true));filters.setContentDescription(getString(R.string.simple_media_filter));
@@ -214,14 +223,14 @@ public final class MainActivity extends LocalizedActivity {
         LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(0,-2,1);cp.setMarginStart(dp(6));selection.addView(clearSelectionButton,cp);
         LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,-2);sp.bottomMargin=dp(12);body.addView(selection,sp);
         if(visible.isEmpty()){
-            TextView empty=text(connected?getString(R.string.simple_no_matches):getString(R.string.ui_your_camera_without_the_cloud_1_enable_wi_fi_on_),16,MUTED);empty.setGravity(Gravity.CENTER);body.addView(empty,new LinearLayout.LayoutParams(-1,0,1));
+            TextView empty=text(connected?getString(R.string.simple_no_matches):getString(R.string.ui_your_camera_without_the_cloud_1_enable_wi_fi_on_),16,MUTED);empty.setGravity(Gravity.CENTER);results.addView(empty,new LinearLayout.LayoutParams(-1,0,1));
         }else{
             grid=new GridView(this);grid.setNumColumns(GridView.AUTO_FIT);grid.setColumnWidth(dp(144));grid.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
             grid.setHorizontalSpacing(dp(12));grid.setVerticalSpacing(dp(14));grid.setClipToPadding(false);grid.setPadding(0,0,0,dp(8));
-            adapter=new GalleryAdapter();grid.setAdapter(adapter);body.addView(grid,new LinearLayout.LayoutParams(-1,0,1));
+            adapter=new GalleryAdapter();grid.setAdapter(adapter);results.addView(grid,new LinearLayout.LayoutParams(-1,0,1));
         }
         downloadButton=UiStyle.button(this,"","download",true,false,this::downloadSelected);
-        LinearLayout.LayoutParams dp=new LinearLayout.LayoutParams(-1,-2);dp.topMargin=dp(10);dp.bottomMargin=dp(4);body.addView(downloadButton,dp);updateSelection();
+        LinearLayout.LayoutParams dp=new LinearLayout.LayoutParams(-1,-2);dp.topMargin=dp(10);dp.bottomMargin=dp(4);results.addView(downloadButton,dp);updateSelection();
     }
     private View simpleTile(Protocol.Media item){
         LinearLayout card=column();
