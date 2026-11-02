@@ -111,7 +111,7 @@ struct SettingsView: View {
             Picker("Jazyk / Language",selection: $language) { Text(tr("Podle systému", "System")).tag("system"); Text("Čeština").tag("cs"); Text("English").tag("en") }.pickerStyle(.menu)
             Button(tr("Synchronizovat čas", "Synchronize time")) { model.syncTime() }.buttonStyle(CapsuleAction()).disabled(model.busy)
             Text(tr("Stažené soubory najdeš v Soubory → Na mém iPhonu → X10 Connect → Downloads. Vybrané uložené soubory lze sdílet z Galerie. Při stahování nech aplikaci v popředí; přechod na pozadí přenos zruší.", "Downloaded files are in Files → On My iPhone → X10 Connect → Downloads. Share selected saved files from Gallery. Keep the app in the foreground while downloading; moving it to the background cancels the transfer.")).font(.footnote).foregroundColor(.secondary)
-            Text("X10 Connect iOS 0.1.0 · iOS 15+").font(.footnote)
+            Text("X10 Connect iOS " + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "") + " · iOS 15+").font(.footnote)
             Text(tr("Neoficiální aplikace. X9.1 zatím není ověřená.", "Unofficial client. X9.1 is not verified yet.")).font(.caption).foregroundColor(.secondary)
             Text("VideoLAN MobileVLCKit 3.6.0 · LGPL 2.1").font(.caption)
             Link(tr("Zdrojový kód a licence", "Source and licenses"),destination: URL(string: "https://github.com/miraficus/lamax-camera-controller/tree/ios/ios")!)

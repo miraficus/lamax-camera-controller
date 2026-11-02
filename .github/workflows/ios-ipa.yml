@@ -21,6 +21,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
+      HOMEBREW_NO_AUTO_UPDATE: '1'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,9 +33,14 @@ jobs:
           pod --version
       - name: Test protocol and file validation
         run: swift test --package-path ios/CameraCore
+      - uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: ios-mobilevlckit-3.6.0-xcode16.4-v1
       - name: Generate project and install pinned VLC SDK
         run: |
           cd ios
+          swift scripts/make_icon.swift Resources/Assets.xcassets
           xcodegen generate
           pod install
       - name: Build ARM64 for iOS 15

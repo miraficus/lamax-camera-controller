@@ -24,7 +24,7 @@ struct VLCPreview: UIViewRepresentable {
         var status: Binding<String>
         init(status: Binding<String>) { self.status = status; super.init(); player.delegate = self }
         func stop() { player.stop(); player.drawable = nil }
-        func mediaPlayerStateChanged(_ aNotification: Notification!) {
+        func mediaPlayerStateChanged(_ aNotification: Notification) {
             let state = player.state
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }

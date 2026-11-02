@@ -10,8 +10,8 @@ settings:
   base:
     SWIFT_VERSION: '5.0'
     IPHONEOS_DEPLOYMENT_TARGET: '15.0'
-    MARKETING_VERSION: '0.1.0'
-    CURRENT_PROJECT_VERSION: '1'
+    MARKETING_VERSION: '0.1.1'
+    CURRENT_PROJECT_VERSION: '2'
     TARGETED_DEVICE_FAMILY: '1,2'
     ENABLE_BITCODE: NO
     CODE_SIGNING_ALLOWED: NO
@@ -23,11 +23,11 @@ targets:
     platform: iOS
     sources:
       - App
-    resources:
       - Resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: cz.miraficus.x10connect.ios
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Info.plist
     dependencies:

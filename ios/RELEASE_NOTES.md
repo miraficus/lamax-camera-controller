@@ -1,6 +1,6 @@
 First **iOS 15.0+ / ARM64** preview of X10 Connect, targeting iPhone SE (1st generation), including iOS 15.8.8.
 
-Download **X10Connect-iOS-0.1.0.ipa** below. This device build has an **ad hoc signature only**, with no Apple developer certificate or provisioning profile. Install using an existing compatible TrollStore or jailbreak IPA installation setup; it is not a normally Apple-signed IPA. No root privileges or private app entitlements are requested.
+Download **X10Connect-iOS-0.1.1.ipa** below. This device build has an **ad hoc signature only**, with no Apple developer certificate or provisioning profile. Install using an existing compatible TrollStore or jailbreak IPA installation setup; it is not a normally Apple-signed IPA. No root privileges or private app entitlements are requested.
 
 Simple UI only, no debug tools:
 - Gallery filters, multi-selection, thumbnails, paginated listings, batch downloads, size verification, duplicate skipping and sharing saved files.

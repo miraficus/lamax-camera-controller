@@ -234,3 +234,4 @@ ios/*.xcodeproj/
 ios/*.xcworkspace/
 ios/Podfile.lock
 *.ipa
+ios/Resources/Assets.xcassets/

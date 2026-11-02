@@ -16,7 +16,7 @@ Samostatný jednoduchý klient ve SwiftUI pro **iOS 15.0+ / ARM64**, cílený na
 
 Workflow sestaví zařízení **iphoneos / arm64**, minimum iOS 15.0, bez Apple účtu, certifikátu nebo provisioning profilu. Balíček dostane pouze lokální **ad hoc podpis**; není podepsaný pro běžnou instalaci App Storem nebo Finderem.
 
-1. Stáhnout `X10Connect-iOS-0.1.0.ipa` z prerelease `ios-v0.1.0`.
+1. Stáhnout `X10Connect-iOS-0.1.1.ipa` z prerelease `ios-v0.1.1`.
 2. Pokud je v telefonu funkční **TrollStore**, otevřít IPA v něm a nainstalovat. TrollStore podle svého README podporuje rozsah iOS 14.0 beta 2 až 16.6.1, kam 15.8.8 patří; dostupnost instalátoru a aktuální instalaci na konkrétním telefonu je nutné ověřit.
 3. Jinak použít IPA instalátor podporovaný již používaným jailbreakem; může vyžadovat AppSync nebo odpovídající podporu nepodepsaných aplikací. Samotné označení „jailbreaknutý“ nezaručuje, že libovolný instalátor balíček přijme. Aplikace nepotřebuje root ani soukromé entitlementy. Není nutné kvůli ní měnit jailbreak.
 4. Zapnout Wi-Fi kamery, připojit iPhone ručně přes Nastavení k její síti, ponechat spojení bez internetu.
@@ -31,6 +31,7 @@ Na macOS s Xcode 16.4, XcodeGen a CocoaPods:
 ```sh
 swift test --package-path ios/CameraCore
 cd ios
+swift scripts/make_icon.swift Resources/Assets.xcassets
 xcodegen generate
 pod install
 cd ..
