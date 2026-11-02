@@ -10,6 +10,7 @@ struct ShareSheet: UIViewControllerRepresentable {
 struct Thumbnail: View {
     let file: CameraFile
     let address: String
+    let enabled: Bool
     @State private var image: UIImage?
     var body: some View {
         ZStack {
@@ -17,7 +18,8 @@ struct Thumbnail: View {
             if let image = image { Image(uiImage: image).resizable().scaledToFill() }
             else { Image(systemName: file.video ? "video" : "photo").foregroundColor(.secondary) }
         }.frame(height: 100).clipped().cornerRadius(16)
-        .task(id: address + file.path) {
+        .task(id: address + file.path + String(enabled)) {
+            guard enabled else { return }
             do { let c = try CameraHTTP(base: address); defer { c.close() }; image = try await c.image(file) } catch { }
         }
     }
@@ -60,7 +62,7 @@ struct GalleryView: View {
     private func tile(_ file: CameraFile) -> some View {
         VStack(alignment: .leading,spacing: 4) {
             ZStack(alignment: .topTrailing) {
-                Thumbnail(file: file,address: model.address)
+                Thumbnail(file: file,address: model.address,enabled: !model.downloading)
                 Button {
                     if model.selected.contains(file.path) { model.selected.remove(file.path) } else { model.selected.insert(file.path) }
                 } label: { Image(systemName: model.selected.contains(file.path) ? "checkmark.circle.fill" : "circle").font(.title2).foregroundColor(model.selected.contains(file.path) ? Theme.accent : .white).padding(10).background(Color.black.opacity(0.2)).clipShape(Circle()) }.accessibilityLabel((model.selected.contains(file.path) ? tr("Zrušit označení", "Deselect") : tr("Označit", "Select")) + " " + file.name)

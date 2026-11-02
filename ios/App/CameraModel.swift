@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import ImageIO
 import CameraCore
 
 func tr(_ cs: String, _ en: String) -> String {
@@ -62,10 +63,16 @@ final class CameraHTTP: NSObject, URLSessionTaskDelegate {
     }
     func image(_ file: CameraFile) async throws -> UIImage? {
         let path = try CameraProtocol.safePath(file.thumbnail, thumbnail: true)
-        do { if let image = UIImage(data: try await bytes(base.appendingPathComponent(path))) { return image } }
+        do { if let image = thumbnailImage(try await bytes(base.appendingPathComponent(path))) { return image } }
         catch { if file.video { return nil } }
         guard !file.video else { return nil }
-        return UIImage(data: try await bytes(base.appendingPathComponent(try CameraProtocol.safePath(file.path))))
+        return thumbnailImage(try await bytes(base.appendingPathComponent(try CameraProtocol.safePath(file.path))))
+    }
+    private func thumbnailImage(_ data: Data) -> UIImage? {
+        // Decode a bounded thumbnail instead of retaining 12 MP bitmaps on older iPhones.
+        guard let source = CGImageSourceCreateWithData(data as CFData, [kCGImageSourceShouldCache: false] as CFDictionary),
+              let image = CGImageSourceCreateThumbnailAtIndex(source, 0, [kCGImageSourceCreateThumbnailFromImageAlways: true, kCGImageSourceCreateThumbnailWithTransform: true, kCGImageSourceThumbnailMaxPixelSize: 400, kCGImageSourceShouldCacheImmediately: true] as CFDictionary) else { return nil }
+        return UIImage(cgImage: image)
     }
     func download(_ file: CameraFile, to destination: URL) async throws {
         let url = base.appendingPathComponent(try CameraProtocol.safePath(file.path))
