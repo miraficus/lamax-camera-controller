@@ -224,3 +224,13 @@ android/**/build/
 android/local.properties
 *.apk
 *.aab
+
+# iOS generated project and local builds
+ios/Pods/
+ios/.build/
+ios/CameraCore/.build/
+ios/DerivedData/
+ios/*.xcodeproj/
+ios/*.xcworkspace/
+ios/Podfile.lock
+*.ipa

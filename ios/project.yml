@@ -1,0 +1,41 @@
+name: X10Connect
+options:
+  bundleIdPrefix: cz.miraficus
+  deploymentTarget:
+    iOS: '15.0'
+packages:
+  CameraCore:
+    path: CameraCore
+settings:
+  base:
+    SWIFT_VERSION: '5.0'
+    IPHONEOS_DEPLOYMENT_TARGET: '15.0'
+    MARKETING_VERSION: '0.1.0'
+    CURRENT_PROJECT_VERSION: '1'
+    TARGETED_DEVICE_FAMILY: '1,2'
+    ENABLE_BITCODE: NO
+    CODE_SIGNING_ALLOWED: NO
+    CODE_SIGNING_REQUIRED: NO
+    CODE_SIGN_IDENTITY: ''
+targets:
+  X10Connect:
+    type: application
+    platform: iOS
+    sources:
+      - App
+    resources:
+      - Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: cz.miraficus.x10connect.ios
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Info.plist
+    dependencies:
+      - package: CameraCore
+schemes:
+  X10Connect:
+    build:
+      targets:
+        X10Connect: all
+    run:
+      config: Debug

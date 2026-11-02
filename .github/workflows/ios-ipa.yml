@@ -1,0 +1,74 @@
+name: iOS IPA
+on:
+  push:
+    branches: [ios]
+    paths: ['ios/**', '.github/workflows/ios-ipa.yml']
+  workflow_dispatch:
+    inputs:
+      publish_preview:
+        description: Publish iOS prerelease
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'ios' || github.sha }}
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          pod --version
+      - name: Test protocol and file validation
+        run: swift test --package-path ios/CameraCore
+      - name: Generate project and install pinned VLC SDK
+        run: |
+          cd ios
+          xcodegen generate
+          pod install
+      - name: Build ARM64 for iOS 15
+        run: |
+          set -o pipefail
+          xcodebuild -workspace ios/X10Connect.xcworkspace -scheme X10Connect -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath ios/DerivedData ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' build | tee ios/build.log
+      - name: Include third-party license and dependency lock
+        run: |
+          mkdir -p ios/DerivedData/Build/Products/Release-iphoneos/X10Connect.app/Licenses
+          cp ios/Pods/MobileVLCKit/COPYING.txt ios/DerivedData/Build/Products/Release-iphoneos/X10Connect.app/Licenses/MobileVLCKit-LGPL.txt
+          cp ios/THIRD_PARTY.md ios/DerivedData/Build/Products/Release-iphoneos/X10Connect.app/Licenses/
+          cp ios/LICENSE ios/DerivedData/Build/Products/Release-iphoneos/X10Connect.app/Licenses/X10Connect-MIT.txt
+      - name: Package and verify IPA
+        run: bash ios/scripts/package.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: X10Connect-iOS-IPA
+          path: |
+            ios/output/*.ipa
+            ios/output/*.sha256
+            ios/Podfile.lock
+      - name: Build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-log
+          path: ios/build.log
+          if-no-files-found: ignore
+      - name: Publish requested prerelease
+        if: (github.event_name == 'workflow_dispatch' && inputs.publish_preview) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[ios-prerelease]'))
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' ios/DerivedData/Build/Products/Release-iphoneos/X10Connect.app/Info.plist)
+          tag="ios-v${version}"
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --prerelease --target "$(git rev-parse HEAD)" --title "X10 Connect iOS ${version} preview" --notes-file ios/RELEASE_NOTES.md
+          gh release upload "$tag" ios/output/*.ipa ios/output/*.sha256 --clobber
