@@ -1,4 +1,5 @@
-import AppKit
+import CoreGraphics
+import ImageIO
 import Foundation
 let root = URL(fileURLWithPath: CommandLine.arguments[1])
 let folder = root.appendingPathComponent("AppIcon.appiconset")
@@ -16,16 +17,17 @@ let specs: [(String,String,String,Int)] = [
 var images: [[String:String]] = []
 for (index,spec) in specs.enumerated() {
     let (idiom,size,scale,pixels) = spec
-    let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: pixels, pixelsHigh: pixels, bitsPerSample: 8, samplesPerPixel: 3, hasAlpha: false, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
-    NSGraphicsContext.saveGraphicsState(); NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
-    let c = NSGraphicsContext.current!.cgContext;c.scaleBy(x: CGFloat(pixels)/1024, y: CGFloat(pixels)/1024)
-    c.setFillColor(NSColor(srgbRed: 13/255,green: 20/255,blue: 28/255,alpha: 1).cgColor);c.fill(CGRect(x: 0,y: 0,width: 1024,height: 1024))
-    c.setStrokeColor(NSColor(srgbRed: 97/255,green: 225/255,blue: 208/255,alpha: 1).cgColor);c.setLineWidth(40)
+    guard let c = CGContext(data: nil, width: pixels, height: pixels, bitsPerComponent: 8, bytesPerRow: pixels*4, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue) else { fatalError("Cannot create RGB icon context") }
+    c.scaleBy(x: CGFloat(pixels)/1024, y: CGFloat(pixels)/1024)
+    c.setFillColor(CGColor(red: 13/255,green: 20/255,blue: 28/255,alpha: 1));c.fill(CGRect(x: 0,y: 0,width: 1024,height: 1024))
+    c.setStrokeColor(CGColor(red: 97/255,green: 225/255,blue: 208/255,alpha: 1));c.setLineWidth(40)
     c.addPath(CGPath(roundedRect: CGRect(x: 190,y: 270,width: 644,height: 470),cornerWidth: 90,cornerHeight: 90,transform: nil));c.strokePath()
     c.strokeEllipse(in: CGRect(x: 365,y: 355,width: 294,height: 294))
     c.setLineJoin(.round);c.move(to: CGPoint(x: 350,y: 740));c.addLine(to: CGPoint(x: 400,y: 810));c.addLine(to: CGPoint(x: 624,y: 810));c.addLine(to: CGPoint(x: 674,y: 740));c.strokePath()
-    NSGraphicsContext.restoreGraphicsState()
-    let filename = "icon\(index).png";try rep.representation(using: .png, properties: [:])!.write(to: folder.appendingPathComponent(filename))
+    let filename = "icon\(index).png"
+    guard let image = c.makeImage(), let output = CGImageDestinationCreateWithURL(folder.appendingPathComponent(filename) as CFURL, "public.png" as CFString, 1, nil) else { fatalError("Cannot encode icon") }
+    CGImageDestinationAddImage(output, image, nil)
+    guard CGImageDestinationFinalize(output) else { fatalError("Cannot write icon") }
     images.append(["idiom":idiom,"size":size,"scale":scale,"filename":filename])
 }
 try JSONSerialization.data(withJSONObject: ["images":images,"info":["version":1,"author":"xcode"]],options: .prettyPrinted).write(to: folder.appendingPathComponent("Contents.json"))
